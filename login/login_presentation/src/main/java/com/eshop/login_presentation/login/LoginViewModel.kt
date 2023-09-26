@@ -18,7 +18,6 @@ import com.eshop.core.util.Result
 import com.eshop.coreui.util.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 
 @HiltViewModel
@@ -45,19 +44,24 @@ class LoginViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), LoginState())
 
-    fun onIdentifierEnter(identifier: String) {
-        this.identifier.value = identifier
+    fun onEvent(event: LoginEvent) {
+        when (event) {
+            is LoginEvent.OnIdentifierEnter -> {
+                identifier.value = event.identifier
+            }
+            is LoginEvent.OnPasswordEnter -> {
+                password.value = event.password
+            }
+            is LoginEvent.OnPasswordVisibilityIconClick -> {
+                isPasswordVisible.value = !isPasswordVisible.value
+            }
+            is LoginEvent.OnLoginClick -> {
+                onLoginClick()
+            }
+        }
     }
 
-    fun onPasswordEnter(password: String) {
-        this.password.value = password
-    }
-
-    fun onPasswordVisibilityIconClick() {
-        isPasswordVisible.value = !isPasswordVisible.value
-    }
-
-    fun onLoginClick() {
+    private fun onLoginClick() {
         isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = loginUseCase(Credentials(identifier.value, password.value))) {
@@ -72,5 +76,4 @@ class LoginViewModel @Inject constructor(
             isLoading.value = false
         }
     }
-
 }

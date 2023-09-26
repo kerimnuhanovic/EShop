@@ -1,9 +1,7 @@
 package com.eshop.login_presentation.login
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +18,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -44,8 +41,6 @@ import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.UiEvent
 import com.eshop.login_presentation.login.components.InputField
 import com.eshop.login_presentation.login.components.LoginState
-import kotlinx.coroutines.flow.collect
-
 
 @Composable
 fun LoginScreen(
@@ -62,21 +57,14 @@ fun LoginScreen(
     }
     LoginScreenContent(
         state = state,
-        onIdentifierEnter = viewModel::onIdentifierEnter,
-        onPasswordEnter = viewModel::onPasswordEnter,
-        onPasswordVisibilityIconClick = viewModel::onPasswordVisibilityIconClick,
-        onLoginClick = viewModel::onLoginClick
+        onEvent = viewModel::onEvent
     )
 }
 
 @Composable
 private fun LoginScreenContent(
     state: LoginState,
-    onIdentifierEnter: (String) -> Unit,
-    onPasswordEnter: (String) -> Unit,
-    onPasswordVisibilityIconClick: () -> Unit,
-    onLoginClick: () -> Unit
-
+    onEvent: (LoginEvent) -> Unit
 ) {
     val dimensions = LocalDimensions.current
     Column(
@@ -108,7 +96,9 @@ private fun LoginScreenContent(
         }
         InputField(
             inputText = state.credentials,
-            onTextChange = onIdentifierEnter,
+            onTextChange = {
+                onEvent(LoginEvent.OnIdentifierEnter(it))
+            },
             placeholderId = com.eshop.login_presentation.R.string.enter_email_or_username,
             modifier = Modifier.padding(horizontal = dimensions.spaceMedium),
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -118,10 +108,14 @@ private fun LoginScreenContent(
         Spacer(modifier = Modifier.height(dimensions.spaceMedium))
         InputField(
             inputText = state.password,
-            onTextChange = onPasswordEnter,
+            onTextChange = {
+                onEvent(LoginEvent.OnPasswordEnter(it))
+            },
             placeholderId = com.eshop.login_presentation.R.string.enter_password,
             trailingIconId = if (!state.isPasswordVisible) R.drawable.visibility_off_24 else R.drawable.visibility_24,
-            onTrailingIconClick = onPasswordVisibilityIconClick,
+            onTrailingIconClick = {
+                onEvent(LoginEvent.OnPasswordVisibilityIconClick)
+            },
             modifier = Modifier.padding(horizontal = dimensions.spaceMedium),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password
@@ -147,7 +141,9 @@ private fun LoginScreenContent(
             },
             backgroundColor = MaterialTheme.colors.primary,
             contentColor = MaterialTheme.colors.onPrimary,
-            onButtonClick = onLoginClick,
+            onButtonClick = {
+                onEvent(LoginEvent.OnLoginClick)
+            },
             modifier = Modifier
                 .fillMaxWidth(0.4f),
             enabled = !state.isLoading
@@ -190,10 +186,7 @@ private fun LoginScreenPreview() {
     EShopTheme {
         LoginScreenContent(
             state = LoginState(),
-            onIdentifierEnter = {},
-            onPasswordEnter = {},
-            onPasswordVisibilityIconClick = {},
-            onLoginClick = {}
+            onEvent = {}
         )
     }
 }

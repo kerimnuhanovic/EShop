@@ -1,0 +1,63 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize'
+
+android {
+    compileSdk ProjectConfig.compileSdk
+
+    defaultConfig {
+        minSdk ProjectConfig.minSdk
+        targetSdk ProjectConfig.targetSdk
+        versionCode ProjectConfig.versionCode
+        versionName ProjectConfig.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion Compose.version
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation Compose.activityCompose
+    implementation Compose.viewModelCompose
+    implementation Compose.ui
+    implementation Compose.toolingPreview
+    implementation Compose.material
+    implementation Compose.navigation
+    implementation Compose.hiltNavigationCompose
+    kapt DaggerHilt.hiltCompiler
+    implementation DaggerHilt.hilt
+
+    testImplementation Testing.junit
+    testImplementation Testing.junitExt
+    testImplementation Testing.espresso
+
+    testImplementation Testing.junit
+    androidTestImplementation Testing.junitExt
+    androidTestImplementation Testing.espresso
+
+    debugImplementation Compose.toolingDebug
+    debugImplementation Compose.testManifest
+}

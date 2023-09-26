@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="api_error_4xx">Oops something went wrong, please try again.</string>
+    <string name="api_error_5xx">SleepIQ server is unavailable, please try again.</string>
+    <string name="api_error_unknown">Oops something went wrong, please try again.</string>
+    <string name="invalid_credentials">Invalid credentials. Please try again.</string>
+    <string name="api_error_timeout">Oops something went wrong, please try again.</string>
+    <string name="api_error_no_connection">No connection: Mobile device unable to connect to Data or WiFi.</string>
+</resources>

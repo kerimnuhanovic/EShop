@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_to_continue">LOGIN\n TO CONTINUE</string>
+    <string name="enter_email_or_username">Enter your email or username</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="reset_here">Reset here.</string>
+    <string name="space">\u0020</string>
+    <string name="no_account">No account?</string>
+    <string name="create_one">Create one.</string>
+</resources>

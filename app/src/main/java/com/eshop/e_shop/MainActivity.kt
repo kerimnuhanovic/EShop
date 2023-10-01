@@ -17,6 +17,7 @@ import com.eshop.core.navigation.Route
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.e_shop.navigation.navigate
 import com.eshop.login_presentation.login.LoginScreen
+import com.eshop.signup_presentation.signup.SignupScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,6 +39,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = Route.MAIN) {
                             Text(text = "MAIN SCREEN")
+                        }
+                        composable(route = Route.SIGNUP) {
+                            SignupScreen(onNavigate = navController::navigate)
                         }
                     }
                 }

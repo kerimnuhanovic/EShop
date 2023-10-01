@@ -18,11 +18,16 @@ data class Dimensions(
     val mediumCornerRadius: Dp = 16.dp,
     val largeCornerRadius: Dp = 50.dp,
     val buttonHeight: Dp = 56.dp,
+    val font_12: TextUnit = 12.sp,
     val font_16: TextUnit = 16.sp,
     val font_20: TextUnit = 20.sp,
     val font_24: TextUnit = 24.sp,
     val font_32: TextUnit = 32.sp,
-    val smallLetterSpacing: TextUnit = 1.sp
+    val smallLetterSpacing: TextUnit = 1.sp,
+    val uploadImageSurfaceSize: Dp = 250.dp,
+    val uploadImagePlaceholderHeight: Dp = 200.dp,
+    val uploadImagePlaceholderWidth: Dp = 150.dp,
+    val offset_100: Dp = (-100).dp
 )
 
 val LocalDimensions = compositionLocalOf { Dimensions() }

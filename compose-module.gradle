@@ -49,6 +49,7 @@ dependencies {
     implementation Compose.hiltNavigationCompose
     kapt DaggerHilt.hiltCompiler
     implementation DaggerHilt.hilt
+    implementation Coil.coil
 
     testImplementation Testing.junit
     testImplementation Testing.junitExt

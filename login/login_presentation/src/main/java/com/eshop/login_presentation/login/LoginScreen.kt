@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -40,7 +41,6 @@ import com.eshop.coreui.components.ErrorBox
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.UiEvent
 import com.eshop.login_presentation.login.components.InputField
-import com.eshop.login_presentation.login.components.LoginState
 
 @Composable
 fun LoginScreen(
@@ -163,20 +163,30 @@ private fun LoginScreenContent(
             }
         }, modifier = Modifier.padding(vertical = dimensions.spaceSmall))
         Spacer(modifier = Modifier.weight(1f))
-        Text(text = buildAnnotatedString {
+        ClickableText(text = buildAnnotatedString {
             withStyle(
                 style = SpanStyle(
                     color = MaterialTheme.colors.onBackground,
-                    fontFamily = PoppinsFontFamily
+                    fontFamily = PoppinsFontFamily,
+                    fontSize = dimensions.font_16
                 )
             ) {
                 append(stringResource(id = com.eshop.login_presentation.R.string.no_account))
             }
             append(stringResource(id = com.eshop.login_presentation.R.string.space))
-            withStyle(style = SpanStyle(color = MaterialTheme.colors.primary)) {
+            withStyle(
+                style = SpanStyle(
+                    color = MaterialTheme.colors.primary, fontFamily = PoppinsFontFamily,
+                    fontSize = dimensions.font_16
+                )
+            ) {
                 append(stringResource(id = com.eshop.login_presentation.R.string.create_one))
             }
-        }, modifier = Modifier.padding(vertical = dimensions.spaceSmall))
+        }, modifier = Modifier.padding(vertical = dimensions.spaceSmall), onClick = {
+            if (it > 12) {
+                onEvent(LoginEvent.OnCreateOneClick)
+            }
+        })
     }
 }
 

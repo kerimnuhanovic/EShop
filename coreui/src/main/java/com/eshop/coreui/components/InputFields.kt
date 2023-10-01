@@ -66,7 +66,7 @@ fun InputField(
             Text(
                 text = stringResource(id = placeholderId),
                 fontFamily = PoppinsFontFamily,
-                fontSize = dimensions.font_16,
+                fontSize = dimensions.font_12,
                 letterSpacing = dimensions.smallLetterSpacing
             )
         },
@@ -89,7 +89,7 @@ private fun InputFieldPreview(
         InputField(
             inputText = inputText,
             onTextChange = onTextChange,
-            placeholderId = com.eshop.login_presentation.R.string.enter_email_or_username,
+            placeholderId = R.string.enter_your_email,
             trailingIconId = trailingIconId
         )
     }

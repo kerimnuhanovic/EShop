@@ -1,4 +1,4 @@
-package com.eshop.login_data.remote.dto
+package com.eshop.core.data.remote.dto
 
 import com.squareup.moshi.Json
 

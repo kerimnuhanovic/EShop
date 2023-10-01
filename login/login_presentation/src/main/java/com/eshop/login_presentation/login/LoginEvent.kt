@@ -5,4 +5,5 @@ sealed interface LoginEvent {
     data class OnPasswordEnter(val password: String) : LoginEvent
     object OnPasswordVisibilityIconClick : LoginEvent
     object OnLoginClick : LoginEvent
+    object OnCreateOneClick : LoginEvent
 }

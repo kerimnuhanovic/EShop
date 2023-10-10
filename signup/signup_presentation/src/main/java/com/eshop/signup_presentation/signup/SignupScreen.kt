@@ -1,17 +1,17 @@
 package com.eshop.signup_presentation.signup
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +25,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -34,18 +35,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.layout
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -55,22 +52,26 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.theme.MediumGray
 import com.eshop.coreui.util.UiEvent
-import com.eshop.login_presentation.login.components.InputField
+import com.eshop.coreui.components.InputField
+import com.eshop.signup_presentation.signup.components.ShopCategoriesDropdownMenu
 import com.eshop.signup_presentation.signup.components.PageIndicator
+import com.eshop.signup_presentation.signup.components.ShopDataBox
+import com.eshop.signup_presentation.signup.components.UserRoleSelector
 import com.eshop.signup_presentation.signup.util.FIRST_PAGE
 import com.eshop.signup_presentation.signup.util.PAGE_COUNT
 import com.eshop.signup_presentation.signup.util.SECOND_PAGE
+import com.eshop.signup_presentation.signup.util.ShopCategory
+import com.eshop.signup_presentation.signup.util.ShopLocation
 import com.eshop.signup_presentation.signup.util.THIRD_PAGE
+import com.eshop.signup_presentation.signup.util.UserRole
 
 @Composable
 fun SignupScreen(
@@ -107,9 +108,11 @@ fun SignupScreenContent(
                 )
             }
             THIRD_PAGE -> {
-                Column(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(dimensions.spaceMedium)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(dimensions.spaceMedium)
+                ) {
                     Spacer(modifier = Modifier.weight(1f))
                     PageIndicator(pagerState.currentPage)
                 }
@@ -119,13 +122,14 @@ fun SignupScreenContent(
 
 }
 
+@OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun EnterDataScreen(
     state: SignupState,
     onEvent: (SignupEvent) -> Unit
 ) {
     val dimensions = LocalDimensions.current
-
+    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -147,6 +151,11 @@ private fun EnterDataScreen(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(dimensions.spaceLarge))
+        UserRoleSelector(
+            selectedRole = state.userRole, onEvent = onEvent,
+            modifier = Modifier.align(Alignment.Start)
+        )
+        Spacer(modifier = Modifier.height(dimensions.spaceMedium))
         InputField(
             inputText = state.name,
             onTextChange = {
@@ -229,6 +238,63 @@ private fun EnterDataScreen(
             ),
             visualTransformation = if (!state.isConfirmPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None
         )
+        Spacer(modifier = Modifier.height(dimensions.spaceMedium))
+        AnimatedVisibility(visible = state.userRole == UserRole.SELLER) {
+            Column {
+                ShopCategoriesDropdownMenu(
+                    expanded = state.isCategoryDropdownMenuExpanded,
+                    placeholder = stringResource(id = com.eshop.signup_presentation.R.string.select_your_shop_categories),
+                    items = ShopCategory.listAllCategories(),
+                    selectedItems = state.listOfShopCategories,
+                    onExpandChange = {
+                        onEvent(SignupEvent.OnExpandChange)
+                    },
+                    onSelectItem = {
+                        onEvent(SignupEvent.OnShopCategoryClick(it))
+                    },
+                    modifier = Modifier.padding(horizontal = dimensions.spaceMedium)
+                )
+                Spacer(modifier = Modifier.height(dimensions.spaceMedium))
+                FlowRow(modifier = Modifier.padding(horizontal = dimensions.spaceMedium)) {
+                    state.listOfShopCategories.forEach {
+                        ShopDataBox(shopData = it, onExitClick = { shopCategory ->
+                            onEvent(SignupEvent.OnShopCategoryClick(shopCategory as ShopCategory))
+                        })
+                    }
+                }
+                if (state.listOfShopCategories.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(dimensions.spaceMedium))
+                }
+                InputField(
+                    inputText = state.shopLocation,
+                    onTextChange = {
+                        onEvent(SignupEvent.OnShopLocationEnter(it))
+                    },
+                    placeholderId = com.eshop.signup_presentation.R.string.enter_your_shop_locations,
+                    modifier = Modifier.padding(horizontal = dimensions.spaceMedium),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        onEvent(SignupEvent.OnShopLocationAdd(ShopLocation(state.shopLocation)))
+                        keyboardController?.hide()
+                    })
+                )
+                if (state.listOfShopLocations.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(dimensions.spaceMedium))
+                }
+                FlowRow(modifier = Modifier.padding(horizontal = dimensions.spaceMedium)) {
+                    state.listOfShopLocations.forEach {
+                        ShopDataBox(shopData = it, onExitClick = { shopLocation ->
+                            onEvent(SignupEvent.OnShopLocationRemove(shopLocation as ShopLocation))
+                        })
+                    }
+                }
+                if (state.listOfShopLocations.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(dimensions.spaceMedium))
+                }
+            }
+        }
         Spacer(modifier = Modifier.weight(1f))
         PageIndicator(FIRST_PAGE, modifier = Modifier.padding(top = dimensions.spaceSmall))
     }
@@ -241,7 +307,8 @@ private fun UploadImageScreen(
 ) {
     val dimensions = LocalDimensions.current
     val borderColor = MaterialTheme.colors.primary
-    val stroke = Stroke(width = 16f,
+    val stroke = Stroke(
+        width = 16f,
         pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 10f), 0f)
     )
     val galleryLauncher =
@@ -313,7 +380,10 @@ private fun UploadImageScreen(
 @Preview
 private fun SignupScreenPreview() {
     EShopTheme {
-        SignupScreenContent(state = SignupState(), onEvent = {})
+        SignupScreenContent(
+            state = SignupState(),
+            onEvent = {}
+        )
     }
 }
 

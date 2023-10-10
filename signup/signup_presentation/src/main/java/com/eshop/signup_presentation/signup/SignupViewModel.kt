@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class SignupViewModel @Inject constructor(): ViewModel() {
+class SignupViewModel @Inject constructor() : ViewModel() {
     private val _state: MutableStateFlow<SignupState> = MutableStateFlow(SignupState())
     val state = _state.asStateFlow()
 
@@ -60,7 +60,49 @@ class SignupViewModel @Inject constructor(): ViewModel() {
                 _state.value = _state.value.copy(
                     profileImage = event.image
                 )
-                println("EVO ME U VIEW MODELU: ${_state.value}")
+            }
+            is SignupEvent.OnUserRoleSelect -> {
+                _state.value = _state.value.copy(
+                    userRole = event.userRole
+                )
+            }
+            SignupEvent.OnExpandChange -> {
+                _state.value = _state.value.copy(
+                    isCategoryDropdownMenuExpanded = !state.value.isCategoryDropdownMenuExpanded
+                )
+            }
+            is SignupEvent.OnShopCategoryClick -> {
+                if (!_state.value.listOfShopCategories.contains(event.shopCategory)) {
+                    _state.value = _state.value.copy(
+                        listOfShopCategories = _state.value.listOfShopCategories.plus(event.shopCategory)
+                    )
+                } else {
+                    _state.value = _state.value.copy(
+                        listOfShopCategories = _state.value.listOfShopCategories.filterNot {
+                            it == event.shopCategory
+                        }
+                    )
+                }
+            }
+            is SignupEvent.OnShopLocationAdd -> {
+                if (!_state.value.listOfShopLocations.contains(event.shopLocation) && event.shopLocation.value != "") {
+                    _state.value = _state.value.copy(
+                        listOfShopLocations = _state.value.listOfShopLocations.plus(event.shopLocation),
+                        shopLocation = ""
+                    )
+                }
+            }
+            is SignupEvent.OnShopLocationRemove -> {
+                _state.value = _state.value.copy(
+                    listOfShopLocations = _state.value.listOfShopLocations.filterNot {
+                        it == event.shopLocation
+                    }
+                )
+            }
+            is SignupEvent.OnShopLocationEnter -> {
+                _state.value = _state.value.copy(
+                    shopLocation = event.location
+                )
             }
         }
     }

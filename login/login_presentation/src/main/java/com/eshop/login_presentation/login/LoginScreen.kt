@@ -40,7 +40,7 @@ import com.eshop.coreui.components.EShopButton
 import com.eshop.coreui.components.ErrorBox
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.UiEvent
-import com.eshop.login_presentation.login.components.InputField
+import com.eshop.coreui.components.InputField
 
 @Composable
 fun LoginScreen(

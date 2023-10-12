@@ -2,6 +2,8 @@ package com.eshop.signup_presentation.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eshop.core.domain.preferences.Preferences
+import com.eshop.core.navigation.Route
 import com.eshop.signup_domain.models.RegistrationData
 import com.eshop.signup_domain.usecase.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +16,7 @@ import com.eshop.core.util.Result
 import com.eshop.coreui.util.UiEvent
 import com.eshop.signup_domain.usecase.ConvertListToStringUseCase
 import com.eshop.signup_domain.usecase.CreateFileFromUriUseCase
+import com.eshop.signup_domain.usecase.SignupInputVerificationUseCase
 import com.eshop.signup_presentation.signup.util.FIRST_PAGE
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -22,7 +25,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 class SignupViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
     private val createFileFromUriUseCase: CreateFileFromUriUseCase,
-    private val convertListToStringUseCase: ConvertListToStringUseCase
+    private val convertListToStringUseCase: ConvertListToStringUseCase,
+    private val signupInputVerificationUseCase: SignupInputVerificationUseCase,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<SignupState> = MutableStateFlow(SignupState())
@@ -128,10 +133,28 @@ class SignupViewModel @Inject constructor(
     }
 
     private fun registerUser() {
-        _state.value = _state.value.copy(
-            isLoading = true
-        )
         viewModelScope.launch(Dispatchers.IO) {
+            val isUserInputValid = signupInputVerificationUseCase(
+                state.value.name,
+                state.value.surname,
+                state.value.username,
+                state.value.email,
+                state.value.password,
+                state.value.confirmPassword,
+                state.value.userRole.role,
+                state.value.profileImage,
+                state.value.listOfShopCategories.map { it.value }
+            )
+            if (!isUserInputValid.isInputValid) {
+                _state.value = _state.value.copy(
+                    errorMessageId = isUserInputValid.errorMessageId
+                )
+                _uiEvent.send(UiEvent.ScrollPage(FIRST_PAGE))
+                return@launch
+            }
+            _state.value = _state.value.copy(
+                isLoading = true
+            )
             val result = registerUseCase(
                 RegistrationData(
                     name = state.value.name,
@@ -147,7 +170,8 @@ class SignupViewModel @Inject constructor(
             )
             when (result) {
                 is Result.Success -> {
-                    println(result.data.token)
+                    preferences.saveToken(result.data.token)
+                    _uiEvent.send(UiEvent.Navigate(Route.MAIN))
                 }
                 is Result.Failure -> {
                     _state.value = _state.value.copy(

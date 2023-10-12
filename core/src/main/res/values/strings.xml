@@ -7,4 +7,12 @@
     <string name="api_error_timeout">Oops something went wrong, please try again.</string>
     <string name="api_error_no_connection">No connection: Mobile device unable to connect to Data or WiFi.</string>
     <string name="user_already_exists">User with same username or email already exists!</string>
+    <string name="name_too_short">Name should be at least 2 characters long!</string>
+    <string name="surname_too_short">Surname should be at least 2 characters long!</string>
+    <string name="username_too_short">Username should be at least 3 characters long!</string>
+    <string name="email_invalid_format">Email has invalid format!</string>
+    <string name="passwords_dont_match">Passwords do not match!</string>
+    <string name="shop_categories_empty">No shop categories found. Please add categories to your shop.</string>
+    <string name="profile_image_missing">Profile image is required. Please upload an image to continue.</string>
+    <string name="password_too_short">Password should contain at least 8 characters!</string>
 </resources>

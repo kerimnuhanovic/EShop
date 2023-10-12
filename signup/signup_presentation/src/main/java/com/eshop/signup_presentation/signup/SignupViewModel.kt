@@ -1,15 +1,35 @@
 package com.eshop.signup_presentation.signup
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.eshop.signup_domain.models.RegistrationData
+import com.eshop.signup_domain.usecase.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.eshop.core.util.Result
+import com.eshop.coreui.util.UiEvent
+import com.eshop.signup_domain.usecase.ConvertListToStringUseCase
+import com.eshop.signup_domain.usecase.CreateFileFromUriUseCase
+import com.eshop.signup_presentation.signup.util.FIRST_PAGE
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @HiltViewModel
-class SignupViewModel @Inject constructor() : ViewModel() {
+class SignupViewModel @Inject constructor(
+    private val registerUseCase: RegisterUseCase,
+    private val createFileFromUriUseCase: CreateFileFromUriUseCase,
+    private val convertListToStringUseCase: ConvertListToStringUseCase
+) : ViewModel() {
+
     private val _state: MutableStateFlow<SignupState> = MutableStateFlow(SignupState())
     val state = _state.asStateFlow()
+
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     fun onEvent(event: SignupEvent) {
         when (event) {
@@ -42,9 +62,6 @@ class SignupViewModel @Inject constructor() : ViewModel() {
                 _state.value = _state.value.copy(
                     confirmPassword = event.confirmPassword
                 )
-            }
-            is SignupEvent.OnUserTypeSelect -> {
-
             }
             SignupEvent.OnPasswordVisibilityIconClick -> {
                 _state.value = _state.value.copy(
@@ -104,6 +121,44 @@ class SignupViewModel @Inject constructor() : ViewModel() {
                     shopLocation = event.location
                 )
             }
+            SignupEvent.OnRegisterClick -> {
+                registerUser()
+            }
+        }
+    }
+
+    private fun registerUser() {
+        _state.value = _state.value.copy(
+            isLoading = true
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = registerUseCase(
+                RegistrationData(
+                    name = state.value.name,
+                    surname = state.value.surname,
+                    username = state.value.username,
+                    email = state.value.email,
+                    password = state.value.password,
+                    userType = state.value.userRole.role,
+                    shopCategories = convertListToStringUseCase(state.value.listOfShopCategories.map { it.value }),
+                    shopLocations = convertListToStringUseCase(state.value.listOfShopLocations.map { it.value }),
+                    profileImage = createFileFromUriUseCase(state.value.profileImage)
+                )
+            )
+            when (result) {
+                is Result.Success -> {
+                    println(result.data.token)
+                }
+                is Result.Failure -> {
+                    _state.value = _state.value.copy(
+                        errorMessageId = result.errorMessageId
+                    )
+                    _uiEvent.send(UiEvent.ScrollPage(FIRST_PAGE))
+                }
+            }
+            _state.value = _state.value.copy(
+                isLoading = false
+            )
         }
     }
 

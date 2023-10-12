@@ -12,7 +12,6 @@ sealed interface SignupEvent {
     data class OnEmailEnter(val email: String) : SignupEvent
     data class OnPasswordEnter(val password: String) : SignupEvent
     data class OnConfirmPasswordEnter(val confirmPassword: String) : SignupEvent
-    data class OnUserTypeSelect(val userType: String) : SignupEvent
     object OnPasswordVisibilityIconClick : SignupEvent
     object OnConfirmPasswordVisibilityIconClick : SignupEvent
     data class OnImageSelect(val image: Uri) : SignupEvent
@@ -22,4 +21,5 @@ sealed interface SignupEvent {
     data class OnShopLocationAdd(val shopLocation: ShopLocation) : SignupEvent
     data class OnShopLocationRemove(val shopLocation: ShopLocation) : SignupEvent
     data class OnShopLocationEnter(val location: String) : SignupEvent
+    object OnRegisterClick : SignupEvent
 }

@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
@@ -28,11 +29,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -52,11 +56,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
+import com.eshop.coreui.components.EShopButton
+import com.eshop.coreui.components.ErrorBox
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.theme.MediumGray
 import com.eshop.coreui.util.UiEvent
@@ -73,15 +84,26 @@ import com.eshop.signup_presentation.signup.util.ShopLocation
 import com.eshop.signup_presentation.signup.util.THIRD_PAGE
 import com.eshop.signup_presentation.signup.util.UserRole
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SignupScreen(
     viewModel: SignupViewModel = hiltViewModel(),
     onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val state = viewModel.state.collectAsState().value
+    val pagerState = rememberPagerState()
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { uiEvent ->
+            when (uiEvent) {
+                is UiEvent.Navigate -> onNavigate(uiEvent)
+                is UiEvent.ScrollPage -> pagerState.animateScrollToPage(uiEvent.page)
+            }
+        }
+    }
     SignupScreenContent(
         state = state,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
+        pagerState = pagerState
     )
 }
 
@@ -89,10 +111,9 @@ fun SignupScreen(
 @Composable
 fun SignupScreenContent(
     state: SignupState,
-    onEvent: (SignupEvent) -> Unit
+    onEvent: (SignupEvent) -> Unit,
+    pagerState: PagerState
 ) {
-    val pagerState = rememberPagerState()
-    val dimensions = LocalDimensions.current
     HorizontalPager(state = pagerState, pageCount = PAGE_COUNT) { page ->
         when (page) {
             FIRST_PAGE -> {
@@ -108,14 +129,10 @@ fun SignupScreenContent(
                 )
             }
             THIRD_PAGE -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(dimensions.spaceMedium)
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    PageIndicator(pagerState.currentPage)
-                }
+                CompleteRegistrationScreen(
+                    state = state,
+                    onEvent = onEvent
+                )
             }
         }
     }
@@ -151,6 +168,13 @@ private fun EnterDataScreen(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(dimensions.spaceLarge))
+        if (state.errorMessageId != null) {
+            ErrorBox(
+                errorMessageId = state.errorMessageId,
+                modifier = Modifier.padding(horizontal = dimensions.spaceMedium)
+            )
+            Spacer(modifier = Modifier.height(dimensions.spaceLarge))
+        }
         UserRoleSelector(
             selectedRole = state.userRole, onEvent = onEvent,
             modifier = Modifier.align(Alignment.Start)
@@ -377,12 +401,59 @@ private fun UploadImageScreen(
 }
 
 @Composable
+private fun CompleteRegistrationScreen(
+    state: SignupState,
+    onEvent: (SignupEvent) -> Unit
+) {
+    val dimensions = LocalDimensions.current
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(com.eshop.signup_presentation.R.raw.e_commerce_animation))
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(dimensions.spaceMedium),
+        horizontalAlignment = CenterHorizontally
+    ) {
+        LottieAnimation(
+            composition = composition,
+            iterations = LottieConstants.IterateForever
+        )
+        EShopButton(
+            content = {
+                if (!state.isLoading) {
+                    Text(
+                        text = stringResource(id = com.eshop.signup_presentation.R.string.sign_up),
+                        fontFamily = PoppinsFontFamily,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = dimensions.font_16
+                    )
+                } else {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colors.onPrimary,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+            },
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary,
+            onButtonClick = {
+                onEvent(SignupEvent.OnRegisterClick)
+            },modifier = Modifier
+                    .fillMaxWidth(0.6f),
+            enabled = !state.isLoading)
+        Spacer(modifier = Modifier.weight(1f))
+        PageIndicator(THIRD_PAGE)
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
 @Preview
 private fun SignupScreenPreview() {
     EShopTheme {
         SignupScreenContent(
             state = SignupState(),
-            onEvent = {}
+            onEvent = {},
+            pagerState = rememberPagerState()
         )
     }
 }
@@ -392,5 +463,16 @@ private fun SignupScreenPreview() {
 private fun UploadImageScreenPreview() {
     EShopTheme {
         UploadImageScreen(state = SignupState(), onEvent = {})
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun CompleteRegistrationScreenPreview() {
+    EShopTheme {
+        CompleteRegistrationScreen(
+            state = SignupState(),
+            onEvent = {}
+        )
     }
 }

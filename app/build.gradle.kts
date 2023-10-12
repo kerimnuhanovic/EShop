@@ -71,6 +71,7 @@ dependencies {
     implementation(DaggerHilt.hilt)
     kapt(DaggerHilt.hiltCompiler)
     implementation(Coil.coil)
+    implementation(Lottie.lottie)
 
     implementation(project(Modules.core))
     implementation(project(Modules.coreui))

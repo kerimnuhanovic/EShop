@@ -52,6 +52,9 @@ fun LoginScreen(
         viewModel.uiEvent.collect { uiEvent ->
             when (uiEvent) {
                 is UiEvent.Navigate -> onNavigate(uiEvent)
+                is UiEvent.ScrollPage -> {
+                    // No-op
+                }
             }
         }
     }

@@ -12,7 +12,6 @@ data class SignupState(
     val email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
-    val userType: String = "",
     val profileImage: Uri = Uri.EMPTY,
     val isPasswordVisible: Boolean = false,
     val isConfirmPasswordVisible: Boolean = false,
@@ -20,5 +19,7 @@ data class SignupState(
     val isCategoryDropdownMenuExpanded: Boolean = false,
     val listOfShopCategories: List<ShopCategory> = emptyList(),
     val listOfShopLocations: List<ShopLocation> = emptyList(),
-    val shopLocation: String = ""
+    val shopLocation: String = "",
+    val isLoading: Boolean = false,
+    val errorMessageId: Int? = null
 )

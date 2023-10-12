@@ -1,5 +1,7 @@
 package com.eshop.signup_domain.models
 
+import java.io.File
+
 data class RegistrationData(
     val name: String,
     val surname: String,
@@ -7,5 +9,7 @@ data class RegistrationData(
     val email: String,
     val password: String,
     val userType: String,
-    val profileImage: String
+    val shopCategories: String,
+    val shopLocations: String,
+    val profileImage: File
 )

@@ -1,8 +1,8 @@
 package com.eshop.login_data.repository
 
-import com.eshop.login_data.mapper.toAccessToken
+import com.eshop.core.data.mapper.toAccessToken
 import com.eshop.login_data.remote.LoginApi
-import com.eshop.login_domain.models.AccessToken
+import com.eshop.core.domain.models.AccessToken
 import com.eshop.login_domain.models.Credentials
 import com.eshop.login_domain.repository.LoginRepository
 import javax.inject.Inject

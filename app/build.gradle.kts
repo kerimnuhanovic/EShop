@@ -70,6 +70,8 @@ dependencies {
     implementation(Coroutines.coroutines)
     implementation(DaggerHilt.hilt)
     kapt(DaggerHilt.hiltCompiler)
+    implementation(Coil.coil)
+    implementation(Lottie.lottie)
 
     implementation(project(Modules.core))
     implementation(project(Modules.coreui))
@@ -78,6 +80,9 @@ dependencies {
     implementation(project(Modules.loginData))
     implementation(project(Modules.loginDomain))
     implementation(project(Modules.loginPresentation))
+    implementation(project(Modules.signupData))
+    implementation(project(Modules.signupDomain))
+    implementation(project(Modules.signupPresentation))
 
     testImplementation(Testing.junit)
     androidTestImplementation(Testing.junitExt)

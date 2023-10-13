@@ -1,4 +1,4 @@
-package com.eshop.login_presentation.login.components
+package com.eshop.coreui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -19,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
@@ -36,7 +36,8 @@ fun InputField(
     onTrailingIconClick: () -> Unit = {},
     isSingleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     val dimensions = LocalDimensions.current
     TextField(
@@ -51,7 +52,7 @@ fun InputField(
                 )
             }
         }, modifier = modifier
-            .fillMaxWidth(), shape = RoundedCornerShape(CornerSize(50.dp)),
+            .fillMaxWidth(), shape = RoundedCornerShape(CornerSize(dimensions.largeCornerRadius)),
         textStyle = TextStyle(
             fontFamily = PoppinsFontFamily,
             letterSpacing = dimensions.smallLetterSpacing
@@ -66,12 +67,13 @@ fun InputField(
             Text(
                 text = stringResource(id = placeholderId),
                 fontFamily = PoppinsFontFamily,
-                fontSize = dimensions.font_16,
+                fontSize = dimensions.font_12,
                 letterSpacing = dimensions.smallLetterSpacing
             )
         },
         singleLine = isSingleLine,
         keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         visualTransformation = visualTransformation
     )
 }
@@ -83,13 +85,16 @@ private fun InputFieldPreview(
     onTextChange: (String) -> Unit = {},
     trailingIconId: Int = R.drawable.visibility_24
 ) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(16.dp)) {
+    val dimensions = LocalDimensions.current
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(dimensions.spaceMedium)
+    ) {
         InputField(
             inputText = inputText,
             onTextChange = onTextChange,
-            placeholderId = com.eshop.login_presentation.R.string.enter_email_or_username,
+            placeholderId = R.string.enter_your_email,
             trailingIconId = trailingIconId
         )
     }

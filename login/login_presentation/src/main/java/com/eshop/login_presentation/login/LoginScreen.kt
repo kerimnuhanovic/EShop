@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -30,7 +31,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
@@ -39,8 +39,7 @@ import com.eshop.coreui.components.EShopButton
 import com.eshop.coreui.components.ErrorBox
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.UiEvent
-import com.eshop.login_presentation.login.components.InputField
-import com.eshop.login_presentation.login.components.LoginState
+import com.eshop.coreui.components.InputField
 
 @Composable
 fun LoginScreen(
@@ -52,6 +51,9 @@ fun LoginScreen(
         viewModel.uiEvent.collect { uiEvent ->
             when (uiEvent) {
                 is UiEvent.Navigate -> onNavigate(uiEvent)
+                is UiEvent.ScrollPage -> {
+                    // No-op
+                }
             }
         }
     }
@@ -135,7 +137,7 @@ private fun LoginScreenContent(
                 } else {
                     CircularProgressIndicator(
                         color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(dimensions.size_32)
                     )
                 }
             },
@@ -163,20 +165,30 @@ private fun LoginScreenContent(
             }
         }, modifier = Modifier.padding(vertical = dimensions.spaceSmall))
         Spacer(modifier = Modifier.weight(1f))
-        Text(text = buildAnnotatedString {
+        ClickableText(text = buildAnnotatedString {
             withStyle(
                 style = SpanStyle(
                     color = MaterialTheme.colors.onBackground,
-                    fontFamily = PoppinsFontFamily
+                    fontFamily = PoppinsFontFamily,
+                    fontSize = dimensions.font_16
                 )
             ) {
                 append(stringResource(id = com.eshop.login_presentation.R.string.no_account))
             }
             append(stringResource(id = com.eshop.login_presentation.R.string.space))
-            withStyle(style = SpanStyle(color = MaterialTheme.colors.primary)) {
+            withStyle(
+                style = SpanStyle(
+                    color = MaterialTheme.colors.primary, fontFamily = PoppinsFontFamily,
+                    fontSize = dimensions.font_16
+                )
+            ) {
                 append(stringResource(id = com.eshop.login_presentation.R.string.create_one))
             }
-        }, modifier = Modifier.padding(vertical = dimensions.spaceSmall))
+        }, modifier = Modifier.padding(vertical = dimensions.spaceSmall), onClick = {
+            if (it > 12) {
+                onEvent(LoginEvent.OnCreateOneClick)
+            }
+        })
     }
 }
 

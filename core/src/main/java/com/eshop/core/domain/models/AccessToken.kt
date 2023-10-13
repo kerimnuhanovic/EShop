@@ -1,4 +1,4 @@
-package com.eshop.login_domain.models
+package com.eshop.core.domain.models
 
 data class AccessToken(
     val token: String

@@ -6,7 +6,6 @@ import com.eshop.core.domain.preferences.Preferences
 import com.eshop.core.navigation.Route
 import com.eshop.login_domain.models.Credentials
 import com.eshop.login_domain.usecase.LoginUseCase
-import com.eshop.login_presentation.login.components.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -58,6 +57,15 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.OnLoginClick -> {
                 onLoginClick()
             }
+            LoginEvent.OnCreateOneClick -> {
+                navigateToSignupScreen()
+            }
+        }
+    }
+
+    private fun navigateToSignupScreen() {
+        viewModelScope.launch {
+            _uiEvent.send(UiEvent.Navigate(Route.SIGNUP))
         }
     }
 

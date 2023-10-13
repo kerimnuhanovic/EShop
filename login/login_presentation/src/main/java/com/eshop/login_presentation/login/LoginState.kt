@@ -1,4 +1,4 @@
-package com.eshop.login_presentation.login.components
+package com.eshop.login_presentation.login
 
 data class LoginState(
     val credentials: String = "",

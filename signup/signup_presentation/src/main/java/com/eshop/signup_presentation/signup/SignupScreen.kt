@@ -56,7 +56,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.airbnb.lottie.compose.LottieAnimation
@@ -345,6 +344,7 @@ private fun UploadImageScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
+            .padding(bottom = dimensions.spaceMedium)
     ) {
         Box(
             modifier = Modifier
@@ -429,7 +429,7 @@ private fun CompleteRegistrationScreen(
                 } else {
                     CircularProgressIndicator(
                         color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(dimensions.size_32)
                     )
                 }
             },

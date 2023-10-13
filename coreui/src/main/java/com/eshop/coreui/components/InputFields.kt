@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
@@ -53,7 +52,7 @@ fun InputField(
                 )
             }
         }, modifier = modifier
-            .fillMaxWidth(), shape = RoundedCornerShape(CornerSize(50.dp)),
+            .fillMaxWidth(), shape = RoundedCornerShape(CornerSize(dimensions.largeCornerRadius)),
         textStyle = TextStyle(
             fontFamily = PoppinsFontFamily,
             letterSpacing = dimensions.smallLetterSpacing
@@ -86,9 +85,12 @@ private fun InputFieldPreview(
     onTextChange: (String) -> Unit = {},
     trailingIconId: Int = R.drawable.visibility_24
 ) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(16.dp)) {
+    val dimensions = LocalDimensions.current
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(dimensions.spaceMedium)
+    ) {
         InputField(
             inputText = inputText,
             onTextChange = onTextChange,

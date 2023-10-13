@@ -29,7 +29,9 @@ data class Dimensions(
     val uploadImagePlaceholderWidth: Dp = 150.dp,
     val offset_100: Dp = (-100).dp,
     val dropdownHeight: Dp = 150.dp,
-    val size_20: Dp = 20.dp
+    val size_20: Dp = 20.dp,
+    val size_10: Dp = 10.dp,
+    val size_32: Dp = 32.dp
 )
 
 val LocalDimensions = compositionLocalOf { Dimensions() }

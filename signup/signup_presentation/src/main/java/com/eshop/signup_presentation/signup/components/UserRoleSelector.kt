@@ -32,9 +32,9 @@ fun UserRoleSelector(
     modifier: Modifier = Modifier
 ) {
     val dimensions = LocalDimensions.current
-    val halfScreenWidth = (LocalConfiguration.current.screenWidthDp / 2).dp - 32.dp
+    val halfScreenWidth = (LocalConfiguration.current.screenWidthDp / 2).dp - dimensions.size_32
     val animateDividerOffset = animateDpAsState(
-        targetValue = if (selectedRole == UserRole.CUSTOMER) 0.dp else halfScreenWidth,
+        targetValue = if (selectedRole == UserRole.CUSTOMER) dimensions.default else halfScreenWidth,
         animationSpec = tween(1000)
     )
     Row(

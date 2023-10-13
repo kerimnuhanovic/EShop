@@ -10,31 +10,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.theme.Red
 
 @Composable
 fun PageIndicator(currentPage: Int = 0, modifier: Modifier = Modifier) {
-        Row(
-            modifier = modifier
-                .height(20.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            repeat(3) { iteration ->
-                val color = if (currentPage == iteration) Red else Color.LightGray
-                Box(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .clip(CircleShape)
-                        .background(color)
-                        .size(10.dp)
-                )
-            }
+    val dimensions = LocalDimensions.current
+    Row(
+        modifier = modifier
+            .height(dimensions.size_20)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        repeat(3) { iteration ->
+            val color = if (currentPage == iteration) Red else Color.LightGray
+            Box(
+                modifier = Modifier
+                    .padding(dimensions.spaceExtraSmall)
+                    .clip(CircleShape)
+                    .background(color)
+                    .size(dimensions.size_10)
+            )
         }
+    }
 
 }

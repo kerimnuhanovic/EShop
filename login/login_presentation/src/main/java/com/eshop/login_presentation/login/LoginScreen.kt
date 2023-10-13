@@ -31,7 +31,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
@@ -138,7 +137,7 @@ private fun LoginScreenContent(
                 } else {
                     CircularProgressIndicator(
                         color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(dimensions.size_32)
                     )
                 }
             },

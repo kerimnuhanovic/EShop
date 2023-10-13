@@ -14,4 +14,8 @@ object Modules {
     const val signupData = ":signup:signup_data"
     const val signupDomain = ":signup:signup_domain"
     const val signupPresentation = ":signup:signup_presentation"
+
+    const val productoverviewData = ":productoverview:productoverview_data"
+    const val productoverviewDomain = ":productoverview:productoverview_domain"
+    const val productoverviewPresentation = ":productoverview:productoverview_presentation"
 }

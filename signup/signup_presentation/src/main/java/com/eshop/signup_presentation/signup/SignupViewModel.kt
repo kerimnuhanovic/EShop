@@ -171,7 +171,7 @@ class SignupViewModel @Inject constructor(
             when (result) {
                 is Result.Success -> {
                     preferences.saveToken(result.data.token)
-                    _uiEvent.send(UiEvent.Navigate(Route.MAIN))
+                    _uiEvent.send(UiEvent.Navigate(Route.PRODUCTS))
                 }
                 is Result.Failure -> {
                     _state.value = _state.value.copy(

@@ -75,7 +75,7 @@ class LoginViewModel @Inject constructor(
             when (val result = loginUseCase(Credentials(identifier.value, password.value))) {
                 is Result.Success -> {
                     preferences.saveToken(result.data.token)
-                    _uiEvent.send(UiEvent.Navigate(Route.MAIN))
+                    _uiEvent.send(UiEvent.Navigate(Route.PRODUCTS))
                 }
                 is Result.Failure -> {
                     errorMessageId.value = result.errorMessageId

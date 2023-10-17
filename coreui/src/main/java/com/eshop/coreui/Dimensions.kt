@@ -19,6 +19,7 @@ data class Dimensions(
     val largeCornerRadius: Dp = 50.dp,
     val buttonHeight: Dp = 56.dp,
     val font_12: TextUnit = 12.sp,
+    val font_14: TextUnit = 14.sp,
     val font_16: TextUnit = 16.sp,
     val font_20: TextUnit = 20.sp,
     val font_24: TextUnit = 24.sp,
@@ -31,7 +32,10 @@ data class Dimensions(
     val dropdownHeight: Dp = 150.dp,
     val size_20: Dp = 20.dp,
     val size_10: Dp = 10.dp,
-    val size_32: Dp = 32.dp
+    val size_32: Dp = 32.dp,
+    val size_60: Dp = 60.dp,
+    val size_50: Dp = 50.dp,
+    val size_55: Dp = 55.dp
 )
 
 val LocalDimensions = compositionLocalOf { Dimensions() }

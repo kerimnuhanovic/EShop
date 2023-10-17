@@ -83,6 +83,9 @@ dependencies {
     implementation(project(Modules.signupData))
     implementation(project(Modules.signupDomain))
     implementation(project(Modules.signupPresentation))
+    implementation(project(Modules.productoverviewData))
+    implementation(project(Modules.productoverviewDomain))
+    implementation(project(Modules.productoverviewPresentation))
 
     testImplementation(Testing.junit)
     androidTestImplementation(Testing.junitExt)

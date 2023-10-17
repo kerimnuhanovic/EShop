@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -24,6 +23,7 @@ import com.eshop.e_shop.components.BottomBar
 import com.eshop.e_shop.navigation.navigate
 import com.eshop.e_shop.util.BottomBarItem
 import com.eshop.login_presentation.login.LoginScreen
+import com.eshop.productoverview_presentation.ProductOverviewScreen
 import com.eshop.signup_presentation.signup.SignupScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
                             SignupScreen(onNavigate = navController::navigate)
                         }
                         composable(route = Route.PRODUCTS) {
-                            Text(text = "PRODUCTS SCREEN")
+                            ProductOverviewScreen(onNavigate = navController::navigate)
                         }
                         composable(route = Route.SHOPS) {
                             Text(text = "SHOPS SCREEN")

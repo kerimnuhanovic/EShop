@@ -35,7 +35,9 @@ data class Dimensions(
     val size_32: Dp = 32.dp,
     val size_60: Dp = 60.dp,
     val size_50: Dp = 50.dp,
-    val size_55: Dp = 55.dp
+    val size_55: Dp = 55.dp,
+    val size_80: Dp = 80.dp,
+    val size_200: Dp = 200.dp
 )
 
 val LocalDimensions = compositionLocalOf { Dimensions() }

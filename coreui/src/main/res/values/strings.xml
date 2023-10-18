@@ -11,4 +11,6 @@
     <string name="create_an_account">Create an account</string>
     <string name="enter_your_email">Enter your email</string>
     <string name="search">Search</string>
+    <string name="eshop">E-Shop</string>
+    <string name="your_online_shop_destination">Your online shop destination</string>
 </resources>

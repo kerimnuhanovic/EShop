@@ -2,6 +2,7 @@ package com.eshop.productoverview_presentation
 
 import androidx.lifecycle.ViewModel
 import com.eshop.coreui.util.UiEvent
+import com.eshop.productoverview_domain.usecase.AddProductUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductOverviewViewModel @Inject constructor(
-
+    private val addProductUseCase: AddProductUseCase
 ): ViewModel() {
 
     private val _state: MutableStateFlow<ProductOverviewState> = MutableStateFlow(ProductOverviewState())
@@ -31,6 +32,9 @@ class ProductOverviewViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     searchQuery = event.query
                 )
+            }
+            ProductOverviewEvent.OnAddProductClick -> {
+                // open screen/popup for adding product
             }
         }
     }

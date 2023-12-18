@@ -2,15 +2,20 @@ package com.eshop.e_shop.components
 
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -21,15 +26,17 @@ import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.UiEvent
 import com.eshop.e_shop.util.BottomBarItem
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomBar(
     items: List<BottomBarItem>,
     onNavigate: (UiEvent.Navigate) -> Unit,
-    navController: NavController
+    navController: NavController,
+    isBottomBarOverlapped: Boolean
 ) {
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
     val dimensions = LocalDimensions.current
-    if(!Route.listLandingRoutes().contains(currentDestination)) {
+    if(!Route.listLandingRoutes().contains(currentDestination) && !isBottomBarOverlapped) {
         BottomAppBar(
             backgroundColor = MaterialTheme.colors.onPrimary,
             elevation = dimensions.spaceExtraSmall
@@ -53,6 +60,7 @@ fun BottomBar(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 @Preview
 private fun BottomBarPreview() {
@@ -65,7 +73,8 @@ private fun BottomBarPreview() {
                 BottomBarItem("Orders", Icons.Default.List, "orders")
             ),
             onNavigate = {},
-            navController = rememberNavController()
+            navController = rememberNavController(),
+            isBottomBarOverlapped = false
         )
     }
 }

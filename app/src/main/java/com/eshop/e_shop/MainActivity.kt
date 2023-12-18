@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -12,12 +14,17 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eshop.core.navigation.Route
+import com.eshop.coreui.components.FloatingButton
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.e_shop.components.BottomBar
 import com.eshop.e_shop.navigation.navigate
@@ -29,6 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterialApi::class)
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +44,17 @@ class MainActivity : ComponentActivity() {
             EShopTheme {
                 val navController = rememberNavController()
                 val scaffoldState = rememberScaffoldState()
+                val isBottomBarOverlapped = remember {
+                    mutableStateOf(false)
+                }
+                val bottomSheetState = rememberModalBottomSheetState(
+                    initialValue = ModalBottomSheetValue.Hidden,
+                    confirmValueChange = {
+                        if (it == ModalBottomSheetValue.Hidden)
+                            isBottomBarOverlapped.value = false
+                        true
+                    }
+                )
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     scaffoldState = scaffoldState,
@@ -48,11 +67,19 @@ class MainActivity : ComponentActivity() {
                                 BottomBarItem("Orders", Icons.Default.List, Route.ORDERS)
                             ),
                             onNavigate = navController::navigate,
-                            navController = navController
+                            navController = navController,
+                            isBottomBarOverlapped = isBottomBarOverlapped.value
+                        )
+                    },
+                    floatingActionButton = {
+                        FloatingButton(
+                            modalBottomSheetState = bottomSheetState,
+                            navController = navController,
+                            isBottomBarOverlapped = isBottomBarOverlapped
                         )
                     }
                 ) {
-                    NavHost(navController = navController, startDestination = Route.LOGIN) {
+                    NavHost(navController = navController, startDestination = Route.PRODUCTS) {
                         composable(route = Route.LOGIN) {
                             LoginScreen(onNavigate = navController::navigate)
                         }
@@ -60,7 +87,10 @@ class MainActivity : ComponentActivity() {
                             SignupScreen(onNavigate = navController::navigate)
                         }
                         composable(route = Route.PRODUCTS) {
-                            ProductOverviewScreen(onNavigate = navController::navigate)
+                            ProductOverviewScreen(
+                                onNavigate = navController::navigate,
+                                modalBottomSheetState = bottomSheetState
+                            )
                         }
                         composable(route = Route.SHOPS) {
                             Text(text = "SHOPS SCREEN")

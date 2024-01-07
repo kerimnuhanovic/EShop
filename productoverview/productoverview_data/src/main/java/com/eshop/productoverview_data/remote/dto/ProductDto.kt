@@ -4,7 +4,7 @@ data class ProductDto(
     val id: String,
     val title: String,
     val description: String,
-    val category: String,
+    val category: List<String>,
     val price: Double,
     val shop: String,
     val date: String,

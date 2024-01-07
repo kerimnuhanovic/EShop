@@ -10,7 +10,7 @@ import retrofit2.http.Part
 interface ProductApi {
 
     @Multipart
-    @POST("/addProduct")
+    @POST("/product/addProduct")
     suspend fun addProduct(
         @Part("title") title: RequestBody,
         @Part("description") description: RequestBody,

@@ -1,8 +1,8 @@
 package com.eshop.signup_presentation.signup
 
 import android.net.Uri
-import com.eshop.signup_presentation.signup.util.ShopCategory
-import com.eshop.signup_presentation.signup.util.ShopLocation
+import com.eshop.coreui.util.ShopAndProductCategory
+import com.eshop.coreui.util.ShopLocation
 import com.eshop.signup_presentation.signup.util.UserRole
 
 sealed interface SignupEvent {
@@ -17,7 +17,7 @@ sealed interface SignupEvent {
     data class OnImageSelect(val image: Uri) : SignupEvent
     data class OnUserRoleSelect(val userRole: UserRole) : SignupEvent
     object OnExpandChange : SignupEvent
-    data class OnShopCategoryClick(val shopCategory: ShopCategory) : SignupEvent
+    data class OnShopCategoryClick(val shopCategory: ShopAndProductCategory) : SignupEvent
     data class OnShopLocationAdd(val shopLocation: ShopLocation) : SignupEvent
     data class OnShopLocationRemove(val shopLocation: ShopLocation) : SignupEvent
     data class OnShopLocationEnter(val location: String) : SignupEvent

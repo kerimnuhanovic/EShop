@@ -17,7 +17,8 @@ data class Dimensions(
     val errorBoxHeight: Dp = 60.dp,
     val mediumCornerRadius: Dp = 16.dp,
     val largeCornerRadius: Dp = 50.dp,
-    val buttonHeight: Dp = 56.dp,
+    val buttonHeight_56: Dp = 56.dp,
+    val buttonHeight_50: Dp = 50.dp,
     val font_12: TextUnit = 12.sp,
     val font_14: TextUnit = 14.sp,
     val font_16: TextUnit = 16.sp,
@@ -38,7 +39,12 @@ data class Dimensions(
     val size_55: Dp = 55.dp,
     val size_80: Dp = 80.dp,
     val size_200: Dp = 200.dp,
-    val floating_button_size: Dp = 56.dp
+    val floating_button_size: Dp = 56.dp,
+    val size_150: Dp = 150.dp,
+    val size_100: Dp = 100.dp,
+    val size_90: Dp = 90.dp,
+    val size_1: Dp = 1.dp,
+    val offset_minus_10: Dp = (-10).dp
 )
 
 val LocalDimensions = compositionLocalOf { Dimensions() }

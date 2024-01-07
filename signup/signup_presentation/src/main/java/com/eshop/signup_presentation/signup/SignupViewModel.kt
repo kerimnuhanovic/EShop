@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.eshop.core.util.Result
 import com.eshop.coreui.util.UiEvent
-import com.eshop.signup_domain.usecase.ConvertListToStringUseCase
-import com.eshop.signup_domain.usecase.CreateFileFromUriUseCase
+import com.eshop.core.domain.usecase.ConvertListToStringUseCase
+import com.eshop.core.domain.usecase.CreateFileFromUriUseCase
 import com.eshop.signup_domain.usecase.SignupInputVerificationUseCase
 import com.eshop.signup_presentation.signup.util.FIRST_PAGE
 import kotlinx.coroutines.channels.Channel

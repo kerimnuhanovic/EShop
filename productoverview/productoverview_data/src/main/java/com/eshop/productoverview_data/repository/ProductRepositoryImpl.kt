@@ -20,7 +20,7 @@ class ProductRepositoryImpl @Inject constructor(
         return try {
             val title = productData.title.toRequestBody("text/plain".toMediaTypeOrNull())
             val description = productData.description.toRequestBody("text/plain".toMediaTypeOrNull())
-            val category = productData.category.toRequestBody("text/plain".toMediaTypeOrNull())
+            val category = productData.categories.toRequestBody("text/plain".toMediaTypeOrNull())
             val price = productData.price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
             val images = mutableListOf<MultipartBody.Part>()
             productData.images.forEach { imageFile ->

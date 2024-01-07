@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -53,7 +52,8 @@ class MainActivity : ComponentActivity() {
                         if (it == ModalBottomSheetValue.Hidden)
                             isBottomBarOverlapped.value = false
                         true
-                    }
+                    },
+                    skipHalfExpanded = true
                 )
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    NavHost(navController = navController, startDestination = Route.PRODUCTS) {
+                    NavHost(navController = navController, startDestination = Route.LOGIN) {
                         composable(route = Route.LOGIN) {
                             LoginScreen(onNavigate = navController::navigate)
                         }

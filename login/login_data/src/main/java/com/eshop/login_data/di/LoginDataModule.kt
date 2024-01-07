@@ -1,5 +1,7 @@
 package com.eshop.login_data.di
 
+import com.eshop.core.data.interceptor.NetworkInterceptor
+import com.eshop.core.domain.preferences.Preferences
 import com.eshop.core.util.BASE_URL
 import com.eshop.login_data.remote.LoginApi
 import com.eshop.login_data.repository.LoginRepositoryImpl
@@ -21,8 +23,9 @@ object LoginDataModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(preferences: Preferences): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(NetworkInterceptor(preferences))
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY

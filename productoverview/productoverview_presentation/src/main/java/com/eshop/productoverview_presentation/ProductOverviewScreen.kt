@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -29,6 +33,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -37,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.eshop.core.util.BASE_URL
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
@@ -48,6 +54,9 @@ import com.eshop.coreui.components.ImageUploadPlaceholder
 import com.eshop.coreui.components.InputField
 import com.eshop.coreui.components.ItemDataBox
 import com.eshop.coreui.components.ProductCard
+import com.eshop.coreui.components.ProductCardPlaceholder
+import com.eshop.coreui.components.ProductCardPlaceholderFlowRow
+import com.eshop.coreui.components.ProductCardPlaceholderRow
 import com.eshop.coreui.components.SearchBar
 import com.eshop.coreui.components.TopBanner
 import com.eshop.coreui.theme.EShopTheme
@@ -84,6 +93,7 @@ private fun ProductOverviewScreenContent(
                 onEvent(ProductOverviewEvent.OnProductPhotosSelect(uriList))
             }
         }
+    val scrollState = rememberScrollState()
     ModalBottomSheetLayout(
         sheetState = modalBottomSheetState,
         sheetContent = {
@@ -243,7 +253,7 @@ private fun ProductOverviewScreenContent(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(dimensions.buttonHeight_50),
+                        .height(dimensions.buttonHeight_56),
                     shape = RectangleShape,
                     content = {
                         if (!state.isProductAdditionInProgress) {
@@ -280,10 +290,11 @@ private fun ProductOverviewScreenContent(
                 titleId = R.string.eshop,
                 subtitleId = R.string.your_online_shop_destination
             )
+            Spacer(modifier = Modifier.height(dimensions.spaceMedium))
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(dimensions.spaceMedium)
+                    .verticalScroll(scrollState)
             ) {
                 SearchBar(
                     inputText = state.searchQuery,
@@ -293,38 +304,79 @@ private fun ProductOverviewScreenContent(
                     onIconClick = { onEvent(ProductOverviewEvent.OnSearchIconClick) },
                     isSingleLine = true,
                     placeholderId = R.string.search,
-                    isExpanded = state.isSearchBarExpanded
+                    isExpanded = state.isSearchBarExpanded,
+                    modifier = Modifier.padding(start = dimensions.spaceMedium, end = dimensions.spaceMedium)
                 )
                 Spacer(modifier = Modifier.height(dimensions.spaceLarge))
-                FlowRow {
-                    ProductCard(
-                        image = "https://m.media-amazon.com/images/I/71vFKBpKakL._AC_UF1000,1000_QL80_.jpg",
-                        productName = "Samsung Galaxy S23 Samsung Galaxy S23",
-                        price = 20.0,
-                        date = "20.9.2023",
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                            .height(dimensions.uploadImageSurfaceSize)
-                            .padding(
-                                top = dimensions.spaceSmall,
-                                bottom = dimensions.spaceSmall,
-                                end = dimensions.spaceSmall
-                            )
-                    )
-                    ProductCard(
-                        image = "https://m.media-amazon.com/images/I/71vFKBpKakL._AC_UF1000,1000_QL80_.jpg",
-                        productName = "Samsung Galaxy S23",
-                        price = 20.0,
-                        date = "20.9.2023",
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                            .height(dimensions.uploadImageSurfaceSize)
-                            .padding(
-                                top = dimensions.spaceSmall,
-                                bottom = dimensions.spaceSmall,
-                                start = dimensions.spaceSmall
-                            )
-                    )
+                Text(
+                    text = stringResource(id = com.eshop.productoverview_presentation.R.string.popular_products),
+                    fontFamily = PoppinsFontFamily,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = dimensions.font_20,
+                    modifier = Modifier.padding(start = dimensions.spaceMedium)
+                )
+                Spacer(modifier = Modifier.height(dimensions.spaceSmall))
+                if (state.isPopularProductsLoading) {
+                    ProductCardPlaceholderRow()
+                }
+                LazyRow {
+                    itemsIndexed(state.popularProducts) { index, product ->
+                        ProductCard(
+                            image = "${BASE_URL}/${product.images.first()}",
+                            productName = product.title,
+                            price = product.price,
+                            date = product.date.toString(),
+                            modifier = Modifier
+                                .width(dimensions.card_width_180)
+                                .height(dimensions.uploadImageSurfaceSize)
+                                .padding(
+                                    top = dimensions.spaceSmall,
+                                    bottom = dimensions.spaceSmall,
+                                    start = if (index != 0) dimensions.spaceSmall else dimensions.spaceMedium,
+                                    end = if (index != state.popularProducts.size.minus(1)) dimensions.default else dimensions.spaceMedium
+                                )
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(dimensions.spaceMedium))
+                Text(
+                    text = stringResource(id = com.eshop.productoverview_presentation.R.string.all_products),
+                    fontFamily = PoppinsFontFamily,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = dimensions.font_20,
+                    modifier = Modifier.padding(start = dimensions.spaceMedium)
+                )
+                Spacer(modifier = Modifier.height(dimensions.spaceSmall))
+                if (state.isAllProductsLoading) {
+                    ProductCardPlaceholderFlowRow()
+                }
+                FlowRow(modifier = Modifier.padding(horizontal = dimensions.spaceMedium)) {
+                    state.allProducts.forEachIndexed { index, product ->
+                        ProductCard(
+                            image = "${BASE_URL}/${product.images.first()}",
+                            productName = product.title,
+                            price = product.price,
+                            date = product.date.toString(),
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f)
+                                .height(dimensions.uploadImageSurfaceSize)
+                                .padding(
+                                    top = dimensions.spaceSmall,
+                                    bottom = dimensions.spaceSmall,
+                                    start = if (index % 2 == 0) dimensions.default else dimensions.spaceSmall
+                                )
+                        )
+                    }
+                }
+                if (state.areAllProductsLoaded) {
+                    Spacer(modifier = Modifier.height(dimensions.spaceExtraLarge))
+                }
+                if (state.isLoadingMoreProducts) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                    Spacer(modifier = Modifier.height(dimensions.spaceExtraLarge))
+                }
+                if (!scrollState.canScrollForward) {
+                    onEvent(ProductOverviewEvent.OnScreenEndReach)
                 }
             }
         }

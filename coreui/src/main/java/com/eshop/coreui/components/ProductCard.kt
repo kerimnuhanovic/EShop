@@ -2,6 +2,7 @@ package com.eshop.coreui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,9 +19,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +26,7 @@ import coil.compose.AsyncImage
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.theme.EShopTheme
+import com.eshop.coreui.util.loadingAnimation
 import java.text.NumberFormat
 import java.util.Currency
 
@@ -58,15 +57,7 @@ fun ProductCard(
                 model = image,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxHeight(0.4f),
-                placeholder = BrushPainter(
-                    Brush.linearGradient(
-                        listOf(
-                            Color(color = 0xFFFFFFFF),
-                            Color(color = 0xFFDDDDDD),
-                        )
-                    )
-                ),
+                modifier = Modifier.fillMaxHeight(0.4f)
             )
             Spacer(modifier = Modifier.height(dimensions.spaceSmall))
             Text(

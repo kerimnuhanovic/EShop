@@ -14,6 +14,10 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.List
+import androidx.compose.material.icons.rounded.Place
+import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.mutableStateOf
@@ -61,10 +65,10 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         BottomBar(
                             items = listOf(
-                                BottomBarItem("Products", Icons.Default.Home, Route.PRODUCTS),
-                                BottomBarItem("Shops", Icons.Default.Place, Route.SHOPS),
-                                BottomBarItem("Basket", Icons.Default.ShoppingCart, Route.BASKET),
-                                BottomBarItem("Orders", Icons.Default.List, Route.ORDERS)
+                                BottomBarItem("Products", Icons.Rounded.Home, Route.PRODUCTS),
+                                BottomBarItem("Shops", Icons.Rounded.Place, Route.SHOPS),
+                                BottomBarItem("Basket", Icons.Rounded.ShoppingCart, Route.BASKET),
+                                BottomBarItem("Orders", Icons.Rounded.List, Route.ORDERS)
                             ),
                             onNavigate = navController::navigate,
                             navController = navController,

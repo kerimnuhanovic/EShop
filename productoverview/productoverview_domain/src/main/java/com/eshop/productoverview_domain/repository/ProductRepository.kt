@@ -6,4 +6,6 @@ import com.eshop.productoverview_domain.model.ProductAdditionData
 
 interface ProductRepository {
     suspend fun addProduct(productData: ProductAdditionData): Result<Product>
+    suspend fun fetchPopularProducts(): Result<List<Product>>
+    suspend fun fetchAllProducts(offset: Int): Result<List<Product>>
 }

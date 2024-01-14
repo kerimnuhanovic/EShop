@@ -42,7 +42,8 @@ fun SearchBar(
     onIconClick: () -> Unit,
     isSingleLine: Boolean,
     placeholderId: Int,
-    isExpanded: Boolean
+    isExpanded: Boolean,
+    modifier: Modifier = Modifier
 ) {
     val dimensions = LocalDimensions.current
     val animateTextFieldWidth = animateDpAsState(
@@ -51,7 +52,7 @@ fun SearchBar(
     )
     Box(
         contentAlignment = Alignment.CenterEnd,
-        modifier = Modifier
+        modifier = modifier
             .height(dimensions.size_55)
             .fillMaxWidth()
     ) {

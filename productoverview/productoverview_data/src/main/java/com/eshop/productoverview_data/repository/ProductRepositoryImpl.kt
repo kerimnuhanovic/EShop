@@ -34,4 +34,26 @@ class ProductRepositoryImpl @Inject constructor(
             handleApiError(ex)
         }
     }
+
+    override suspend fun fetchPopularProducts(): Result<List<Product>> {
+        return try {
+            val result = productApi.fetchPopularProduct()
+            Result.Success(result.map { productDto ->
+                productDto.toProduct()
+            })
+        } catch (ex: Exception) {
+            handleApiError(ex)
+        }
+    }
+
+    override suspend fun fetchAllProducts(offset: Int): Result<List<Product>> {
+        return try {
+            val result = productApi.fetchAllProducts(offset)
+            Result.Success(result.map { productDto ->
+                productDto.toProduct()
+            })
+        } catch (ex: Exception) {
+            handleApiError(ex)
+        }
+    }
 }

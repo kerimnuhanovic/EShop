@@ -1,16 +1,22 @@
 package com.eshop.productoverview_presentation
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eshop.core.domain.usecase.ConvertListToStringUseCase
 import com.eshop.core.domain.usecase.CreateFileFromUriUseCase
 import com.eshop.core.util.Result
+import com.eshop.coreui.util.ShopAndProductCategory
 import com.eshop.coreui.util.UiEvent
 import com.eshop.productoverview_domain.model.ProductAdditionData
 import com.eshop.productoverview_domain.usecase.AddProductInputValidationUseCase
 import com.eshop.productoverview_domain.usecase.AddProductUseCase
+import com.eshop.productoverview_domain.usecase.FetchAllProductsUseCase
+import com.eshop.productoverview_domain.usecase.FetchPopularProductsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -22,14 +28,21 @@ class ProductOverviewViewModel @Inject constructor(
     private val addProductUseCase: AddProductUseCase,
     private val createFileFromUriUseCase: CreateFileFromUriUseCase,
     private val convertListToStringUseCase: ConvertListToStringUseCase,
-    private val addProductInputValidationUseCase: AddProductInputValidationUseCase
-): ViewModel() {
+    private val addProductInputValidationUseCase: AddProductInputValidationUseCase,
+    private val fetchPopularProductsUseCase: FetchPopularProductsUseCase,
+    private val fetchAllProductsUseCase: FetchAllProductsUseCase,
+) : ViewModel() {
 
-    private val _state: MutableStateFlow<ProductOverviewState> = MutableStateFlow(ProductOverviewState())
+    private val _state: MutableStateFlow<ProductOverviewState> =
+        MutableStateFlow(ProductOverviewState())
     val state = _state.asStateFlow()
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+
+    init {
+        fetchInitialProducts()
+    }
 
     fun onEvent(event: ProductOverviewEvent) {
         when (event) {
@@ -38,11 +51,13 @@ class ProductOverviewViewModel @Inject constructor(
                     isSearchBarExpanded = !state.value.isSearchBarExpanded
                 )
             }
+
             is ProductOverviewEvent.OnSearchQueryEnter -> {
                 _state.value = _state.value.copy(
                     searchQuery = event.query
                 )
             }
+
             ProductOverviewEvent.OnAddProductClick -> {
                 addProduct()
             }
@@ -52,11 +67,13 @@ class ProductOverviewViewModel @Inject constructor(
                     productDescription = event.description
                 )
             }
+
             is ProductOverviewEvent.OnProductPriceEnter -> {
                 _state.value = _state.value.copy(
                     productPrice = event.price
                 )
             }
+
             is ProductOverviewEvent.OnProductTitleEnter -> {
                 _state.value = _state.value.copy(
                     productTitle = event.title
@@ -68,6 +85,7 @@ class ProductOverviewViewModel @Inject constructor(
                     isCategoryDropdownMenuExpanded = !state.value.isCategoryDropdownMenuExpanded
                 )
             }
+
             is ProductOverviewEvent.OnProductCategoryClick -> {
                 if (!_state.value.listOfProductCategories.contains(event.productCategory)) {
                     _state.value = _state.value.copy(
@@ -89,6 +107,7 @@ class ProductOverviewViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     productImages = _state.value.productImages + newImages
                 )
+                println(newImages)
             }
 
             is ProductOverviewEvent.OnProductPhotoRemove -> {
@@ -98,6 +117,68 @@ class ProductOverviewViewModel @Inject constructor(
                     }
                 )
             }
+
+            ProductOverviewEvent.OnScreenEndReach -> {
+                loadMoreProducts()
+            }
+        }
+    }
+
+    private suspend fun fetchPopularProducts() {
+        when (val result = fetchPopularProductsUseCase()) {
+            is Result.Success -> {
+                _state.value = _state.value.copy(
+                    isPopularProductsLoading = false,
+                    popularProducts = result.data
+                )
+            }
+            is Result.Failure -> {
+                // TODO
+            }
+        }
+    }
+
+    private suspend fun fetchAllProducts(offset: Int) {
+        when (val result = fetchAllProductsUseCase(offset)) {
+            is Result.Success -> {
+                _state.value = _state.value.copy(
+                    isAllProductsLoading = false,
+                    allProducts = state.value.allProducts + result.data,
+                    areAllProductsLoaded = result.data.isEmpty()
+                )
+            }
+            is Result.Failure -> {
+                // TODO
+            }
+        }
+    }
+
+    private fun fetchInitialProducts() {
+        _state.value = _state.value.copy(
+            isPopularProductsLoading = true,
+            isAllProductsLoading = true
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            launch {
+                fetchPopularProducts()
+            }
+            launch {
+                fetchAllProducts(state.value.allProducts.size)
+            }
+        }
+    }
+
+    private fun loadMoreProducts() {
+        if (state.value.areAllProductsLoaded || state.value.isLoadingMoreProducts) return
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                isLoadingMoreProducts = true
+            )
+            delay(7000L)
+            fetchAllProducts(state.value.allProducts.size)
+            _state.value = _state.value.copy(
+                isLoadingMoreProducts = false
+            )
         }
     }
 
@@ -132,8 +213,10 @@ class ProductOverviewViewModel @Inject constructor(
             )
             when (result) {
                 is Result.Success -> {
-                    _state.value = ProductOverviewState()
+                    _state.value =
+                        ProductOverviewState(popularProducts = state.value.popularProducts)
                 }
+
                 is Result.Failure -> {
                     _state.value = _state.value.copy(
                         errorMessageId = result.errorMessageId

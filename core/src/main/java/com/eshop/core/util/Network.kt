@@ -44,6 +44,14 @@ fun handleSignupApiFailure(ex: Exception): Result.Failure {
     }
 }
 
+fun handleApiError(ex: Exception): Result.Failure {
+    return when(ex) {
+        is HttpException -> Result.Failure(exception = ex, errorCode = ex.code(), errorMessageId = getMessageIdForServerError(ex.code()))
+        is IOException -> handleIoException(ex)
+        else -> Result.Failure(exception = ex, errorMessageId = R.string.api_error_unknown)
+    }
+}
+
 private fun getMessageIdForFailedSignup(statusCode: Int): Int {
     return when (statusCode) {
         in 400 until 500 -> R.string.user_already_exists

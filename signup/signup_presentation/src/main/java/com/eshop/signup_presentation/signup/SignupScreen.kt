@@ -71,15 +71,15 @@ import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.theme.MediumGray
 import com.eshop.coreui.util.UiEvent
 import com.eshop.coreui.components.InputField
-import com.eshop.signup_presentation.signup.components.ShopCategoriesDropdownMenu
+import com.eshop.coreui.components.EShopDropdownMenu
 import com.eshop.signup_presentation.signup.components.PageIndicator
-import com.eshop.signup_presentation.signup.components.ShopDataBox
+import com.eshop.coreui.components.ItemDataBox
 import com.eshop.signup_presentation.signup.components.UserRoleSelector
 import com.eshop.signup_presentation.signup.util.FIRST_PAGE
 import com.eshop.signup_presentation.signup.util.PAGE_COUNT
 import com.eshop.signup_presentation.signup.util.SECOND_PAGE
-import com.eshop.signup_presentation.signup.util.ShopCategory
-import com.eshop.signup_presentation.signup.util.ShopLocation
+import com.eshop.coreui.util.ShopAndProductCategory
+import com.eshop.coreui.util.ShopLocation
 import com.eshop.signup_presentation.signup.util.THIRD_PAGE
 import com.eshop.signup_presentation.signup.util.UserRole
 
@@ -264,24 +264,24 @@ private fun EnterDataScreen(
         Spacer(modifier = Modifier.height(dimensions.spaceMedium))
         AnimatedVisibility(visible = state.userRole == UserRole.SELLER) {
             Column {
-                ShopCategoriesDropdownMenu(
+                EShopDropdownMenu(
                     expanded = state.isCategoryDropdownMenuExpanded,
                     placeholder = stringResource(id = com.eshop.signup_presentation.R.string.select_your_shop_categories),
-                    items = ShopCategory.listAllCategories(),
+                    items = ShopAndProductCategory.listAllCategories(),
                     selectedItems = state.listOfShopCategories,
                     onExpandChange = {
                         onEvent(SignupEvent.OnExpandChange)
                     },
                     onSelectItem = {
-                        onEvent(SignupEvent.OnShopCategoryClick(it))
+                        onEvent(SignupEvent.OnShopCategoryClick(it as ShopAndProductCategory))
                     },
                     modifier = Modifier.padding(horizontal = dimensions.spaceMedium)
                 )
                 Spacer(modifier = Modifier.height(dimensions.spaceMedium))
                 FlowRow(modifier = Modifier.padding(horizontal = dimensions.spaceMedium)) {
                     state.listOfShopCategories.forEach {
-                        ShopDataBox(shopData = it, onExitClick = { shopCategory ->
-                            onEvent(SignupEvent.OnShopCategoryClick(shopCategory as ShopCategory))
+                        ItemDataBox(itemData = it, onExitClick = { shopCategory ->
+                            onEvent(SignupEvent.OnShopCategoryClick(shopCategory as ShopAndProductCategory))
                         })
                     }
                 }
@@ -308,7 +308,7 @@ private fun EnterDataScreen(
                 }
                 FlowRow(modifier = Modifier.padding(horizontal = dimensions.spaceMedium)) {
                     state.listOfShopLocations.forEach {
-                        ShopDataBox(shopData = it, onExitClick = { shopLocation ->
+                        ItemDataBox(itemData = it, onExitClick = { shopLocation ->
                             onEvent(SignupEvent.OnShopLocationRemove(shopLocation as ShopLocation))
                         })
                     }
@@ -439,7 +439,9 @@ private fun CompleteRegistrationScreen(
                 onEvent(SignupEvent.OnRegisterClick)
             },modifier = Modifier
                     .fillMaxWidth(0.6f),
-            enabled = !state.isLoading)
+            enabled = !state.isLoading,
+            shape = RoundedCornerShape(CornerSize(dimensions.largeCornerRadius))
+            )
         Spacer(modifier = Modifier.weight(1f))
         PageIndicator(THIRD_PAGE)
     }

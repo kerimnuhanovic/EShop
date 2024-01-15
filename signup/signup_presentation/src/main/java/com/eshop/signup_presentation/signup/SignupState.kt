@@ -1,8 +1,8 @@
 package com.eshop.signup_presentation.signup
 
 import android.net.Uri
-import com.eshop.signup_presentation.signup.util.ShopCategory
-import com.eshop.signup_presentation.signup.util.ShopLocation
+import com.eshop.coreui.util.ShopAndProductCategory
+import com.eshop.coreui.util.ShopLocation
 import com.eshop.signup_presentation.signup.util.UserRole
 
 data class SignupState(
@@ -17,7 +17,7 @@ data class SignupState(
     val isConfirmPasswordVisible: Boolean = false,
     val userRole: UserRole = UserRole.CUSTOMER,
     val isCategoryDropdownMenuExpanded: Boolean = false,
-    val listOfShopCategories: List<ShopCategory> = emptyList(),
+    val listOfShopCategories: List<ShopAndProductCategory> = emptyList(),
     val listOfShopLocations: List<ShopLocation> = emptyList(),
     val shopLocation: String = "",
     val isLoading: Boolean = false,

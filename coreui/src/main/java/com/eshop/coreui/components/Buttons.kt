@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -15,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.eshop.coreui.LocalDimensions
@@ -26,9 +26,10 @@ fun EShopButton(
     content: @Composable () -> Unit,
     backgroundColor: Color,
     contentColor: Color,
+    shape: Shape,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     val dimensions = LocalDimensions.current
     Button(
@@ -37,8 +38,8 @@ fun EShopButton(
             backgroundColor = backgroundColor,
             contentColor = contentColor
         ),
-        modifier = modifier.height(dimensions.buttonHeight),
-        shape = RoundedCornerShape(CornerSize(dimensions.largeCornerRadius)),
+        modifier = modifier.height(dimensions.buttonHeight_56),
+        shape = shape,
         enabled = enabled
     ) {
         Box(modifier = Modifier.padding(dimensions.spaceExtraSmall), contentAlignment = Alignment.Center) {
@@ -60,7 +61,8 @@ private fun EShopButtonPreview() {
             onButtonClick = { },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensions.spaceSmall)
+                .padding(dimensions.spaceSmall),
+            shape = RoundedCornerShape(CornerSize(dimensions.largeCornerRadius))
         )
     }
 }

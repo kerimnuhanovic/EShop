@@ -10,4 +10,8 @@
     <string name="api_error_no_connection">No connection: Mobile device unable to connect to Data or WiFi.</string>
     <string name="create_an_account">Create an account</string>
     <string name="enter_your_email">Enter your email</string>
+    <string name="search">Search</string>
+    <string name="eshop">E-Shop</string>
+    <string name="your_online_shop_destination">Your online shop destination</string>
+    <string name="select_your_shop_categories">Select your shop categories</string>
 </resources>

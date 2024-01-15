@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
@@ -148,7 +150,8 @@ private fun LoginScreenContent(
             },
             modifier = Modifier
                 .fillMaxWidth(0.4f),
-            enabled = !state.isLoading
+            enabled = !state.isLoading,
+            shape = RoundedCornerShape(CornerSize(dimensions.largeCornerRadius))
         )
         Text(text = buildAnnotatedString {
             withStyle(

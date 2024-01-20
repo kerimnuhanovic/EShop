@@ -2,9 +2,9 @@ package com.eshop.productoverview_data.repository
 
 import com.eshop.core.util.handleApiError
 import com.eshop.productoverview_data.mapper.toProduct
-import com.eshop.productoverview_data.remote.ProductApi
-import com.eshop.productoverview_domain.model.Product
-import com.eshop.productoverview_domain.repository.ProductRepository
+import com.eshop.productoverview_data.remote.ProductOverviewApi
+import com.eshop.core.domain.models.Product
+import com.eshop.productoverview_domain.repository.ProductOverviewRepository
 import javax.inject.Inject
 import com.eshop.core.util.Result
 import com.eshop.productoverview_domain.model.ProductAdditionData
@@ -13,9 +13,9 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
-class ProductRepositoryImpl @Inject constructor(
-    private val productApi: ProductApi
-): ProductRepository {
+class ProductOverviewRepositoryImpl @Inject constructor(
+    private val productOverviewApi: ProductOverviewApi
+): ProductOverviewRepository {
     override suspend fun addProduct(productData: ProductAdditionData): Result<Product> {
         return try {
             val title = productData.title.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -28,7 +28,7 @@ class ProductRepositoryImpl @Inject constructor(
                 val imagePart = MultipartBody.Part.createFormData("productImages[]", imageFile.name, image)
                 images.add(imagePart)
             }
-            val result = productApi.addProduct(title, description, category, price, images)
+            val result = productOverviewApi.addProduct(title, description, category, price, images)
             Result.Success(result.toProduct())
         } catch (ex: Exception) {
             handleApiError(ex)
@@ -37,7 +37,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun fetchPopularProducts(): Result<List<Product>> {
         return try {
-            val result = productApi.fetchPopularProduct()
+            val result = productOverviewApi.fetchPopularProduct()
             Result.Success(result.map { productDto ->
                 productDto.toProduct()
             })
@@ -48,7 +48,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun fetchAllProducts(offset: Int): Result<List<Product>> {
         return try {
-            val result = productApi.fetchAllProducts(offset)
+            val result = productOverviewApi.fetchAllProducts(offset)
             Result.Success(result.map { productDto ->
                 productDto.toProduct()
             })

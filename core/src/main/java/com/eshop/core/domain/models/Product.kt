@@ -1,4 +1,4 @@
-package com.eshop.productoverview_domain.model
+package com.eshop.core.domain.models
 
 import java.time.LocalDate
 

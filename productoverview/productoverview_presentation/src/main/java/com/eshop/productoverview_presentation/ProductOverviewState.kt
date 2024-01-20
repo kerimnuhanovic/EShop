@@ -2,7 +2,7 @@ package com.eshop.productoverview_presentation
 
 import android.net.Uri
 import com.eshop.coreui.util.ShopAndProductCategory
-import com.eshop.productoverview_domain.model.Product
+import com.eshop.core.domain.models.Product
 
 data class ProductOverviewState(
     val popularProducts: List<Product> = emptyList(),

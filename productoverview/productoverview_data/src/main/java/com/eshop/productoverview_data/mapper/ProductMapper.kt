@@ -1,7 +1,7 @@
 package com.eshop.productoverview_data.mapper
 
-import com.eshop.productoverview_data.remote.dto.ProductDto
-import com.eshop.productoverview_domain.model.Product
+import com.eshop.core.data.remote.dto.ProductDto
+import com.eshop.core.domain.models.Product
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

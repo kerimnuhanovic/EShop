@@ -1,4 +1,4 @@
-package com.eshop.productoverview_data.remote.dto
+package com.eshop.core.data.remote.dto
 
 data class ProductDto(
     val id: String,

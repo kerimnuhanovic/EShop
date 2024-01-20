@@ -18,4 +18,8 @@ object Modules {
     const val productoverviewData = ":productoverview:productoverview_data"
     const val productoverviewDomain = ":productoverview:productoverview_domain"
     const val productoverviewPresentation = ":productoverview:productoverview_presentation"
+
+    const val productData = ":product:product_data"
+    const val productDomain = ":product:product_domain"
+    const val productPresentation = ":product:product_presentation"
 }

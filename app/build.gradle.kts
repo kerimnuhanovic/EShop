@@ -86,6 +86,9 @@ dependencies {
     implementation(project(Modules.productoverviewData))
     implementation(project(Modules.productoverviewDomain))
     implementation(project(Modules.productoverviewPresentation))
+    implementation(project(Modules.productData))
+    implementation(project(Modules.productDomain))
+    implementation(project(Modules.productPresentation))
 
     testImplementation(Testing.junit)
     androidTestImplementation(Testing.junitExt)

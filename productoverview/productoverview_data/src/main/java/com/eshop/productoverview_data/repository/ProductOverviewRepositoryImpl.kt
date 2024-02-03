@@ -1,7 +1,7 @@
 package com.eshop.productoverview_data.repository
 
 import com.eshop.core.util.handleApiError
-import com.eshop.productoverview_data.mapper.toProduct
+import com.eshop.core.data.mapper.toProduct
 import com.eshop.productoverview_data.remote.ProductOverviewApi
 import com.eshop.core.domain.models.Product
 import com.eshop.productoverview_domain.repository.ProductOverviewRepository

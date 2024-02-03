@@ -1,6 +1,7 @@
 package com.eshop.coreui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ fun ProductCard(
     productName: String,
     price: Double,
     date: String,
+    onClick: () -> Unit = {},
     currency: Currency = Currency.getInstance("EUR"),
     modifier: Modifier = Modifier
 ) {
@@ -49,7 +51,7 @@ fun ProductCard(
     Card(
         backgroundColor = MaterialTheme.colors.onSecondary,
         elevation = dimensions.spaceSmall,
-        modifier = modifier,
+        modifier = modifier.clickable { onClick() },
         shape = RoundedCornerShape(CornerSize(dimensions.spaceSmall))
     ) {
         Column {
@@ -116,7 +118,8 @@ private fun ProductCardPreview() {
                     .height(dimensions.uploadImageSurfaceSize),
                 productName = "Samsung Galaxy S23",
                 price = 20.0,
-                date = "20.9.2023"
+                date = "20.9.2023",
+                onClick = {}
             )
         }
     }

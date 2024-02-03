@@ -25,6 +25,7 @@ import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.UiEvent
 import com.eshop.e_shop.util.BottomBarItem
+import com.eshop.e_shop.util.checkIsProductRoute
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -36,7 +37,7 @@ fun BottomBar(
 ) {
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
     val dimensions = LocalDimensions.current
-    if(!Route.listLandingRoutes().contains(currentDestination) && !isBottomBarOverlapped) {
+    if(!Route.listLandingRoutes().contains(currentDestination) && !checkIsProductRoute(currentDestination) && !isBottomBarOverlapped) {
         BottomAppBar(
             backgroundColor = MaterialTheme.colors.onPrimary,
             elevation = dimensions.spaceExtraSmall

@@ -72,7 +72,7 @@ import com.eshop.coreui.theme.MediumGray
 import com.eshop.coreui.util.UiEvent
 import com.eshop.coreui.components.InputField
 import com.eshop.coreui.components.EShopDropdownMenu
-import com.eshop.signup_presentation.signup.components.PageIndicator
+import com.eshop.coreui.components.PageIndicator
 import com.eshop.coreui.components.ItemDataBox
 import com.eshop.signup_presentation.signup.components.UserRoleSelector
 import com.eshop.signup_presentation.signup.util.FIRST_PAGE
@@ -96,6 +96,9 @@ fun SignupScreen(
             when (uiEvent) {
                 is UiEvent.Navigate -> onNavigate(uiEvent)
                 is UiEvent.ScrollPage -> pagerState.animateScrollToPage(uiEvent.page)
+                UiEvent.NavigateBack -> {
+                    // No-op
+                }
             }
         }
     }

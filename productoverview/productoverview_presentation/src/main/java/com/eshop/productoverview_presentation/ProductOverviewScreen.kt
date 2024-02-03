@@ -32,6 +32,7 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eshop.core.util.BASE_URL
+import com.eshop.core.util.formatDate
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
@@ -71,6 +73,19 @@ fun ProductOverviewScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
 ) {
     val state = viewModel.state.collectAsState().value
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { uiEvent ->
+            when (uiEvent) {
+                is UiEvent.Navigate -> onNavigate(uiEvent)
+                is UiEvent.ScrollPage -> {
+                    // No-op
+                }
+                UiEvent.NavigateBack -> {
+                    // No-op
+                }
+            }
+        }
+    }
     ProductOverviewScreenContent(
         state = state,
         onEvent = viewModel::onEvent,
@@ -325,7 +340,7 @@ private fun ProductOverviewScreenContent(
                             image = "${BASE_URL}/${product.images.first()}",
                             productName = product.title,
                             price = product.price,
-                            date = product.date.toString(),
+                            date = product.date.formatDate(),
                             modifier = Modifier
                                 .width(dimensions.card_width_180)
                                 .height(dimensions.uploadImageSurfaceSize)
@@ -334,7 +349,10 @@ private fun ProductOverviewScreenContent(
                                     bottom = dimensions.spaceSmall,
                                     start = if (index != 0) dimensions.spaceSmall else dimensions.spaceMedium,
                                     end = if (index != state.popularProducts.size.minus(1)) dimensions.default else dimensions.spaceMedium
-                                )
+                                ),
+                            onClick = {
+                                onEvent(ProductOverviewEvent.OnProductClick(product.id))
+                            }
                         )
                     }
                 }
@@ -356,7 +374,7 @@ private fun ProductOverviewScreenContent(
                             image = "${BASE_URL}/${product.images.first()}",
                             productName = product.title,
                             price = product.price,
-                            date = product.date.toString(),
+                            date = product.date.formatDate(),
                             modifier = Modifier
                                 .fillMaxWidth(0.5f)
                                 .height(dimensions.uploadImageSurfaceSize)
@@ -364,7 +382,10 @@ private fun ProductOverviewScreenContent(
                                     top = dimensions.spaceSmall,
                                     bottom = dimensions.spaceSmall,
                                     start = if (index % 2 == 0) dimensions.default else dimensions.spaceSmall
-                                )
+                                ),
+                            onClick = {
+                                onEvent(ProductOverviewEvent.OnProductClick(product.id))
+                            }
                         )
                     }
                 }

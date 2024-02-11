@@ -57,17 +57,11 @@ class ProductViewModel @Inject constructor(
             )
             when (val result = addProductToCartUseCase(productId)) {
                 is Result.Success -> {
-                    // save result to local db
-                    // display alert that product is added
-                    println(result.data)
-                    println("EVO ME U SUCCESS")
                     _state.value = _state.value.copy(
                         isAddingProductInProgress = false
                     )
                 }
                 is Result.Failure -> {
-                    // display error message
-                    println("EVO ME U FAILURE")
                     _state.value = _state.value.copy(
                         isAddingProductInProgress = false
                     )

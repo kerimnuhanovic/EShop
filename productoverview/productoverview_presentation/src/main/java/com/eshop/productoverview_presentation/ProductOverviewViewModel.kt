@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eshop.core.domain.usecase.ConvertListToStringUseCase
 import com.eshop.core.domain.usecase.CreateFileFromUriUseCase
+import com.eshop.core.navigation.Route
 import com.eshop.core.util.Result
 import com.eshop.coreui.util.ShopAndProductCategory
 import com.eshop.coreui.util.UiEvent
@@ -121,6 +122,12 @@ class ProductOverviewViewModel @Inject constructor(
             ProductOverviewEvent.OnScreenEndReach -> {
                 loadMoreProducts()
             }
+
+            is ProductOverviewEvent.OnProductClick -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.Navigate("${Route.PRODUCT}/${event.productId}"))
+                }
+            }
         }
     }
 
@@ -174,7 +181,6 @@ class ProductOverviewViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 isLoadingMoreProducts = true
             )
-            delay(7000L)
             fetchAllProducts(state.value.allProducts.size)
             _state.value = _state.value.copy(
                 isLoadingMoreProducts = false

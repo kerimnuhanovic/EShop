@@ -1,12 +1,8 @@
 package com.eshop.coreui.components
 
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
@@ -38,7 +34,7 @@ fun FloatingButton(
 ) {
     val scope = rememberCoroutineScope()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
-    if (currentDestination == Route.PRODUCTS && !isBottomBarOverlapped.value) {
+    if (currentDestination == Route.PRODUCTS_OVERVIEW && !isBottomBarOverlapped.value) {
         FloatingActionButton(onClick = {
             scope.launch {
                 isBottomBarOverlapped.value = true

@@ -6,3 +6,6 @@ import com.eshop.coreui.util.UiEvent
 fun NavController.navigate(uiEvent: UiEvent.Navigate) {
     this.navigate(uiEvent.route)
 }
+fun NavController.navigateBack() {
+    this.popBackStack()
+}

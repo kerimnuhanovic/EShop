@@ -13,6 +13,7 @@ sealed interface ProductOverviewEvent {
     object OnExpandChange : ProductOverviewEvent
     data class OnProductCategoryClick(val productCategory: ShopAndProductCategory) : ProductOverviewEvent
     data class OnProductPhotosSelect(val photos: List<Uri>) : ProductOverviewEvent
-    data class OnProductPhotoRemove(val photo: Uri): ProductOverviewEvent
+    data class OnProductPhotoRemove(val photo: Uri) : ProductOverviewEvent
     object OnScreenEndReach : ProductOverviewEvent
+    data class OnProductClick(val productId: String) : ProductOverviewEvent
 }

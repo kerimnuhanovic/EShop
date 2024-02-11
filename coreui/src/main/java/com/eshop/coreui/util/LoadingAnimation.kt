@@ -18,7 +18,8 @@ fun Modifier.loadingAnimation(
     widthOfShadowBrush: Int = 500,
     angleOfAxisY: Float = 270f,
     durationMillis: Int = 1000,
-    isLoading: Boolean = true
+    isLoading: Boolean = true,
+    shimmerColor: Color = Color.White
 ): Modifier {
     if (!isLoading) {
         return this
@@ -26,11 +27,11 @@ fun Modifier.loadingAnimation(
     return composed {
 
         val shimmerColors = listOf(
-            Color.White.copy(alpha = 0.3f),
-            Color.White.copy(alpha = 0.5f),
-            Color.White.copy(alpha = 1.0f),
-            Color.White.copy(alpha = 0.5f),
-            Color.White.copy(alpha = 0.3f),
+            shimmerColor.copy(alpha = 0.3f),
+            shimmerColor.copy(alpha = 0.5f),
+            shimmerColor.copy(alpha = 1.0f),
+            shimmerColor.copy(alpha = 0.5f),
+            shimmerColor.copy(alpha = 0.3f),
         )
 
         val transition = rememberInfiniteTransition(label = "")

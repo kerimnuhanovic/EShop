@@ -56,6 +56,9 @@ fun LoginScreen(
                 is UiEvent.ScrollPage -> {
                     // No-op
                 }
+                UiEvent.NavigateBack -> {
+                    // No-op
+                }
             }
         }
     }

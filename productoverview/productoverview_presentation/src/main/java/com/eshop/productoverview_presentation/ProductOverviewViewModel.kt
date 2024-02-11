@@ -181,7 +181,6 @@ class ProductOverviewViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 isLoadingMoreProducts = true
             )
-            delay(7000L)
             fetchAllProducts(state.value.allProducts.size)
             _state.value = _state.value.copy(
                 isLoadingMoreProducts = false

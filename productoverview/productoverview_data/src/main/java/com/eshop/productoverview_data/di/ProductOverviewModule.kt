@@ -21,7 +21,7 @@ object ProductOverviewModule {
 
     @Provides
     @Singleton
-    fun provideProductApi(client: OkHttpClient): ProductOverviewApi = Retrofit.Builder()
+    fun provideProductOverviewApi(client: OkHttpClient): ProductOverviewApi = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(MoshiConverterFactory.create())
         .client(client)

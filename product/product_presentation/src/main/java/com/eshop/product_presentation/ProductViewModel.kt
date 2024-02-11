@@ -81,7 +81,6 @@ class ProductViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 isLoading = true
             )
-            delay(6000L)
             when (val result = fetchProductUseCase(productId)) {
                 is Result.Success -> {
                     when (val productOwner = fetchProductOwnerUseCase(result.data.shop)) {

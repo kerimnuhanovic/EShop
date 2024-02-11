@@ -34,6 +34,7 @@ import com.eshop.e_shop.util.BottomBarItem
 import com.eshop.login_presentation.login.LoginScreen
 import com.eshop.product_presentation.ProductScreen
 import com.eshop.productoverview_presentation.ProductOverviewScreen
+import com.eshop.shopoverview_presentation.ShopOverviewScreen
 import com.eshop.signup_presentation.signup.SignupScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -66,7 +67,7 @@ class MainActivity : ComponentActivity() {
                         BottomBar(
                             items = listOf(
                                 BottomBarItem("Products", Icons.Rounded.Home, Route.PRODUCTS_OVERVIEW),
-                                BottomBarItem("Shops", Icons.Rounded.Place, Route.SHOPS),
+                                BottomBarItem("Shops", Icons.Rounded.Place, Route.SHOPS_OVERVIEW),
                                 BottomBarItem("Basket", Icons.Rounded.ShoppingCart, Route.BASKET),
                                 BottomBarItem("Orders", Icons.Rounded.List, Route.ORDERS)
                             ),
@@ -83,7 +84,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    NavHost(navController = navController, startDestination = Route.PRODUCTS_OVERVIEW) {
+                    NavHost(navController = navController, startDestination = Route.LOGIN) {
                         composable(route = Route.LOGIN) {
                             LoginScreen(onNavigate = navController::navigate)
                         }
@@ -103,8 +104,8 @@ class MainActivity : ComponentActivity() {
                                 onNavigateBack = navController::navigateBack
                             )
                         }
-                        composable(route = Route.SHOPS) {
-                            Text(text = "SHOPS SCREEN")
+                        composable(route = Route.SHOPS_OVERVIEW) {
+                            ShopOverviewScreen(onNavigate = navController::navigate)
                         }
                         composable(route = Route.BASKET) {
                             Text(text = "BASKET SCREEN")

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="locations">Locations</string>
+    <string name="no_products">This shop does not have any products.</string>
+    <string name="no_reviews">This shop does not have any reviews.</string>
+</resources>

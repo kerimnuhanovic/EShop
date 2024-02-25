@@ -329,6 +329,5 @@ private fun ProductScreenContent(
                 shape = RectangleShape
             )
         }
-
     }
 }

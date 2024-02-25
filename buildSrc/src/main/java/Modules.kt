@@ -26,4 +26,8 @@ object Modules {
     const val shopoverviewData = ":shopoverview:shopoverview_data"
     const val shopoverviewDomain = ":shopoverview:shopoverview_domain"
     const val shopoverviewPresentation = ":shopoverview:shopoverview_presentation"
+
+    const val shopData = ":shop:shop_data"
+    const val shopDomain = ":shop:shop_domain"
+    const val shopPresentation = ":shop:shop_presentation"
 }

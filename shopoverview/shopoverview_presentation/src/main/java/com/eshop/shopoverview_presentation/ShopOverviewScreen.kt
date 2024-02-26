@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -21,9 +23,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
@@ -32,12 +37,14 @@ import com.eshop.core.util.formatDate
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
+import com.eshop.coreui.components.PrimaryTopBanner
 import com.eshop.coreui.components.ProductCard
 import com.eshop.coreui.components.ProductCardPlaceholderFlowRow
 import com.eshop.coreui.components.ProductCardPlaceholderRow
 import com.eshop.coreui.components.SearchBar
 import com.eshop.coreui.components.TopBanner
 import com.eshop.coreui.theme.EShopTheme
+import com.eshop.coreui.util.ShopLocation
 import com.eshop.coreui.util.UiEvent
 import com.eshop.shopoverview_presentation.components.ShopCard
 
@@ -67,7 +74,7 @@ fun ShopOverviewScreen(
     ShopOverviewScreenContent(state = state, onEvent = viewModel::onEvent)
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ShopOverviewScreenContent(
     state: ShopOverviewState,
@@ -75,15 +82,27 @@ fun ShopOverviewScreenContent(
 ) {
     val dimensions = LocalDimensions.current
     val scrollState = rememberScrollState()
+    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
     ) {
-        TopBanner(
+        PrimaryTopBanner(
             iconId = R.drawable.eshoplogo,
-            titleId = R.string.eshop,
-            subtitleId = R.string.your_online_shop_destination
+            inputText = state.searchQuery,
+            onTextChange = {
+                onEvent(ShopOverviewEvent.OnSearchQueryEnter(it))
+            },
+            isSingleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = {
+                keyboardController?.hide()
+            }),
+            placeholderId = R.string.search,
+
         )
         Spacer(modifier = Modifier.height(dimensions.spaceMedium))
         Column(
@@ -91,20 +110,6 @@ fun ShopOverviewScreenContent(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            SearchBar(
-                inputText = state.searchQuery,
-                onTextChange = {
-                    onEvent(ShopOverviewEvent.OnSearchQueryEnter(it))
-                },
-                onIconClick = { onEvent(ShopOverviewEvent.OnSearchIconClick) },
-                isSingleLine = true,
-                placeholderId = R.string.search,
-                isExpanded = state.isSearchBarExpanded,
-                modifier = Modifier.padding(
-                    start = dimensions.spaceMedium,
-                    end = dimensions.spaceMedium
-                )
-            )
             Spacer(modifier = Modifier.height(dimensions.spaceLarge))
             Text(
                 text = stringResource(id = com.eshop.shopoverview_presentation.R.string.popular_shops),

@@ -1,6 +1,10 @@
 package com.eshop.shopoverview_presentation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -17,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -31,20 +36,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import com.eshop.core.util.BASE_URL
-import com.eshop.core.util.formatDate
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
-import com.eshop.coreui.components.PrimaryTopBanner
-import com.eshop.coreui.components.ProductCard
+import com.eshop.coreui.components.PrimarySearchBar
 import com.eshop.coreui.components.ProductCardPlaceholderFlowRow
 import com.eshop.coreui.components.ProductCardPlaceholderRow
-import com.eshop.coreui.components.SearchBar
 import com.eshop.coreui.components.TopBanner
 import com.eshop.coreui.theme.EShopTheme
-import com.eshop.coreui.util.ShopLocation
 import com.eshop.coreui.util.UiEvent
 import com.eshop.shopoverview_presentation.components.ShopCard
 
@@ -77,8 +77,7 @@ fun ShopOverviewScreen(
 @OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ShopOverviewScreenContent(
-    state: ShopOverviewState,
-    onEvent: (ShopOverviewEvent) -> Unit
+    state: ShopOverviewState, onEvent: (ShopOverviewEvent) -> Unit
 ) {
     val dimensions = LocalDimensions.current
     val scrollState = rememberScrollState()
@@ -88,29 +87,48 @@ fun ShopOverviewScreenContent(
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
     ) {
-        PrimaryTopBanner(
-            iconId = R.drawable.eshoplogo,
-            inputText = state.searchQuery,
-            onTextChange = {
-                onEvent(ShopOverviewEvent.OnSearchQueryEnter(it))
-            },
-            isSingleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(onDone = {
-                keyboardController?.hide()
-            }),
-            placeholderId = R.string.search,
-
-        )
+        Box {
+            androidx.compose.animation.AnimatedVisibility(
+                visible = state.isSearchBarVisible,
+                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 150))
+            ) {
+                PrimarySearchBar(inputText = state.searchQuery, onTextChange = {
+                    onEvent(ShopOverviewEvent.OnSearchQueryEnter(it))
+                }, isSingleLine = true, keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search
+                ), keyboardActions = KeyboardActions(onSearch = {
+                    keyboardController?.hide()
+                    onEvent(ShopOverviewEvent.OnSearch)
+                }), placeholderId = R.string.search, onLeadingIconClick = {
+                    onEvent(ShopOverviewEvent.OnExitSearchBarClick)
+                }, onTrailingIconClick = {
+                    onEvent(ShopOverviewEvent.OnDeleteSearchTextClick)
+                })
+            }
+            androidx.compose.animation.AnimatedVisibility(
+                visible = !state.isSearchBarVisible,
+                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 150))
+            ) {
+                TopBanner(iconId = R.drawable.eshoplogo,
+                    titleId = R.string.eshop,
+                    subtitleId = R.string.your_online_shop_destination,
+                    onSearchIconClick = {
+                        keyboardController?.show()
+                        onEvent(ShopOverviewEvent.OnSearchIconClick)
+                    },
+                    onFilterIconClick = { onEvent(ShopOverviewEvent.OnFilterIconClick) })
+            }
+        }
+        Divider(color = MaterialTheme.colors.onSecondary)
         Spacer(modifier = Modifier.height(dimensions.spaceMedium))
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            Spacer(modifier = Modifier.height(dimensions.spaceLarge))
+            Spacer(modifier = Modifier.height(dimensions.spaceMedium))
             Text(
                 text = stringResource(id = com.eshop.shopoverview_presentation.R.string.popular_shops),
                 fontFamily = PoppinsFontFamily,
@@ -124,8 +142,7 @@ fun ShopOverviewScreenContent(
             }
             LazyRow {
                 itemsIndexed(state.popularShops) { index, shop ->
-                    ShopCard(
-                        image = "$BASE_URL/${shop.profileImage}",
+                    ShopCard(image = "$BASE_URL/${shop.profileImage}",
                         shopName = shop.username,
                         location = shop.shopLocations.first(),
                         review = 4.4,
@@ -140,13 +157,14 @@ fun ShopOverviewScreenContent(
                             ),
                         onClick = {
                             onEvent(ShopOverviewEvent.OnShopClick(shop.id))
-                        }
-                    )
+                        })
                 }
             }
             Spacer(modifier = Modifier.height(dimensions.spaceMedium))
             Text(
-                text = stringResource(id = com.eshop.shopoverview_presentation.R.string.all_shops),
+                text = if (state.areSearchedShopsDisplayed) "Search results for '${state.searchedQuery}'" else stringResource(
+                    id = com.eshop.shopoverview_presentation.R.string.all_shops
+                ),
                 fontFamily = PoppinsFontFamily,
                 fontWeight = FontWeight.Medium,
                 fontSize = dimensions.font_20,
@@ -158,8 +176,7 @@ fun ShopOverviewScreenContent(
             }
             FlowRow(modifier = Modifier.padding(horizontal = dimensions.spaceMedium)) {
                 state.allShops.forEachIndexed { index, shop ->
-                    ShopCard(
-                        image = "$BASE_URL/${shop.profileImage}",
+                    ShopCard(image = "$BASE_URL/${shop.profileImage}",
                         shopName = shop.username,
                         location = shop.shopLocations.first(),
                         review = 4.4,
@@ -173,8 +190,7 @@ fun ShopOverviewScreenContent(
                             ),
                         onClick = {
                             onEvent(ShopOverviewEvent.OnShopClick(shop.id))
-                        }
-                    )
+                        })
                 }
             }
             if (state.areAllShopsLoaded) {

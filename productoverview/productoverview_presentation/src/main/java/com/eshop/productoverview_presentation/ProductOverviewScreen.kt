@@ -303,7 +303,9 @@ private fun ProductOverviewScreenContent(
             TopBanner(
                 iconId = R.drawable.eshoplogo,
                 titleId = R.string.eshop,
-                subtitleId = R.string.your_online_shop_destination
+                subtitleId = R.string.your_online_shop_destination,
+                onSearchIconClick = {},
+                onFilterIconClick = {}
             )
             Spacer(modifier = Modifier.height(dimensions.spaceMedium))
             Column(

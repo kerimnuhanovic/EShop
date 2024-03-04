@@ -52,7 +52,9 @@ fun PrimaryTopBanner(
                 placeholderId = placeholderId,
                 keyboardOptions = keyboardOptions,
                 keyboardActions = keyboardActions,
-                modifier = Modifier.padding(horizontal = dimensions.spaceExtraSmall)
+                modifier = Modifier.padding(horizontal = dimensions.spaceExtraSmall),
+                onTrailingIconClick = {},
+                onLeadingIconClick = {}
             )
         }
     }

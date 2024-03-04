@@ -39,7 +39,7 @@ class ShopOverviewViewModel @Inject constructor(
             }
             ShopOverviewEvent.OnSearchIconClick -> {
                 _state.value = _state.value.copy(
-                    isSearchBarExpanded = !state.value.isSearchBarExpanded
+                    isSearchBarVisible = true
                 )
             }
             is ShopOverviewEvent.OnSearchQueryEnter -> {
@@ -51,6 +51,25 @@ class ShopOverviewViewModel @Inject constructor(
                 viewModelScope.launch {
                     _uiEvent.send(UiEvent.Navigate("${Route.SHOP}/${event.shopId}"))
                 }
+            }
+            ShopOverviewEvent.OnDeleteSearchTextClick -> {
+                _state.value = _state.value.copy(
+                    searchQuery = ""
+                )
+            }
+            ShopOverviewEvent.OnExitSearchBarClick -> {
+                _state.value = _state.value.copy(
+                    searchQuery = "",
+                    isSearchBarVisible = false
+                )
+            }
+
+            ShopOverviewEvent.OnFilterIconClick -> {
+                // TODO
+            }
+
+            ShopOverviewEvent.OnSearch -> {
+                onSearch()
             }
         }
     }
@@ -69,13 +88,14 @@ class ShopOverviewViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchAllShops(offset: Int) {
-        when (val result = fetchAllShopsUseCase(offset)) {
+    private suspend fun fetchAllShops(offset: Int, searchQuery: String? = null) {
+        when (val result = fetchAllShopsUseCase(offset, searchQuery)) {
             is Result.Success -> {
                 _state.value = _state.value.copy(
                     isAllShopsLoading = false,
                     allShops = state.value.allShops + result.data,
-                    areAllShopsLoaded = result.data.isEmpty()
+                    areAllShopsLoaded = result.data.isEmpty(),
+                    areSearchedShopsDisplayed = !searchQuery.isNullOrEmpty()
                 )
             }
             is Result.Failure -> {
@@ -87,8 +107,11 @@ class ShopOverviewViewModel @Inject constructor(
 
     private fun fetchInitialShops() {
         _state.value = _state.value.copy(
+            isSearchBarVisible = false,
             isPopularShopsLoading = true,
-            isAllShopsLoading = true
+            isAllShopsLoading = true,
+            areSearchedShopsDisplayed = false,
+            searchedQuery = ""
         )
         viewModelScope.launch(Dispatchers.IO) {
             launch {
@@ -106,11 +129,31 @@ class ShopOverviewViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 isLoadingMoreShops = true
             )
-            fetchAllShops(state.value.allShops.size)
+            fetchAllShops(offset = state.value.allShops.size, searchQuery = state.value.searchQuery)
             _state.value = _state.value.copy(
                 isLoadingMoreShops = false
             )
         }
     }
 
+    private fun onSearch() {
+        if (state.value.searchQuery.isEmpty()) {
+            fetchInitialShops()
+        }
+        else {
+            fetchSearchedShops()
+        }
+    }
+
+    private fun fetchSearchedShops() {
+        _state.value = state.value.copy(
+            isAllShopsLoading = true,
+            allShops = emptyList(),
+            isSearchBarVisible = false,
+            searchedQuery = state.value.searchQuery
+        )
+        viewModelScope.launch {
+            fetchAllShops(state.value.allShops.size, searchQuery = state.value.searchQuery)
+        }
+    }
 }

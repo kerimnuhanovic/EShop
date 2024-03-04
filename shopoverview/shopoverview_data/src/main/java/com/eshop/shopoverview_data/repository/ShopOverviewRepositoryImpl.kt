@@ -12,9 +12,9 @@ import javax.inject.Inject
 class ShopOverviewRepositoryImpl @Inject constructor(
     private val shopOverviewApi: ShopOverviewApi
 ): ShopOverviewRepository {
-    override suspend fun fetchAllShops(offset: Int): Result<List<Shop>> {
+    override suspend fun fetchAllShops(offset: Int, searchQuery: String?): Result<List<Shop>> {
         return try {
-            val result = shopOverviewApi.fetchAllShops(offset)
+            val result = shopOverviewApi.fetchAllShops(offset, searchQuery)
             val shops = result.map { shopDto ->
                 shopDto.toShop()
             }

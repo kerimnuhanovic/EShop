@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
@@ -19,12 +20,19 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.eshop.core.navigation.Route
+import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.components.FloatingButton
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.e_shop.components.BottomBar
@@ -38,6 +46,7 @@ import com.eshop.shop_presentation.ShopScreen
 import com.eshop.shopoverview_presentation.ShopOverviewScreen
 import com.eshop.signup_presentation.signup.SignupScreen
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -61,8 +70,28 @@ class MainActivity : ComponentActivity() {
                     },
                     skipHalfExpanded = true
                 )
+
+                val dimensions = LocalDimensions.current
+                val bottomBarHeightPx = with(LocalDensity.current) { dimensions.size_56.roundToPx().toFloat() }
+                val bottomBarOffsetHeightPx = remember { mutableStateOf(0f) }
+                val topBarOffsetHeightPx = remember { mutableStateOf(0f) }
+                val nestedScrollConnection = remember {
+                    object : NestedScrollConnection {
+                        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+
+                            val delta = available.y
+                            val newOffset = bottomBarOffsetHeightPx.value + delta
+                            bottomBarOffsetHeightPx.value = newOffset.coerceIn(-bottomBarHeightPx, 0f)
+                            topBarOffsetHeightPx.value = newOffset.coerceIn(-bottomBarHeightPx, 0f)
+
+                            return Offset.Zero
+                        }
+                    }
+                }
+
+
                 Scaffold(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().nestedScroll(nestedScrollConnection),
                     scaffoldState = scaffoldState,
                     bottomBar = {
                         BottomBar(
@@ -74,7 +103,8 @@ class MainActivity : ComponentActivity() {
                             ),
                             onNavigate = navController::navigate,
                             navController = navController,
-                            isBottomBarOverlapped = isBottomBarOverlapped.value
+                            isBottomBarOverlapped = isBottomBarOverlapped.value,
+                            modifier = Modifier.offset { IntOffset(x = 0, y = -bottomBarOffsetHeightPx.value.roundToInt()) }
                         )
                     },
                     floatingActionButton = {
@@ -106,7 +136,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(route = Route.SHOPS_OVERVIEW) {
-                            ShopOverviewScreen(onNavigate = navController::navigate)
+                            ShopOverviewScreen(onNavigate = navController::navigate, topBarOffset = topBarOffsetHeightPx.value)
                         }
                         composable(route = "${Route.SHOP}/{shopId}", arguments =
                         listOf(navArgument("shopId") { type = NavType.StringType})) {

@@ -95,8 +95,8 @@ fun PrimarySearchBar(
         ),
         modifier = modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colors.background)
-            .height(dimensions.size_60),
+            .background(color = MaterialTheme.colors.onPrimary)
+            .height(dimensions.size_56),
         decorationBox = { innerTextField ->
             TextFieldDefaults.TextFieldDecorationBox(
                 value = inputText,

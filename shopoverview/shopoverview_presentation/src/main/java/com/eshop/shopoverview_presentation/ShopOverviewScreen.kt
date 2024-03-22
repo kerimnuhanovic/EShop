@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -35,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eshop.core.util.BASE_URL
 import com.eshop.coreui.LocalDimensions
@@ -47,11 +49,13 @@ import com.eshop.coreui.components.TopBanner
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.UiEvent
 import com.eshop.shopoverview_presentation.components.ShopCard
+import kotlin.math.roundToInt
 
 @Composable
 fun ShopOverviewScreen(
     viewModel: ShopOverviewViewModel = hiltViewModel(),
     onNavigate: (UiEvent.Navigate) -> Unit,
+    topBarOffset: Float
 ) {
     val state = viewModel.state.collectAsState().value
     LaunchedEffect(key1 = true) {
@@ -71,62 +75,27 @@ fun ShopOverviewScreen(
             }
         }
     }
-    ShopOverviewScreenContent(state = state, onEvent = viewModel::onEvent)
+    ShopOverviewScreenContent(state = state, onEvent = viewModel::onEvent, topBarOffset)
 }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ShopOverviewScreenContent(
-    state: ShopOverviewState, onEvent: (ShopOverviewEvent) -> Unit
+    state: ShopOverviewState, onEvent: (ShopOverviewEvent) -> Unit, topBarOffset: Float
 ) {
     val dimensions = LocalDimensions.current
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
     ) {
-        Box {
-            androidx.compose.animation.AnimatedVisibility(
-                visible = state.isSearchBarVisible,
-                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                exit = fadeOut(animationSpec = tween(durationMillis = 150))
-            ) {
-                PrimarySearchBar(inputText = state.searchQuery, onTextChange = {
-                    onEvent(ShopOverviewEvent.OnSearchQueryEnter(it))
-                }, isSingleLine = true, keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Search
-                ), keyboardActions = KeyboardActions(onSearch = {
-                    keyboardController?.hide()
-                    onEvent(ShopOverviewEvent.OnSearch)
-                }), placeholderId = R.string.search, onLeadingIconClick = {
-                    onEvent(ShopOverviewEvent.OnExitSearchBarClick)
-                }, onTrailingIconClick = {
-                    onEvent(ShopOverviewEvent.OnDeleteSearchTextClick)
-                })
-            }
-            androidx.compose.animation.AnimatedVisibility(
-                visible = !state.isSearchBarVisible,
-                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                exit = fadeOut(animationSpec = tween(durationMillis = 150))
-            ) {
-                TopBanner(iconId = R.drawable.eshoplogo,
-                    titleId = R.string.eshop,
-                    subtitleId = R.string.your_online_shop_destination,
-                    onSearchIconClick = {
-                        keyboardController?.show()
-                        onEvent(ShopOverviewEvent.OnSearchIconClick)
-                    },
-                    onFilterIconClick = { onEvent(ShopOverviewEvent.OnFilterIconClick) })
-            }
-        }
-        Divider(color = MaterialTheme.colors.onSecondary)
-        Spacer(modifier = Modifier.height(dimensions.spaceMedium))
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
+                .padding(top = dimensions.size_56)
         ) {
             Spacer(modifier = Modifier.height(dimensions.spaceMedium))
             Text(
@@ -204,6 +173,40 @@ fun ShopOverviewScreenContent(
                 onEvent(ShopOverviewEvent.OnScreenEndReach)
             }
         }
+        Box(modifier = Modifier.offset { IntOffset(x = 0, y = topBarOffset.roundToInt()) }) {
+            androidx.compose.animation.AnimatedVisibility(
+                visible = state.isSearchBarVisible,
+                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 150))
+            ) {
+                PrimarySearchBar(inputText = state.searchQuery, onTextChange = {
+                    onEvent(ShopOverviewEvent.OnSearchQueryEnter(it))
+                }, isSingleLine = true, keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search
+                ), keyboardActions = KeyboardActions(onSearch = {
+                    keyboardController?.hide()
+                    onEvent(ShopOverviewEvent.OnSearch)
+                }), placeholderId = R.string.search, onLeadingIconClick = {
+                    onEvent(ShopOverviewEvent.OnExitSearchBarClick)
+                }, onTrailingIconClick = {
+                    onEvent(ShopOverviewEvent.OnDeleteSearchTextClick)
+                })
+            }
+            androidx.compose.animation.AnimatedVisibility(
+                visible = !state.isSearchBarVisible,
+                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 150))
+            ) {
+                TopBanner(iconId = R.drawable.eshoplogo,
+                    titleId = R.string.eshop,
+                    subtitleId = R.string.your_online_shop_destination,
+                    onSearchIconClick = {
+                        keyboardController?.show()
+                        onEvent(ShopOverviewEvent.OnSearchIconClick)
+                    },
+                    onFilterIconClick = { onEvent(ShopOverviewEvent.OnFilterIconClick) })
+            }
+        }
     }
 }
 
@@ -211,6 +214,6 @@ fun ShopOverviewScreenContent(
 @Composable
 private fun ShopOverviewScreenPreview() {
     EShopTheme {
-        ShopOverviewScreenContent(state = ShopOverviewState(), onEvent = {})
+        ShopOverviewScreenContent(state = ShopOverviewState(), onEvent = {}, 0f)
     }
 }

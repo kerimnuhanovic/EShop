@@ -45,8 +45,8 @@ fun TopBanner(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(dimensions.size_60)
-            .background(color = MaterialTheme.colors.background)
+            .height(dimensions.size_56)
+            .background(color = MaterialTheme.colors.onPrimary)
             .fillMaxWidth(),
     )
     {

@@ -46,9 +46,9 @@ class ProductOverviewRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchAllProducts(offset: Int): Result<List<Product>> {
+    override suspend fun fetchAllProducts(offset: Int, searchQuery: String?): Result<List<Product>> {
         return try {
-            val result = productOverviewApi.fetchAllProducts(offset)
+            val result = productOverviewApi.fetchAllProducts(offset, searchQuery)
             Result.Success(result.map { productDto ->
                 productDto.toProduct()
             })

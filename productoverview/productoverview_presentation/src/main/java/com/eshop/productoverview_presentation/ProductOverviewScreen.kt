@@ -2,6 +2,9 @@ package com.eshop.productoverview_presentation
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -21,6 +25,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
@@ -35,13 +41,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eshop.core.util.BASE_URL
 import com.eshop.core.util.formatDate
@@ -55,6 +65,7 @@ import com.eshop.coreui.components.ImageHolder
 import com.eshop.coreui.components.ImageUploadPlaceholder
 import com.eshop.coreui.components.InputField
 import com.eshop.coreui.components.ItemDataBox
+import com.eshop.coreui.components.PrimarySearchBar
 import com.eshop.coreui.components.ProductCard
 import com.eshop.coreui.components.ProductCardPlaceholder
 import com.eshop.coreui.components.ProductCardPlaceholderFlowRow
@@ -64,6 +75,7 @@ import com.eshop.coreui.components.TopBanner
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.ShopAndProductCategory
 import com.eshop.coreui.util.UiEvent
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -71,6 +83,7 @@ fun ProductOverviewScreen(
     viewModel: ProductOverviewViewModel = hiltViewModel(),
     modalBottomSheetState: ModalBottomSheetState,
     onNavigate: (UiEvent.Navigate) -> Unit,
+    topBarOffset: Float
 ) {
     val state = viewModel.state.collectAsState().value
     LaunchedEffect(key1 = true) {
@@ -89,17 +102,21 @@ fun ProductOverviewScreen(
     ProductOverviewScreenContent(
         state = state,
         onEvent = viewModel::onEvent,
-        modalBottomSheetState = modalBottomSheetState
+        modalBottomSheetState = modalBottomSheetState,
+        topBarOffset = topBarOffset
     )
 
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterialApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 private fun ProductOverviewScreenContent(
     state: ProductOverviewState,
     onEvent: (ProductOverviewEvent) -> Unit,
     modalBottomSheetState: ModalBottomSheetState,
+    topBarOffset: Float
 ) {
     val dimensions = LocalDimensions.current
     val galleryLauncher =
@@ -109,6 +126,7 @@ private fun ProductOverviewScreenContent(
             }
         }
     val scrollState = rememberScrollState()
+    val keyboardController = LocalSoftwareKeyboardController.current
     ModalBottomSheetLayout(
         sheetState = modalBottomSheetState,
         sheetContent = {
@@ -295,36 +313,18 @@ private fun ProductOverviewScreenContent(
         ),
         sheetBackgroundColor = MaterialTheme.colors.background
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
         ) {
-            TopBanner(
-                iconId = R.drawable.eshoplogo,
-                titleId = R.string.eshop,
-                subtitleId = R.string.your_online_shop_destination,
-                onSearchIconClick = {},
-                onFilterIconClick = {}
-            )
-            Spacer(modifier = Modifier.height(dimensions.spaceMedium))
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState)
+                    .padding(top = dimensions.size_56)
             ) {
-                SearchBar(
-                    inputText = state.searchQuery,
-                    onTextChange = {
-                        onEvent(ProductOverviewEvent.OnSearchQueryEnter(it))
-                    },
-                    onIconClick = { onEvent(ProductOverviewEvent.OnSearchIconClick) },
-                    isSingleLine = true,
-                    placeholderId = R.string.search,
-                    isExpanded = state.isSearchBarExpanded,
-                    modifier = Modifier.padding(start = dimensions.spaceMedium, end = dimensions.spaceMedium)
-                )
-                Spacer(modifier = Modifier.height(dimensions.spaceLarge))
+                Spacer(modifier = Modifier.height(dimensions.spaceMedium))
                 Text(
                     text = stringResource(id = com.eshop.productoverview_presentation.R.string.popular_products),
                     fontFamily = PoppinsFontFamily,
@@ -402,6 +402,40 @@ private fun ProductOverviewScreenContent(
                     onEvent(ProductOverviewEvent.OnScreenEndReach)
                 }
             }
+            Box(modifier = Modifier.offset { IntOffset(x = 0, y = topBarOffset.roundToInt()) }) {
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = state.isSearchBarVisible,
+                    enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 150))
+                ) {
+                    PrimarySearchBar(inputText = state.searchQuery, onTextChange = {
+                        onEvent(ProductOverviewEvent.OnSearchQueryEnter(it))
+                    }, isSingleLine = true, keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Search
+                    ), keyboardActions = KeyboardActions(onSearch = {
+                        keyboardController?.hide()
+                        onEvent(ProductOverviewEvent.OnSearch)
+                    }), placeholderId = R.string.search, onLeadingIconClick = {
+                        onEvent(ProductOverviewEvent.OnExitSearchBarClick)
+                    }, onTrailingIconClick = {
+                        onEvent(ProductOverviewEvent.OnDeleteSearchTextClick)
+                    })
+                }
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = !state.isSearchBarVisible,
+                    enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 150))
+                ) {
+                    TopBanner(iconId = R.drawable.eshoplogo,
+                        titleId = R.string.eshop,
+                        subtitleId = R.string.your_online_shop_destination,
+                        onSearchIconClick = {
+                            keyboardController?.show()
+                            onEvent(ProductOverviewEvent.OnSearchIconClick)
+                        },
+                        onFilterIconClick = { onEvent(ProductOverviewEvent.OnFilterIconClick) })
+                }
+            }
         }
     }
 
@@ -413,11 +447,12 @@ private fun ProductOverviewScreenContent(
 private fun ProductOverviewScreenPreview() {
     EShopTheme {
         ProductOverviewScreenContent(
-            state = ProductOverviewState(),
+            state = ProductOverviewState(isPopularProductsLoading = true, isAllProductsLoading = true),
             onEvent = {},
             modalBottomSheetState = rememberModalBottomSheetState(
                 initialValue = ModalBottomSheetValue.Hidden
-            )
+            ),
+            0f
         )
     }
 }

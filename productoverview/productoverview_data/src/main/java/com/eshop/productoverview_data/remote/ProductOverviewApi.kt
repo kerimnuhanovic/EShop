@@ -8,6 +8,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ProductOverviewApi {
 
@@ -25,5 +26,5 @@ interface ProductOverviewApi {
     suspend fun fetchPopularProduct(): List<ProductDto>
 
     @GET("product/allProducts/{offset}")
-    suspend fun fetchAllProducts(@Path("offset") offset: Int): List<ProductDto>
+    suspend fun fetchAllProducts(@Path("offset") offset: Int, @Query("searchQuery") searchQuery: String?): List<ProductDto>
 }

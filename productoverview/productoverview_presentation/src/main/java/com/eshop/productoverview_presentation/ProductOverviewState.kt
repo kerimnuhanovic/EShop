@@ -10,7 +10,6 @@ data class ProductOverviewState(
     val isPopularProductsLoading: Boolean = false,
     val isAllProductsLoading: Boolean = false,
     val searchQuery: String = "",
-    val isSearchBarExpanded: Boolean = false,
     val productTitle: String = "",
     val productDescription: String = "",
     val productCategory: String = "",
@@ -21,5 +20,7 @@ data class ProductOverviewState(
     val isProductAdditionInProgress: Boolean = false,
     val errorMessageId: Int? = null,
     val isLoadingMoreProducts: Boolean = false,
-    val areAllProductsLoaded: Boolean = false
+    val areAllProductsLoaded: Boolean = false,
+    val isSearchBarVisible: Boolean = false,
+    val searchedQuery: String = ""
 )

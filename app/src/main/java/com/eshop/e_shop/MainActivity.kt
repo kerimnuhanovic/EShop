@@ -125,7 +125,8 @@ class MainActivity : ComponentActivity() {
                         composable(route = Route.PRODUCTS_OVERVIEW) {
                             ProductOverviewScreen(
                                 onNavigate = navController::navigate,
-                                modalBottomSheetState = bottomSheetState
+                                modalBottomSheetState = bottomSheetState,
+                                topBarOffset = topBarOffsetHeightPx.value
                             )
                         }
                         composable(route = "${Route.PRODUCT}/{productId}", arguments =

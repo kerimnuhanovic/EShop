@@ -49,7 +49,7 @@ class ProductOverviewViewModel @Inject constructor(
         when (event) {
             ProductOverviewEvent.OnSearchIconClick -> {
                 _state.value = _state.value.copy(
-                    isSearchBarExpanded = !state.value.isSearchBarExpanded
+                    isSearchBarVisible = true
                 )
             }
 
@@ -128,6 +128,24 @@ class ProductOverviewViewModel @Inject constructor(
                     _uiEvent.send(UiEvent.Navigate("${Route.PRODUCT}/${event.productId}"))
                 }
             }
+
+            ProductOverviewEvent.OnDeleteSearchTextClick -> {
+                _state.value = _state.value.copy(
+                    searchQuery = ""
+                )
+            }
+            ProductOverviewEvent.OnExitSearchBarClick -> {
+                _state.value = _state.value.copy(
+                    searchQuery = "",
+                    isSearchBarVisible = false
+                )
+            }
+            ProductOverviewEvent.OnFilterIconClick -> {
+                // TODO
+            }
+            ProductOverviewEvent.OnSearch -> {
+                onSearch()
+            }
         }
     }
 
@@ -145,8 +163,8 @@ class ProductOverviewViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchAllProducts(offset: Int) {
-        when (val result = fetchAllProductsUseCase(offset)) {
+    private suspend fun fetchAllProducts(offset: Int, searchQuery: String? = null) {
+        when (val result = fetchAllProductsUseCase(offset, searchQuery)) {
             is Result.Success -> {
                 _state.value = _state.value.copy(
                     isAllProductsLoading = false,
@@ -181,10 +199,30 @@ class ProductOverviewViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 isLoadingMoreProducts = true
             )
-            fetchAllProducts(state.value.allProducts.size)
+            fetchAllProducts(offset = state.value.allProducts.size, searchQuery = state.value.searchQuery)
             _state.value = _state.value.copy(
                 isLoadingMoreProducts = false
             )
+        }
+    }
+
+    private fun fetchSearchedProducts() {
+        _state.value = state.value.copy(
+            isAllProductsLoading = true,
+            allProducts = emptyList(),
+            isSearchBarVisible = false,
+            searchedQuery = state.value.searchQuery
+        )
+        viewModelScope.launch {
+            fetchAllProducts(state.value.allProducts.size, searchQuery = state.value.searchQuery)
+        }
+    }
+    private fun onSearch() {
+        if (state.value.searchQuery.isEmpty()) {
+            fetchInitialProducts()
+        }
+        else {
+            fetchSearchedProducts()
         }
     }
 

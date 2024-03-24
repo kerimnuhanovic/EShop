@@ -36,6 +36,7 @@ data class Dimensions(
     val size_32: Dp = 32.dp,
     val size_60: Dp = 60.dp,
     val size_50: Dp = 50.dp,
+    val size_56: Dp = 56.dp,
     val size_55: Dp = 55.dp,
     val size_80: Dp = 80.dp,
     val size_200: Dp = 200.dp,
@@ -48,7 +49,9 @@ data class Dimensions(
     val offset_minus_10: Dp = (-10).dp,
     val card_width_180: Dp = 180.dp,
     val size_52: Dp = 52.dp,
-    val size_24: Dp = 24.dp
+    val size_24: Dp = 24.dp,
+    val size_250: Dp = 250.dp,
+    val size_40: Dp = 40.dp
 )
 
 val LocalDimensions = compositionLocalOf { Dimensions() }

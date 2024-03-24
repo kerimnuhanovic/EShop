@@ -8,7 +8,7 @@ import javax.inject.Inject
 class FetchAllProductsUseCase @Inject constructor(
     private val productOverviewRepository: ProductOverviewRepository
 ) {
-    suspend operator fun invoke(offset: Int): Result<List<Product>> {
-        return productOverviewRepository.fetchAllProducts(offset)
+    suspend operator fun invoke(offset: Int, searchQuery: String? = null): Result<List<Product>> {
+        return productOverviewRepository.fetchAllProducts(offset, searchQuery)
     }
 }

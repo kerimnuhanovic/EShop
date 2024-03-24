@@ -6,8 +6,12 @@ import com.eshop.coreui.util.ShopAndProductCategory
 sealed interface ProductOverviewEvent {
     object OnSearchIconClick : ProductOverviewEvent
     data class OnSearchQueryEnter(val query: String) : ProductOverviewEvent
+    object OnSearch : ProductOverviewEvent
     object OnAddProductClick : ProductOverviewEvent
     data class OnProductTitleEnter(val title: String) : ProductOverviewEvent
+    object OnExitSearchBarClick : ProductOverviewEvent
+    object OnDeleteSearchTextClick : ProductOverviewEvent
+    object OnFilterIconClick : ProductOverviewEvent
     data class OnProductDescriptionEnter(val description: String) : ProductOverviewEvent
     data class OnProductPriceEnter(val price: String) : ProductOverviewEvent
     object OnExpandChange : ProductOverviewEvent

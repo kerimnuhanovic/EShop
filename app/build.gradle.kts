@@ -92,6 +92,9 @@ dependencies {
     implementation(project(Modules.shopoverviewData))
     implementation(project(Modules.shopoverviewDomain))
     implementation(project(Modules.shopoverviewPresentation))
+    implementation(project(Modules.shopData))
+    implementation(project(Modules.shopDomain))
+    implementation(project(Modules.shopPresentation))
 
     testImplementation(Testing.junit)
     androidTestImplementation(Testing.junitExt)

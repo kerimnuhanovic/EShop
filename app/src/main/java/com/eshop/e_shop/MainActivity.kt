@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    NavHost(navController = navController, startDestination = Route.SHOPS_OVERVIEW) {
+                    NavHost(navController = navController, startDestination = Route.LOGIN) {
                         composable(route = Route.LOGIN) {
                             LoginScreen(onNavigate = navController::navigate)
                         }

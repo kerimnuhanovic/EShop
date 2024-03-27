@@ -15,10 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.eshop.core.navigation.Route
 import com.eshop.coreui.theme.EShopTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,13 +24,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun FloatingButton(
     modalBottomSheetState: ModalBottomSheetState,
-    navController: NavController,
-    isBottomBarOverlapped: MutableState<Boolean>,
-    modifier: Modifier = Modifier
+    isBottomBarOverlapped: MutableState<Boolean>
 ) {
     val scope = rememberCoroutineScope()
-    val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
-    if (currentDestination == Route.PRODUCTS_OVERVIEW && !isBottomBarOverlapped.value) {
+    if (!isBottomBarOverlapped.value) {
         FloatingActionButton(onClick = {
             scope.launch {
                 isBottomBarOverlapped.value = true
@@ -54,7 +47,6 @@ fun FloatingButtonPreview() {
     EShopTheme {
         FloatingButton(
             modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden),
-            navController = rememberNavController(),
             isBottomBarOverlapped = remember { mutableStateOf(false) }
         )
     }

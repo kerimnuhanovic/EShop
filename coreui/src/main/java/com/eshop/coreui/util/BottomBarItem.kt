@@ -1,4 +1,4 @@
-package com.eshop.e_shop.util
+package com.eshop.coreui.util
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

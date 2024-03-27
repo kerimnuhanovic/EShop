@@ -1,22 +1,20 @@
 package com.eshop.coreui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
@@ -42,12 +40,10 @@ fun TopBanner(
     modifier: Modifier = Modifier
 ) {
     val dimensions = LocalDimensions.current
-    Row(
+    TopAppBar(
         modifier = modifier
-            .fillMaxWidth()
-            .height(dimensions.size_56)
-            .background(color = MaterialTheme.colors.onPrimary)
-            .fillMaxWidth(),
+            .height(dimensions.size_56),
+        backgroundColor = MaterialTheme.colors.onPrimary,
     )
     {
         Row(
@@ -112,7 +108,7 @@ private fun TopBannerPreview() {
             titleId = R.string.eshop,
             subtitleId = R.string.your_online_shop_destination,
             onFilterIconClick = {},
-            onSearchIconClick = {}
+            onSearchIconClick = {},
         )
     }
 }

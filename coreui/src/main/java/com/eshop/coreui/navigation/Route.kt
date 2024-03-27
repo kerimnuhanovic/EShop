@@ -1,4 +1,4 @@
-package com.eshop.core.navigation
+package com.eshop.coreui.navigation
 
 object Route {
     const val LOGIN = "login"

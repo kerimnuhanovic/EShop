@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eshop.core.domain.usecase.ConvertListToStringUseCase
 import com.eshop.core.domain.usecase.CreateFileFromUriUseCase
-import com.eshop.core.navigation.Route
+import com.eshop.coreui.navigation.Route
 import com.eshop.core.util.Result
 import com.eshop.coreui.util.ShopAndProductCategory
 import com.eshop.coreui.util.UiEvent

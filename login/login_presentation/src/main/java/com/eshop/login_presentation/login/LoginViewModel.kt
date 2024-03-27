@@ -3,7 +3,7 @@ package com.eshop.login_presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eshop.core.domain.preferences.Preferences
-import com.eshop.core.navigation.Route
+import com.eshop.coreui.navigation.Route
 import com.eshop.login_domain.models.Credentials
 import com.eshop.login_domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

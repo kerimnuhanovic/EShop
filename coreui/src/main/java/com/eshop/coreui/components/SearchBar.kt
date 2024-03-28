@@ -12,14 +12,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,7 @@ import com.eshop.coreui.R
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.theme.MediumGray
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     inputText: String,
@@ -66,8 +68,9 @@ fun SearchBar(
                     fontSize = dimensions.font_14,
                     letterSpacing = dimensions.smallLetterSpacing
                 ),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = MediumGray,
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = MediumGray,
+                    focusedContainerColor = MediumGray,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
@@ -87,7 +90,7 @@ fun SearchBar(
         }
         Surface(
             shape = CircleShape,
-            color = MaterialTheme.colors.primary,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .size(dimensions.size_55)
                 .clickable { onIconClick() }

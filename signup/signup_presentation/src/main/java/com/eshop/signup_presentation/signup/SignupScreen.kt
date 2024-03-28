@@ -29,17 +29,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
@@ -66,20 +65,20 @@ import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
 import com.eshop.coreui.components.EShopButton
+import com.eshop.coreui.components.EShopDropdownMenu
 import com.eshop.coreui.components.ErrorBox
+import com.eshop.coreui.components.InputField
+import com.eshop.coreui.components.ItemDataBox
+import com.eshop.coreui.components.PageIndicator
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.theme.MediumGray
+import com.eshop.coreui.util.ShopAndProductCategory
+import com.eshop.coreui.util.ShopLocation
 import com.eshop.coreui.util.UiEvent
-import com.eshop.coreui.components.InputField
-import com.eshop.coreui.components.EShopDropdownMenu
-import com.eshop.coreui.components.PageIndicator
-import com.eshop.coreui.components.ItemDataBox
 import com.eshop.signup_presentation.signup.components.UserRoleSelector
 import com.eshop.signup_presentation.signup.util.FIRST_PAGE
 import com.eshop.signup_presentation.signup.util.PAGE_COUNT
 import com.eshop.signup_presentation.signup.util.SECOND_PAGE
-import com.eshop.coreui.util.ShopAndProductCategory
-import com.eshop.coreui.util.ShopLocation
 import com.eshop.signup_presentation.signup.util.THIRD_PAGE
 import com.eshop.signup_presentation.signup.util.UserRole
 
@@ -90,7 +89,7 @@ fun SignupScreen(
     onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val state = viewModel.state.collectAsState().value
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(initialPage = FIRST_PAGE, pageCount = { PAGE_COUNT })
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { uiEvent ->
             when (uiEvent) {
@@ -116,7 +115,7 @@ fun SignupScreenContent(
     onEvent: (SignupEvent) -> Unit,
     pagerState: PagerState
 ) {
-    HorizontalPager(state = pagerState, pageCount = PAGE_COUNT) { page ->
+    HorizontalPager(state = pagerState) { page ->
         when (page) {
             FIRST_PAGE -> {
                 EnterDataScreen(
@@ -124,12 +123,14 @@ fun SignupScreenContent(
                     onEvent = onEvent
                 )
             }
+
             SECOND_PAGE -> {
                 UploadImageScreen(
                     state = state,
                     onEvent = onEvent
                 )
             }
+
             THIRD_PAGE -> {
                 CompleteRegistrationScreen(
                     state = state,
@@ -141,7 +142,7 @@ fun SignupScreenContent(
 
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun EnterDataScreen(
     state: SignupState,
@@ -152,7 +153,7 @@ private fun EnterDataScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(dimensions.spaceMedium)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = CenterHorizontally
@@ -332,7 +333,7 @@ private fun UploadImageScreen(
     onEvent: (SignupEvent) -> Unit
 ) {
     val dimensions = LocalDimensions.current
-    val borderColor = MaterialTheme.colors.primary
+    val borderColor = MaterialTheme.colorScheme.primary
     val stroke = Stroke(
         width = 16f,
         pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 10f), 0f)
@@ -346,7 +347,7 @@ private fun UploadImageScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(bottom = dimensions.spaceMedium)
     ) {
         Box(
@@ -358,7 +359,7 @@ private fun UploadImageScreen(
                 modifier = Modifier
                     .height(dimensions.uploadImageSurfaceSize)
                     .fillMaxWidth(),
-                color = MaterialTheme.colors.primary,
+                color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(
                     bottomStart = dimensions.largeCornerRadius,
                     bottomEnd = dimensions.largeCornerRadius
@@ -431,20 +432,20 @@ private fun CompleteRegistrationScreen(
                     )
                 } else {
                     CircularProgressIndicator(
-                        color = MaterialTheme.colors.onPrimary,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(dimensions.size_32)
                     )
                 }
             },
-            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary,
+            backgroundColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
             onButtonClick = {
                 onEvent(SignupEvent.OnRegisterClick)
-            },modifier = Modifier
-                    .fillMaxWidth(0.6f),
+            }, modifier = Modifier
+                .fillMaxWidth(0.6f),
             enabled = !state.isLoading,
             shape = RoundedCornerShape(CornerSize(dimensions.largeCornerRadius))
-            )
+        )
         Spacer(modifier = Modifier.weight(1f))
         PageIndicator(THIRD_PAGE)
     }
@@ -458,7 +459,7 @@ private fun SignupScreenPreview() {
         SignupScreenContent(
             state = SignupState(),
             onEvent = {},
-            pagerState = rememberPagerState()
+            pagerState = rememberPagerState(initialPage = FIRST_PAGE, pageCount = { PAGE_COUNT })
         )
     }
 }

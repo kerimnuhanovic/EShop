@@ -13,9 +13,9 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -77,7 +77,7 @@ private fun LoginScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(dimensions.spaceMedium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -141,13 +141,13 @@ private fun LoginScreenContent(
                     )
                 } else {
                     CircularProgressIndicator(
-                        color = MaterialTheme.colors.onPrimary,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(dimensions.size_32)
                     )
                 }
             },
-            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary,
+            backgroundColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
             onButtonClick = {
                 onEvent(LoginEvent.OnLoginClick)
             },
@@ -159,14 +159,14 @@ private fun LoginScreenContent(
         Text(text = buildAnnotatedString {
             withStyle(
                 style = SpanStyle(
-                    color = MaterialTheme.colors.onBackground,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontFamily = PoppinsFontFamily
                 )
             ) {
                 append(stringResource(id = com.eshop.login_presentation.R.string.forgot_password))
             }
             append(stringResource(id = com.eshop.login_presentation.R.string.space))
-            withStyle(style = SpanStyle(color = MaterialTheme.colors.primary)) {
+            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
                 append(stringResource(id = com.eshop.login_presentation.R.string.reset_here))
             }
         }, modifier = Modifier.padding(vertical = dimensions.spaceSmall))
@@ -174,7 +174,7 @@ private fun LoginScreenContent(
         ClickableText(text = buildAnnotatedString {
             withStyle(
                 style = SpanStyle(
-                    color = MaterialTheme.colors.onBackground,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontFamily = PoppinsFontFamily,
                     fontSize = dimensions.font_16
                 )
@@ -184,7 +184,7 @@ private fun LoginScreenContent(
             append(stringResource(id = com.eshop.login_presentation.R.string.space))
             withStyle(
                 style = SpanStyle(
-                    color = MaterialTheme.colors.primary, fontFamily = PoppinsFontFamily,
+                    color = MaterialTheme.colorScheme.primary, fontFamily = PoppinsFontFamily,
                     fontSize = dimensions.font_16
                 )
             ) {

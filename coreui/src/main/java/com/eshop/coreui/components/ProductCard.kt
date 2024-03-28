@@ -3,7 +3,6 @@ package com.eshop.coreui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,9 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -27,7 +27,6 @@ import coil.compose.AsyncImage
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.theme.EShopTheme
-import com.eshop.coreui.util.loadingAnimation
 import java.text.NumberFormat
 import java.util.Currency
 
@@ -49,8 +48,10 @@ fun ProductCard(
     val threeDots = "..."
     currencyFormat.currency = currency
     Card(
-        backgroundColor = MaterialTheme.colors.onSecondary,
-        elevation = dimensions.spaceSmall,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onSecondary
+        ),
+        elevation = CardDefaults.cardElevation(dimensions.spaceSmall),
         modifier = modifier.clickable { onClick() },
         shape = RoundedCornerShape(CornerSize(dimensions.spaceSmall))
     ) {
@@ -70,7 +71,7 @@ fun ProductCard(
                 fontSize = dimensions.font_16,
                 fontFamily = PoppinsFontFamily,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colors.onSurface,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(horizontal = dimensions.spaceSmall)
             )
             Spacer(modifier = Modifier.height(dimensions.spaceExtraSmall))
@@ -79,7 +80,7 @@ fun ProductCard(
                 fontSize = dimensions.font_12,
                 fontFamily = PoppinsFontFamily,
                 fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colors.secondary,
+                color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.padding(horizontal = dimensions.spaceSmall)
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -92,7 +93,7 @@ fun ProductCard(
                     fontSize = dimensions.font_20,
                     fontFamily = PoppinsFontFamily,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colors.primary,
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(horizontal = dimensions.spaceSmall)
                 )
             }
@@ -109,7 +110,7 @@ private fun ProductCardPreview() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(dimensions.spaceMedium)
-                .background(MaterialTheme.colors.background)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             ProductCard(
                 image = "https://upload.wikimedia.org/wikipedia/commons/d/d7/Mostar_Old_Town_Panorama_2007.jpg",

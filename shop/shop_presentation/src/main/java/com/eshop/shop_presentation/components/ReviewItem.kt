@@ -1,22 +1,17 @@
 package com.eshop.shop_presentation.components
 
-import android.widget.Space
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,10 +45,10 @@ fun ReviewItem(
         Row {
             Card(
                 shape = CircleShape,
-                backgroundColor = MaterialTheme.colors.onSecondary,
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSecondary),
                 modifier = Modifier
                     .padding(dimensions.spaceExtraSmall),
-                elevation = dimensions.spaceExtraSmall
+                elevation = CardDefaults.cardElevation(dimensions.spaceExtraSmall)
             ) {
                 AsyncImage(
                     model = "${BASE_URL}/${review.authorProfileImage}",

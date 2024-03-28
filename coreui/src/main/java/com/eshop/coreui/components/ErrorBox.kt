@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +31,7 @@ fun ErrorBox(
         modifier = modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = dimensions.errorBoxHeight),
-        contentColor = MaterialTheme.colors.onPrimary
+        contentColor = MaterialTheme.colorScheme.onPrimary
     ) {
         Column(
             modifier = Modifier

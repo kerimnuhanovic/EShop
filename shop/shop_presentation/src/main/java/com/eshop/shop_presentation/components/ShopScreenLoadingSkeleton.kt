@@ -7,10 +7,9 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.util.loadingAnimation
 
@@ -24,7 +23,7 @@ fun ShopScreenLoadingSkeleton() {
                 .fillMaxWidth()
                 .loadingAnimation(
                     isLoading = true,
-                    shimmerColor = MaterialTheme.colors.onSecondary
+                    shimmerColor = MaterialTheme.colorScheme.onSecondary
                 )
         ) {}
         Spacer(modifier = Modifier.height(dimensions.spaceMedium))
@@ -34,7 +33,7 @@ fun ShopScreenLoadingSkeleton() {
                 .padding(horizontal = dimensions.spaceMedium)
                 .loadingAnimation(
                     isLoading = true,
-                    shimmerColor = MaterialTheme.colors.onSecondary
+                    shimmerColor = MaterialTheme.colorScheme.onSecondary
                 )
         ) {}
         Spacer(modifier = Modifier.height(dimensions.spaceSmall))
@@ -47,7 +46,7 @@ fun ShopScreenLoadingSkeleton() {
                 .defaultMinSize(minHeight = dimensions.size_20)
                 .loadingAnimation(
                     isLoading = true,
-                    shimmerColor = MaterialTheme.colors.onSecondary
+                    shimmerColor = MaterialTheme.colorScheme.onSecondary
                 )
         ) {}
         Spacer(modifier = Modifier.height(dimensions.spaceExtraLarge))
@@ -60,7 +59,7 @@ fun ShopScreenLoadingSkeleton() {
                 .defaultMinSize(minHeight = dimensions.size_20)
                 .loadingAnimation(
                     isLoading = true,
-                    shimmerColor = MaterialTheme.colors.onSecondary
+                    shimmerColor = MaterialTheme.colorScheme.onSecondary
                 )
         ) {}
         Spacer(modifier = Modifier.height(dimensions.spaceSmall))
@@ -73,7 +72,7 @@ fun ShopScreenLoadingSkeleton() {
                 .defaultMinSize(minHeight = dimensions.size_20)
                 .loadingAnimation(
                     isLoading = true,
-                    shimmerColor = MaterialTheme.colors.onSecondary
+                    shimmerColor = MaterialTheme.colorScheme.onSecondary
                 )
         ) {}
         Spacer(modifier = Modifier.height(dimensions.size_100))
@@ -86,7 +85,7 @@ fun ShopScreenLoadingSkeleton() {
                 .weight(1f)
                 .loadingAnimation(
                     isLoading = true,
-                    shimmerColor = MaterialTheme.colors.onSecondary
+                    shimmerColor = MaterialTheme.colorScheme.onSecondary
                 )
         ) {}
     }

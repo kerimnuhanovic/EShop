@@ -28,20 +28,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material.icons.rounded.ShoppingCart
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -118,10 +119,10 @@ fun ProductOverviewScreen(
 
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterialApi::class,
-    ExperimentalComposeUiApi::class
+@OptIn(ExperimentalLayoutApi::class,
+    ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class
 )
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun ProductOverviewScreenContent(
     state: ProductOverviewState,
@@ -137,21 +138,22 @@ private fun ProductOverviewScreenContent(
         }
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
-    val scaffoldState = rememberScaffoldState()
     val isBottomBarOverlapped = remember {
         mutableStateOf(false)
     }
     val bottomSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
         confirmValueChange = {
-            if (it == ModalBottomSheetValue.Hidden)
+            if (it == SheetValue.Hidden)
                 isBottomBarOverlapped.value = false
             true
         },
-        skipHalfExpanded = true
+        skipPartiallyExpanded = true
     )
 
-    val bottomBarHeightPx = with(LocalDensity.current) { dimensions.size_56.roundToPx().toFloat() }
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val bottomBarScrollbehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
+
+    /*val bottomBarHeightPx = with(LocalDensity.current) { dimensions.size_56.roundToPx().toFloat() }
     val bottomBarOffsetHeightPx = remember { mutableStateOf(0f) }
     val topBarOffsetHeightPx = remember { mutableStateOf(0f) }
     val nestedScrollConnection = remember {
@@ -166,11 +168,12 @@ private fun ProductOverviewScreenContent(
                 return Offset.Zero
             }
         }
-    }
+    }*/
 
     Scaffold(
-        modifier = Modifier.fillMaxSize().nestedScroll(nestedScrollConnection),
-        scaffoldState = scaffoldState,
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         bottomBar = {
             BottomBar(
                 items = listOf(
@@ -182,11 +185,10 @@ private fun ProductOverviewScreenContent(
                 isBottomBarOverlapped = isBottomBarOverlapped.value,
                 onNavigate = onNavigate,
                 currentDestination = Route.PRODUCTS_OVERVIEW,
-                modifier = Modifier.offset { IntOffset(x = 0, y = -bottomBarOffsetHeightPx.value.roundToInt()) }
             )
         },
         topBar = {
-            Box(modifier = Modifier.offset { IntOffset(x = 0, y = topBarOffsetHeightPx.value.roundToInt()) }) {
+            Box {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = state.isSearchBarVisible,
                     enter = fadeIn(animationSpec = tween(durationMillis = 300)),
@@ -217,7 +219,9 @@ private fun ProductOverviewScreenContent(
                             keyboardController?.show()
                             onEvent(ProductOverviewEvent.OnSearchIconClick)
                         },
-                        onFilterIconClick = { onEvent(ProductOverviewEvent.OnFilterIconClick) })
+                        onFilterIconClick = { onEvent(ProductOverviewEvent.OnFilterIconClick) },
+                        scrollBehavior = scrollBehavior
+                    )
                 }
             }
         },
@@ -228,9 +232,9 @@ private fun ProductOverviewScreenContent(
             )
         }
     ) {
-        ModalBottomSheetLayout(
+        ModalBottomSheet(
             sheetState = bottomSheetState,
-            sheetContent = {
+            content = {
                 Column(
                     modifier = Modifier
                         .padding(dimensions.spaceMedium)
@@ -380,8 +384,8 @@ private fun ProductOverviewScreenContent(
                     }
                     Spacer(modifier = Modifier.height(dimensions.spaceMedium))
                     EShopButton(
-                        backgroundColor = MaterialTheme.colors.primary,
-                        contentColor = MaterialTheme.colors.onPrimary,
+                        backgroundColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
                         onButtonClick = {
                             onEvent(ProductOverviewEvent.OnAddProductClick)
                         },
@@ -399,7 +403,7 @@ private fun ProductOverviewScreenContent(
                                 )
                             } else {
                                 CircularProgressIndicator(
-                                    color = MaterialTheme.colors.onPrimary,
+                                    color = MaterialTheme.colorScheme.onPrimary,
                                     modifier = Modifier.size(dimensions.size_32)
                                 )
                             }
@@ -408,95 +412,95 @@ private fun ProductOverviewScreenContent(
                     Spacer(modifier = Modifier.height(dimensions.spaceMedium))
                 }
             },
-            sheetShape = RoundedCornerShape(
+            shape = RoundedCornerShape(
                 topStart = dimensions.spaceMedium,
                 topEnd = dimensions.spaceMedium
             ),
-            sheetBackgroundColor = MaterialTheme.colors.background
+            containerColor = MaterialTheme.colorScheme.background,
+            onDismissRequest = {}
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .verticalScroll(scrollState)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.background)
-                    .verticalScroll(scrollState)
-            ) {
-                Spacer(modifier = Modifier.height(dimensions.spaceMedium))
-                Text(
-                    text = stringResource(id = com.eshop.productoverview_presentation.R.string.popular_products),
-                    fontFamily = PoppinsFontFamily,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = dimensions.font_20,
-                    modifier = Modifier.padding(start = dimensions.spaceMedium)
-                )
-                Spacer(modifier = Modifier.height(dimensions.spaceSmall))
-                if (state.isPopularProductsLoading) {
-                    ProductCardPlaceholderRow()
+            Spacer(modifier = Modifier.height(dimensions.spaceMedium))
+            Text(
+                text = stringResource(id = com.eshop.productoverview_presentation.R.string.popular_products),
+                fontFamily = PoppinsFontFamily,
+                fontWeight = FontWeight.Medium,
+                fontSize = dimensions.font_20,
+                modifier = Modifier.padding(start = dimensions.spaceMedium)
+            )
+            Spacer(modifier = Modifier.height(dimensions.spaceSmall))
+            if (state.isPopularProductsLoading) {
+                ProductCardPlaceholderRow()
+            }
+            LazyRow {
+                itemsIndexed(state.popularProducts) { index, product ->
+                    ProductCard(
+                        image = "${BASE_URL}/${product.images.first()}",
+                        productName = product.title,
+                        price = product.price,
+                        date = product.date.formatDate(),
+                        modifier = Modifier
+                            .width(dimensions.card_width_180)
+                            .height(dimensions.uploadImageSurfaceSize)
+                            .padding(
+                                top = dimensions.spaceSmall,
+                                bottom = dimensions.spaceSmall,
+                                start = if (index != 0) dimensions.spaceSmall else dimensions.spaceMedium,
+                                end = if (index != state.popularProducts.size.minus(1)) dimensions.default else dimensions.spaceMedium
+                            ),
+                        onClick = {
+                            onEvent(ProductOverviewEvent.OnProductClick(product.id))
+                        }
+                    )
                 }
-                LazyRow {
-                    itemsIndexed(state.popularProducts) { index, product ->
-                        ProductCard(
-                            image = "${BASE_URL}/${product.images.first()}",
-                            productName = product.title,
-                            price = product.price,
-                            date = product.date.formatDate(),
-                            modifier = Modifier
-                                .width(dimensions.card_width_180)
-                                .height(dimensions.uploadImageSurfaceSize)
-                                .padding(
-                                    top = dimensions.spaceSmall,
-                                    bottom = dimensions.spaceSmall,
-                                    start = if (index != 0) dimensions.spaceSmall else dimensions.spaceMedium,
-                                    end = if (index != state.popularProducts.size.minus(1)) dimensions.default else dimensions.spaceMedium
-                                ),
-                            onClick = {
-                                onEvent(ProductOverviewEvent.OnProductClick(product.id))
-                            }
-                        )
-                    }
+            }
+            Spacer(modifier = Modifier.height(dimensions.spaceMedium))
+            Text(
+                text = stringResource(id = com.eshop.productoverview_presentation.R.string.all_products),
+                fontFamily = PoppinsFontFamily,
+                fontWeight = FontWeight.Medium,
+                fontSize = dimensions.font_20,
+                modifier = Modifier.padding(start = dimensions.spaceMedium)
+            )
+            Spacer(modifier = Modifier.height(dimensions.spaceSmall))
+            if (state.isAllProductsLoading) {
+                ProductCardPlaceholderFlowRow()
+            }
+            FlowRow(modifier = Modifier.padding(horizontal = dimensions.spaceMedium)) {
+                state.allProducts.forEachIndexed { index, product ->
+                    ProductCard(
+                        image = "${BASE_URL}/${product.images.first()}",
+                        productName = product.title,
+                        price = product.price,
+                        date = product.date.formatDate(),
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .height(dimensions.uploadImageSurfaceSize)
+                            .padding(
+                                top = dimensions.spaceSmall,
+                                bottom = dimensions.spaceSmall,
+                                start = if (index % 2 == 0) dimensions.default else dimensions.spaceSmall
+                            ),
+                        onClick = {
+                            onEvent(ProductOverviewEvent.OnProductClick(product.id))
+                        }
+                    )
                 }
-                Spacer(modifier = Modifier.height(dimensions.spaceMedium))
-                Text(
-                    text = stringResource(id = com.eshop.productoverview_presentation.R.string.all_products),
-                    fontFamily = PoppinsFontFamily,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = dimensions.font_20,
-                    modifier = Modifier.padding(start = dimensions.spaceMedium)
-                )
-                Spacer(modifier = Modifier.height(dimensions.spaceSmall))
-                if (state.isAllProductsLoading) {
-                    ProductCardPlaceholderFlowRow()
-                }
-                FlowRow(modifier = Modifier.padding(horizontal = dimensions.spaceMedium)) {
-                    state.allProducts.forEachIndexed { index, product ->
-                        ProductCard(
-                            image = "${BASE_URL}/${product.images.first()}",
-                            productName = product.title,
-                            price = product.price,
-                            date = product.date.formatDate(),
-                            modifier = Modifier
-                                .fillMaxWidth(0.5f)
-                                .height(dimensions.uploadImageSurfaceSize)
-                                .padding(
-                                    top = dimensions.spaceSmall,
-                                    bottom = dimensions.spaceSmall,
-                                    start = if (index % 2 == 0) dimensions.default else dimensions.spaceSmall
-                                ),
-                            onClick = {
-                                onEvent(ProductOverviewEvent.OnProductClick(product.id))
-                            }
-                        )
-                    }
-                }
-                if (state.areAllProductsLoaded) {
-                    Spacer(modifier = Modifier.height(dimensions.spaceExtraLarge))
-                }
-                if (state.isLoadingMoreProducts) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-                    Spacer(modifier = Modifier.height(dimensions.spaceExtraLarge))
-                }
-                if (!scrollState.canScrollForward) {
-                    onEvent(ProductOverviewEvent.OnScreenEndReach)
-                }
+            }
+            if (state.areAllProductsLoaded) {
+                Spacer(modifier = Modifier.height(dimensions.spaceExtraLarge))
+            }
+            if (state.isLoadingMoreProducts) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                Spacer(modifier = Modifier.height(dimensions.spaceExtraLarge))
+            }
+            if (!scrollState.canScrollForward) {
+                onEvent(ProductOverviewEvent.OnScreenEndReach)
             }
         }
     }
@@ -504,7 +508,6 @@ private fun ProductOverviewScreenContent(
 
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 @Preview
 private fun ProductOverviewScreenPreview() {

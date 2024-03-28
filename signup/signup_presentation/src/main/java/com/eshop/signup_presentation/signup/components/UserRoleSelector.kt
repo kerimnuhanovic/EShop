@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,7 +54,7 @@ fun UserRoleSelector(
                 fontFamily = PoppinsFontFamily,
                 fontWeight = FontWeight.Medium,
                 fontSize = dimensions.font_16,
-                color = if (selectedRole == UserRole.CUSTOMER) MaterialTheme.colors.primary else
+                color = if (selectedRole == UserRole.CUSTOMER) MaterialTheme.colorScheme.primary else
                     Color.Black
             )
         }
@@ -69,7 +69,7 @@ fun UserRoleSelector(
                 fontFamily = PoppinsFontFamily,
                 fontWeight = FontWeight.Medium,
                 fontSize = dimensions.font_16,
-                color = if (selectedRole == UserRole.SELLER) MaterialTheme.colors.primary else
+                color = if (selectedRole == UserRole.SELLER) MaterialTheme.colorScheme.primary else
                     Color.Black
             )
 
@@ -80,6 +80,6 @@ fun UserRoleSelector(
             .height(dimensions.spaceExtraSmall)
             .padding(start = dimensions.spaceMedium)
             .offset(animateDividerOffset.value)
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colorScheme.primary)
     )
 }

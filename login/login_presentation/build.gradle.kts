@@ -1,3 +1,12 @@
+plugins {
+    id("com.android.library")
+    id("kotlin-android")
+}
+
+android {
+    namespace = "com.eshop.login_presentation"
+}
+
 apply {
     from("$rootDir/compose-module.gradle")
 }

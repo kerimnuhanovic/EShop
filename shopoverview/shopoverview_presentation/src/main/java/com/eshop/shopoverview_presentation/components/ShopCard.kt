@@ -1,9 +1,7 @@
 package com.eshop.shopoverview_presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,17 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,10 +31,7 @@ import coil.compose.AsyncImage
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.theme.EShopTheme
-import com.eshop.coreui.theme.StarGreen
 import com.eshop.coreui.theme.StarGreenVariant
-import java.text.NumberFormat
-import java.util.Currency
 
 @Composable
 fun ShopCard(
@@ -53,8 +46,8 @@ fun ShopCard(
     val shopNameMaxLength = 35
     val threeDots = "..."
     Card(
-        backgroundColor = MaterialTheme.colors.onSecondary,
-        elevation = dimensions.spaceSmall,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSecondary),
+        elevation = CardDefaults.cardElevation(dimensions.spaceSmall),
         modifier = modifier.clickable { onClick() },
         shape = RoundedCornerShape(CornerSize(dimensions.spaceSmall))
     ) {
@@ -74,7 +67,7 @@ fun ShopCard(
                 fontSize = dimensions.font_16,
                 fontFamily = PoppinsFontFamily,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colors.onSurface,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(horizontal = dimensions.spaceSmall)
             )
             Spacer(modifier = Modifier.height(dimensions.spaceExtraSmall))
@@ -82,7 +75,7 @@ fun ShopCard(
                 Icon(
                     imageVector = Icons.Default.LocationOn,
                     contentDescription = null,
-                    tint = MaterialTheme.colors.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .padding(horizontal = dimensions.spaceExtraSmall)
                 )
@@ -128,7 +121,7 @@ private fun ProductCardPreview() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             ShopCard(
                 image = "https://upload.wikimedia.org/wikipedia/commons/d/d7/Mostar_Old_Town_Panorama_2007.jpg",

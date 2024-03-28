@@ -3,7 +3,6 @@ package com.eshop.shop_presentation.components
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,8 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,7 +54,7 @@ fun TwoOptionSelector(
                 fontFamily = PoppinsFontFamily,
                 fontWeight = FontWeight.Medium,
                 fontSize = dimensions.font_16,
-                color = if (selectedOption == optionOne) MaterialTheme.colors.primary else
+                color = if (selectedOption == optionOne) MaterialTheme.colorScheme.primary else
                     Color.Black
             )
         }
@@ -70,7 +69,7 @@ fun TwoOptionSelector(
                 fontFamily = PoppinsFontFamily,
                 fontWeight = FontWeight.Medium,
                 fontSize = dimensions.font_16,
-                color = if (selectedOption == optionTwo) MaterialTheme.colors.primary else
+                color = if (selectedOption == optionTwo) MaterialTheme.colorScheme.primary else
                     Color.Black
             )
 
@@ -81,6 +80,6 @@ fun TwoOptionSelector(
             .height(dimensions.spaceExtraSmall)
             .padding(start = dimensions.spaceMedium)
             .offset(animateDividerOffset.value)
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colorScheme.primary)
     )
 }

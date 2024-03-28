@@ -5,14 +5,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,13 +19,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import com.eshop.core.domain.models.Product
 import com.eshop.core.util.BASE_URL
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
-import com.eshop.coreui.theme.EShopTheme
 import java.text.NumberFormat
 import java.util.Currency
 
@@ -65,7 +61,7 @@ fun ProductItem(
                     fontFamily = PoppinsFontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = dimensions.font_12,
-                    color = MaterialTheme.colors.onBackground
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = currencyFormat.format(product.price), fontFamily = PoppinsFontFamily,
@@ -83,11 +79,11 @@ fun ProductItem(
                 contentScale = ContentScale.Crop
             )
         }
-        Divider(
-            color = MaterialTheme.colors.onSecondary.copy(0.5f),
+        HorizontalDivider(
             modifier = Modifier
                 .height(dimensions.size_1)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            color = MaterialTheme.colorScheme.onSecondary.copy(0.5f)
         )
     }
 }

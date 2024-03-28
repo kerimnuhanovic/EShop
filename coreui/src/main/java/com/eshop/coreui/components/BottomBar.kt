@@ -1,17 +1,17 @@
 package com.eshop.coreui.components
 
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.BottomAppBar
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,7 +20,6 @@ import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.UiEvent
 import com.eshop.coreui.util.BottomBarItem
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomBar(
     items: List<BottomBarItem>,
@@ -33,11 +32,11 @@ fun BottomBar(
     if (!isBottomBarOverlapped) {
         BottomAppBar(
             modifier = modifier.height(dimensions.size_56),
-            backgroundColor = MaterialTheme.colors.onPrimary,
-            elevation = dimensions.spaceExtraSmall
+            containerColor = MaterialTheme.colorScheme.onPrimary,
+            // elevation = dimensions.spaceExtraSmall
         ) {
             items.forEach { item ->
-                BottomNavigationItem(
+                NavigationBarItem(
                     selected = currentDestination == item.route,
                     onClick = { onNavigate(UiEvent.Navigate(item.route)) },
                     icon = {
@@ -47,15 +46,21 @@ fun BottomBar(
                         Text(text = item.text)
                     },
                     alwaysShowLabel = false,
-                    selectedContentColor = MaterialTheme.colors.primary,
-                    unselectedContentColor = MaterialTheme.colors.surface
+                    colors = NavigationBarItemColors(
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.surface,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedTextColor = MaterialTheme.colorScheme.surface,
+                        disabledIconColor = MaterialTheme.colorScheme.surface,
+                        disabledTextColor = MaterialTheme.colorScheme.surface,
+                        selectedIndicatorColor = MaterialTheme.colorScheme.primary
+                    )
                 )
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 @Preview
 private fun BottomBarPreview() {

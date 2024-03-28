@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,14 +35,17 @@ fun EShopButton(
     Button(
         onClick = onButtonClick,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = backgroundColor,
+            containerColor = backgroundColor,
             contentColor = contentColor
         ),
         modifier = modifier.height(dimensions.buttonHeight_56),
         shape = shape,
         enabled = enabled
     ) {
-        Box(modifier = Modifier.padding(dimensions.spaceExtraSmall), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier.padding(dimensions.spaceExtraSmall),
+            contentAlignment = Alignment.Center
+        ) {
             content()
         }
     }
@@ -56,8 +59,8 @@ private fun EShopButtonPreview() {
     EShopTheme {
         EShopButton(
             content = { Text(text = stringResource(id = R.string.login)) },
-            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary,
+            backgroundColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
             onButtonClick = { },
             modifier = Modifier
                 .fillMaxWidth()

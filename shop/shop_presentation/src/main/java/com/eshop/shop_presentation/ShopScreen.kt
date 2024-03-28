@@ -1,18 +1,9 @@
 package com.eshop.shop_presentation
 
-import android.transition.Slide
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,17 +20,16 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -73,7 +63,7 @@ fun ShopScreen(
     onNavigateBack: () -> Unit
 ) {
     val state = viewModel.state.collectAsState().value
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { 1 })
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
@@ -155,7 +145,7 @@ private fun ShopScreenContent(
                 Icon(
                     imageVector = Icons.Default.LocationOn,
                     contentDescription = null,
-                    tint = MaterialTheme.colors.onBackground.copy(alpha = 0.5f)
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                 )
                 Spacer(modifier = Modifier.width(dimensions.spaceExtraSmall))
                 Text(
@@ -163,7 +153,7 @@ private fun ShopScreenContent(
                     fontFamily = PoppinsFontFamily,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = dimensions.font_12,
-                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.5f)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                 )
             }
             Spacer(modifier = Modifier.height(dimensions.spaceSmall))
@@ -173,11 +163,11 @@ private fun ShopScreenContent(
                 }
             }
             Spacer(modifier = Modifier.height(dimensions.spaceSmall))
-            Divider(
-                color = MaterialTheme.colors.onSecondary.copy(0.5f),
+            HorizontalDivider(
                 modifier = Modifier
                     .height(dimensions.size_1)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                color = MaterialTheme.colorScheme.onSecondary.copy(0.5f)
             )
             Row(modifier = Modifier
                 .padding(vertical = dimensions.spaceExtraSmall)
@@ -186,7 +176,7 @@ private fun ShopScreenContent(
                 Icon(
                     imageVector = Icons.Default.LocationOn,
                     contentDescription = null,
-                    tint = MaterialTheme.colors.onBackground.copy(alpha = 0.5f),
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                     modifier = Modifier.padding(start = dimensions.spaceMedium)
                 )
                 Text(
@@ -194,7 +184,7 @@ private fun ShopScreenContent(
                     fontFamily = PoppinsFontFamily,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = dimensions.font_16,
-                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.5f)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
@@ -215,7 +205,7 @@ private fun ShopScreenContent(
                 }
             }
             Divider(
-                color = MaterialTheme.colors.onSecondary.copy(0.5f),
+                color = MaterialTheme.colorScheme.onSecondary.copy(0.5f),
                 modifier = Modifier
                     .height(dimensions.size_1)
                     .fillMaxWidth()
@@ -259,11 +249,11 @@ private fun ShopScreenContent(
                             ReviewItem(
                                 review = review,
                             )
-                            Divider(
-                                color = MaterialTheme.colors.onSecondary.copy(0.5f),
+                            HorizontalDivider(
                                 modifier = Modifier
                                     .height(dimensions.size_1)
-                                    .fillMaxWidth()
+                                    .fillMaxWidth(),
+                                color = MaterialTheme.colorScheme.onSecondary.copy(0.5f)
                             )
                         }
                         if (state.reviews.isEmpty()) {
@@ -287,6 +277,6 @@ private fun ShopScreenContent(
 @Preview
 private fun ShopScreenPreview() {
     EShopTheme {
-        ShopScreenContent(state = ShopState(), onEvent = {}, rememberPagerState())
+        ShopScreenContent(state = ShopState(), onEvent = {}, rememberPagerState(initialPage = 0, pageCount = {1}))
     }
 }

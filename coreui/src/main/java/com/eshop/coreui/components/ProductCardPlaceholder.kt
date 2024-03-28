@@ -11,8 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.eshop.coreui.LocalDimensions
@@ -24,30 +25,47 @@ fun ProductCardPlaceholder(
 ) {
     val dimensions = LocalDimensions.current
     Card(
-        backgroundColor = MaterialTheme.colors.onSecondary,
-        elevation = dimensions.spaceSmall,
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onSecondary),
+        elevation = CardDefaults.cardElevation(dimensions.spaceSmall),
         modifier = modifier,
         shape = RoundedCornerShape(CornerSize(dimensions.spaceSmall))
     ) {
         Column {
             Box(
-                modifier = Modifier.fillMaxHeight(0.4f).fillMaxWidth().loadingAnimation(isLoading = true)
+                modifier = Modifier
+                    .fillMaxHeight(0.4f)
+                    .fillMaxWidth()
+                    .loadingAnimation(isLoading = true)
             )
             Spacer(modifier = Modifier.height(dimensions.spaceSmall))
             Box(
-                modifier = Modifier.padding(horizontal = dimensions.spaceSmall).fillMaxWidth(0.5f).height(dimensions.spaceMedium).loadingAnimation(isLoading = true)
+                modifier = Modifier
+                    .padding(horizontal = dimensions.spaceSmall)
+                    .fillMaxWidth(0.5f)
+                    .height(dimensions.spaceMedium)
+                    .loadingAnimation(isLoading = true)
             )
             Spacer(modifier = Modifier.height(dimensions.spaceExtraSmall))
             Box(
-                modifier = Modifier.padding(horizontal = dimensions.spaceSmall).fillMaxWidth(0.2f).height(dimensions.size_12).loadingAnimation(isLoading = true)
+                modifier = Modifier
+                    .padding(horizontal = dimensions.spaceSmall)
+                    .fillMaxWidth(0.2f)
+                    .height(dimensions.size_12)
+                    .loadingAnimation(isLoading = true)
             )
             Spacer(modifier = Modifier.weight(1f))
             Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = dimensions.spaceSmall),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = dimensions.spaceSmall),
                 horizontalArrangement = Arrangement.End
             ) {
                 Box(
-                    modifier = Modifier.padding(horizontal = dimensions.spaceSmall).fillMaxWidth(0.5f).height(dimensions.size_20).loadingAnimation(isLoading = true)
+                    modifier = Modifier
+                        .padding(horizontal = dimensions.spaceSmall)
+                        .fillMaxWidth(0.5f)
+                        .height(dimensions.size_20)
+                        .loadingAnimation(isLoading = true)
                 )
             }
         }

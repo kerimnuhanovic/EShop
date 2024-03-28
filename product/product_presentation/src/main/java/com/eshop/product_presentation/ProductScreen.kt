@@ -19,18 +19,16 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -54,8 +52,6 @@ import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
 import com.eshop.coreui.components.EShopButton
 import com.eshop.coreui.components.PageIndicator
-import com.eshop.coreui.theme.LightGray
-import com.eshop.coreui.theme.ShimmerLightColor
 import com.eshop.coreui.util.UiEvent
 import com.eshop.coreui.util.loadingAnimation
 import java.text.NumberFormat
@@ -69,7 +65,7 @@ fun ProductScreen(
     onNavigateBack: () -> Unit,
 ) {
     val state = viewModel.state.collectAsState().value
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = {state.product!!.images.size})
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { uiEvent ->
             when (uiEvent) {
@@ -120,7 +116,7 @@ private fun ProductScreenContent(
                             .fillMaxWidth()
                             .loadingAnimation(
                                 isLoading = true,
-                                shimmerColor = MaterialTheme.colors.onSecondary
+                                shimmerColor = MaterialTheme.colorScheme.onSecondary
                             )
                     ) {
 
@@ -129,7 +125,6 @@ private fun ProductScreenContent(
                 if (!state.isLoading && state.product != null) {
                     HorizontalPager(
                         state = pagerState,
-                        pageCount = state.product.images.size
                     ) { page ->
                         Box {
                             AsyncImage(
@@ -190,7 +185,7 @@ private fun ProductScreenContent(
                 .padding(horizontal = dimensions.spaceMedium)
                 .loadingAnimation(
                     isLoading = state.isLoading,
-                    shimmerColor = MaterialTheme.colors.onSecondary
+                    shimmerColor = MaterialTheme.colorScheme.onSecondary
                 )
         ) {
             if (!state.isLoading && state.product != null) {
@@ -214,7 +209,7 @@ private fun ProductScreenContent(
                 .defaultMinSize(minHeight = dimensions.size_20)
                 .loadingAnimation(
                     isLoading = state.isLoading,
-                    shimmerColor = MaterialTheme.colors.onSecondary
+                    shimmerColor = MaterialTheme.colorScheme.onSecondary
                 )
         ) {
             if (!state.isLoading && state.productOwner != null) {
@@ -226,7 +221,7 @@ private fun ProductScreenContent(
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
                             contentDescription = null,
-                            tint = MaterialTheme.colors.onBackground.copy(alpha = 0.5f)
+                            tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                         )
                         Spacer(modifier = Modifier.width(dimensions.spaceSmall))
                         Text(
@@ -234,7 +229,7 @@ private fun ProductScreenContent(
                             fontFamily = PoppinsFontFamily,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = dimensions.font_12,
-                            color = MaterialTheme.colors.onBackground.copy(alpha = 0.5f)
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                         )
                     }
                     Spacer(modifier = Modifier.height(dimensions.spaceSmall))
@@ -245,7 +240,7 @@ private fun ProductScreenContent(
                         Icon(
                             imageVector = Icons.Default.LocationOn,
                             contentDescription = null,
-                            tint = MaterialTheme.colors.onBackground.copy(alpha = 0.5f)
+                            tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                         )
                         Spacer(modifier = Modifier.width(dimensions.spaceSmall))
                         Text(
@@ -253,7 +248,7 @@ private fun ProductScreenContent(
                             fontFamily = PoppinsFontFamily,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = dimensions.font_12,
-                            color = MaterialTheme.colors.onBackground.copy(alpha = 0.5f)
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                         )
                     }
                 }
@@ -266,7 +261,7 @@ private fun ProductScreenContent(
                 .defaultMinSize(minHeight = dimensions.size_200)
                 .loadingAnimation(
                     isLoading = state.isLoading,
-                    shimmerColor = MaterialTheme.colors.onSecondary
+                    shimmerColor = MaterialTheme.colorScheme.onSecondary
                 )
         ) {
             if (!state.isLoading && state.product != null) {
@@ -284,7 +279,7 @@ private fun ProductScreenContent(
                 .defaultMinSize(minHeight = dimensions.size_20, minWidth = dimensions.size_200)
                 .loadingAnimation(
                     isLoading = state.isLoading,
-                    shimmerColor = MaterialTheme.colors.onSecondary
+                    shimmerColor = MaterialTheme.colorScheme.onSecondary
                 )
         ) {
             if (!state.isLoading && state.product != null) {
@@ -310,13 +305,13 @@ private fun ProductScreenContent(
                         )
                     } else {
                         CircularProgressIndicator(
-                            color = MaterialTheme.colors.onPrimary,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(dimensions.size_32)
                         )
                     }
                 },
-                backgroundColor = MaterialTheme.colors.primary,
-                contentColor = MaterialTheme.colors.onPrimary,
+                backgroundColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 onButtonClick = { onEvent(ProductEvent.OnAddToCartClick(state.product!!.id)) },
                 modifier = Modifier
                     .fillMaxWidth()

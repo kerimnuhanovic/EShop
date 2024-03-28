@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -21,14 +19,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
@@ -45,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -56,7 +51,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eshop.core.util.BASE_URL
 import com.eshop.coreui.LocalDimensions
@@ -115,15 +109,6 @@ fun ShopOverviewScreenContent(
     val isBottomBarOverlapped = remember {
         mutableStateOf(false)
     }
-    /*val bottomSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        confirmValueChange = {
-            if (it == ModalBottomSheetValue.Hidden)
-                isBottomBarOverlapped.value = false
-            true
-        },
-        skipHalfExpanded = true
-    )*/
 
     val bottomBarHeightPx = with(LocalDensity.current) { dimensions.size_56.roundToPx().toFloat() }
     val bottomBarOffsetHeightPx = remember { mutableStateOf(0f) }
@@ -165,62 +150,6 @@ fun ShopOverviewScreenContent(
                     )
                 }
             )
-        },
-        topBar = {
-            Box {
-                androidx.compose.animation.AnimatedVisibility(
-                    visible = state.isSearchBarVisible,
-                    enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 150))
-                ) {
-                    PrimarySearchBar(inputText = state.searchQuery, onTextChange = {
-                        onEvent(ShopOverviewEvent.OnSearchQueryEnter(it))
-                    }, isSingleLine = true, keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Search
-                    ), keyboardActions = KeyboardActions(onSearch = {
-                        keyboardController?.hide()
-                        onEvent(ShopOverviewEvent.OnSearch)
-                    }), placeholderId = R.string.search, onLeadingIconClick = {
-                        onEvent(ShopOverviewEvent.OnExitSearchBarClick)
-                    }, onTrailingIconClick = {
-                        onEvent(ShopOverviewEvent.OnDeleteSearchTextClick)
-                    },
-                        modifier = Modifier.offset {
-                            IntOffset(
-                                x = 0,
-                                y = topBarOffsetHeightPx.value.roundToInt()
-                            )
-                        }
-                    )
-                }
-                androidx.compose.animation.AnimatedVisibility(
-                    visible = !state.isSearchBarVisible,
-                    enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 150))
-                ) {
-                    TopBanner(iconId = R.drawable.eshoplogo,
-                        titleId = R.string.eshop,
-                        subtitleId = R.string.your_online_shop_destination,
-                        onSearchIconClick = {
-                            keyboardController?.show()
-                            onEvent(ShopOverviewEvent.OnSearchIconClick)
-                        },
-                        onFilterIconClick = { onEvent(ShopOverviewEvent.OnFilterIconClick) },
-                        modifier = Modifier.offset {
-                            IntOffset(
-                                x = 0,
-                                y = topBarOffsetHeightPx.value.roundToInt()
-                            )
-                        }
-                    )
-                }
-            }
-        },
-        floatingActionButton = {
-            /*FloatingButton(
-                modalBottomSheetState = bottomSheetState,
-                isBottomBarOverlapped = isBottomBarOverlapped
-            )*/
         }
     ) { values ->
         Column(
@@ -228,7 +157,7 @@ fun ShopOverviewScreenContent(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
                 .verticalScroll(scrollState)
-                .padding(values)
+                .padding(top = dimensions.size_60)
         ) {
             Spacer(modifier = Modifier.height(dimensions.spaceMedium))
             Text(
@@ -304,6 +233,54 @@ fun ShopOverviewScreenContent(
             }
             if (!scrollState.canScrollForward) {
                 onEvent(ShopOverviewEvent.OnScreenEndReach)
+            }
+        }
+        Box {
+            androidx.compose.animation.AnimatedVisibility(
+                visible = state.isSearchBarVisible,
+                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 150))
+            ) {
+                PrimarySearchBar(inputText = state.searchQuery, onTextChange = {
+                    onEvent(ShopOverviewEvent.OnSearchQueryEnter(it))
+                }, isSingleLine = true, keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search
+                ), keyboardActions = KeyboardActions(onSearch = {
+                    keyboardController?.hide()
+                    onEvent(ShopOverviewEvent.OnSearch)
+                }), placeholderId = R.string.search, onLeadingIconClick = {
+                    onEvent(ShopOverviewEvent.OnExitSearchBarClick)
+                }, onTrailingIconClick = {
+                    onEvent(ShopOverviewEvent.OnDeleteSearchTextClick)
+                },
+                    modifier = Modifier.offset {
+                        IntOffset(
+                            x = 0,
+                            y = topBarOffsetHeightPx.value.roundToInt()
+                        )
+                    }
+                )
+            }
+            androidx.compose.animation.AnimatedVisibility(
+                visible = !state.isSearchBarVisible,
+                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 150))
+            ) {
+                TopBanner(iconId = R.drawable.eshoplogo,
+                    titleId = R.string.eshop,
+                    subtitleId = R.string.your_online_shop_destination,
+                    onSearchIconClick = {
+                        keyboardController?.show()
+                        onEvent(ShopOverviewEvent.OnSearchIconClick)
+                    },
+                    onFilterIconClick = { onEvent(ShopOverviewEvent.OnFilterIconClick) },
+                    modifier = Modifier.offset {
+                        IntOffset(
+                            x = 0,
+                            y = topBarOffsetHeightPx.value.roundToInt()
+                        )
+                    }
+                )
             }
         }
     }

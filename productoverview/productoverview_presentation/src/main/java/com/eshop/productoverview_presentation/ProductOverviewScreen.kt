@@ -121,7 +121,6 @@ fun ProductOverviewScreen(
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterialApi::class,
     ExperimentalComposeUiApi::class
 )
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 private fun ProductOverviewScreenContent(
     state: ProductOverviewState,
@@ -157,13 +156,16 @@ private fun ProductOverviewScreenContent(
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                val delta = available.y
-                val newOffset = bottomBarOffsetHeightPx.value + delta
+                return if (!isBottomBarOverlapped.value) {
+                    val delta = available.y
+                    val newOffset = bottomBarOffsetHeightPx.value + delta
 
-                bottomBarOffsetHeightPx.value = newOffset.coerceIn(-bottomBarHeightPx, 0f)
-                topBarOffsetHeightPx.value = newOffset.coerceIn(-bottomBarHeightPx, 0f)
-
-                return Offset.Zero
+                    bottomBarOffsetHeightPx.value = newOffset.coerceIn(-bottomBarHeightPx, 0f)
+                    topBarOffsetHeightPx.value = newOffset.coerceIn(-bottomBarHeightPx, 0f)
+                    Offset.Zero
+                } else {
+                    Offset.Zero
+                }
             }
         }
     }
@@ -185,49 +187,13 @@ private fun ProductOverviewScreenContent(
                 modifier = Modifier.offset { IntOffset(x = 0, y = -bottomBarOffsetHeightPx.value.roundToInt()) }
             )
         },
-        topBar = {
-            Box(modifier = Modifier.offset { IntOffset(x = 0, y = topBarOffsetHeightPx.value.roundToInt()) }) {
-                androidx.compose.animation.AnimatedVisibility(
-                    visible = state.isSearchBarVisible,
-                    enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 150))
-                ) {
-                    PrimarySearchBar(inputText = state.searchQuery, onTextChange = {
-                        onEvent(ProductOverviewEvent.OnSearchQueryEnter(it))
-                    }, isSingleLine = true, keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Search
-                    ), keyboardActions = KeyboardActions(onSearch = {
-                        keyboardController?.hide()
-                        onEvent(ProductOverviewEvent.OnSearch)
-                    }), placeholderId = R.string.search, onLeadingIconClick = {
-                        onEvent(ProductOverviewEvent.OnExitSearchBarClick)
-                    }, onTrailingIconClick = {
-                        onEvent(ProductOverviewEvent.OnDeleteSearchTextClick)
-                    })
-                }
-                androidx.compose.animation.AnimatedVisibility(
-                    visible = !state.isSearchBarVisible,
-                    enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 150))
-                ) {
-                    TopBanner(iconId = R.drawable.eshoplogo,
-                        titleId = R.string.eshop,
-                        subtitleId = R.string.your_online_shop_destination,
-                        onSearchIconClick = {
-                            keyboardController?.show()
-                            onEvent(ProductOverviewEvent.OnSearchIconClick)
-                        },
-                        onFilterIconClick = { onEvent(ProductOverviewEvent.OnFilterIconClick) })
-                }
-            }
-        },
         floatingActionButton = {
             FloatingButton(
                 modalBottomSheetState = bottomSheetState,
                 isBottomBarOverlapped = isBottomBarOverlapped
             )
         }
-    ) {
+    ) { values ->
         ModalBottomSheetLayout(
             sheetState = bottomSheetState,
             sheetContent = {
@@ -419,6 +385,7 @@ private fun ProductOverviewScreenContent(
                     .fillMaxSize()
                     .background(MaterialTheme.colors.background)
                     .verticalScroll(scrollState)
+                    .padding(top = dimensions.size_60)
             ) {
                 Spacer(modifier = Modifier.height(dimensions.spaceMedium))
                 Text(
@@ -498,13 +465,47 @@ private fun ProductOverviewScreenContent(
                     onEvent(ProductOverviewEvent.OnScreenEndReach)
                 }
             }
+
+            Box(modifier = Modifier.offset { IntOffset(x = 0, y = topBarOffsetHeightPx.value.roundToInt()) }) {
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = state.isSearchBarVisible,
+                    enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 150))
+                ) {
+                    PrimarySearchBar(inputText = state.searchQuery, onTextChange = {
+                        onEvent(ProductOverviewEvent.OnSearchQueryEnter(it))
+                    }, isSingleLine = true, keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Search
+                    ), keyboardActions = KeyboardActions(onSearch = {
+                        keyboardController?.hide()
+                        onEvent(ProductOverviewEvent.OnSearch)
+                    }), placeholderId = R.string.search, onLeadingIconClick = {
+                        onEvent(ProductOverviewEvent.OnExitSearchBarClick)
+                    }, onTrailingIconClick = {
+                        onEvent(ProductOverviewEvent.OnDeleteSearchTextClick)
+                    })
+                }
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = !state.isSearchBarVisible,
+                    enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 150))
+                ) {
+                    TopBanner(iconId = R.drawable.eshoplogo,
+                        titleId = R.string.eshop,
+                        subtitleId = R.string.your_online_shop_destination,
+                        onSearchIconClick = {
+                            keyboardController?.show()
+                            onEvent(ProductOverviewEvent.OnSearchIconClick)
+                        },
+                        onFilterIconClick = { onEvent(ProductOverviewEvent.OnFilterIconClick) })
+                }
+            }
         }
     }
 
 
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 @Preview
 private fun ProductOverviewScreenPreview() {

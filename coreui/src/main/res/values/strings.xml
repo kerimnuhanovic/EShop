@@ -15,4 +15,16 @@
     <string name="your_online_shop_destination">Your online shop destination</string>
     <string name="select_your_shop_categories">Select your shop categories</string>
     <string name="add_to_cart">Add To Cart</string>
+    <string name="sort_by_shop_name_asc">Shop Name A-Z</string>
+    <string name="sort_by_shop_name_desc">Shop Name Z-A</string>
+    <string name="filter">Filter</string>
+    <string name="sort_by">Sort By</string>
+    <string name="done">Done</string>
+    <string name="sort_by_product_name_asc">Product Name A-Z</string>
+    <string name="sort_by_product_name_desc">Product Name Z-A</string>
+    <string name="sort_by_product_price_desc">Price: High to Low</string>
+    <string name="sort_by_product_price_asc">Price: Low to High</string>
+    <string name="sort_by_product_date_desc">Date: Newest First</string>
+    <string name="sort_by_product_date_asc">Price: Oldest First</string>
+
 </resources>

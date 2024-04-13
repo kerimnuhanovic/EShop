@@ -12,4 +12,5 @@
     <string name="add">Add</string>
     <string name="popular_products">Popular products</string>
     <string name="all_products">All products</string>
+    <string name="filtered_products">Filtered products</string>
 </resources>

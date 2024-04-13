@@ -2,4 +2,5 @@
 <resources>
     <string name="popular_shops">Popular shops</string>
     <string name="all_shops">All shops</string>
+    <string name="filtered_shops">Filtered Shops</string>
 </resources>

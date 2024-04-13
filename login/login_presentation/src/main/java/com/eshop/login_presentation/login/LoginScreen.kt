@@ -51,14 +51,8 @@ fun LoginScreen(
     val state = viewModel.loginState.collectAsState().value
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { uiEvent ->
-            when (uiEvent) {
-                is UiEvent.Navigate -> onNavigate(uiEvent)
-                is UiEvent.ScrollPage -> {
-                    // No-op
-                }
-                UiEvent.NavigateBack -> {
-                    // No-op
-                }
+            if (uiEvent is UiEvent.Navigate) {
+                onNavigate(uiEvent)
             }
         }
     }

@@ -2,6 +2,7 @@ package com.eshop.productoverview_data.repository
 
 import com.eshop.core.util.handleApiError
 import com.eshop.core.data.mapper.toProduct
+import com.eshop.core.domain.models.FilteredShopAndProductCategory
 import com.eshop.productoverview_data.remote.ProductOverviewApi
 import com.eshop.core.domain.models.Product
 import com.eshop.productoverview_domain.repository.ProductOverviewRepository
@@ -15,17 +16,19 @@ import okhttp3.RequestBody.Companion.toRequestBody
 
 class ProductOverviewRepositoryImpl @Inject constructor(
     private val productOverviewApi: ProductOverviewApi
-): ProductOverviewRepository {
+) : ProductOverviewRepository {
     override suspend fun addProduct(productData: ProductAdditionData): Result<Product> {
         return try {
             val title = productData.title.toRequestBody("text/plain".toMediaTypeOrNull())
-            val description = productData.description.toRequestBody("text/plain".toMediaTypeOrNull())
+            val description =
+                productData.description.toRequestBody("text/plain".toMediaTypeOrNull())
             val category = productData.categories.toRequestBody("text/plain".toMediaTypeOrNull())
             val price = productData.price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
             val images = mutableListOf<MultipartBody.Part>()
             productData.images.forEach { imageFile ->
                 val image = imageFile.asRequestBody("image/*".toMediaTypeOrNull())
-                val imagePart = MultipartBody.Part.createFormData("productImages[]", imageFile.name, image)
+                val imagePart =
+                    MultipartBody.Part.createFormData("productImages[]", imageFile.name, image)
                 images.add(imagePart)
             }
             val result = productOverviewApi.addProduct(title, description, category, price, images)
@@ -46,9 +49,21 @@ class ProductOverviewRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchAllProducts(offset: Int, searchQuery: String?): Result<List<Product>> {
+    override suspend fun fetchAllProducts(
+        offset: Int,
+        searchQuery: String?,
+        filteredCategories: List<FilteredShopAndProductCategory>?,
+        sortBy: String?,
+        orderBy: String?
+    ): Result<List<Product>> {
         return try {
-            val result = productOverviewApi.fetchAllProducts(offset, searchQuery)
+            val result = productOverviewApi.fetchAllProducts(
+                offset,
+                searchQuery,
+                filteredCategories?.joinToString(separator = "$") { it.category },
+                sortBy,
+                orderBy
+            )
             Result.Success(result.map { productDto ->
                 productDto.toProduct()
             })

@@ -72,15 +72,10 @@ fun ProductScreen(
     val pagerState = rememberPagerState()
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { uiEvent ->
-            when (uiEvent) {
-                is UiEvent.Navigate -> {
-                    onNavigate(uiEvent)
-                }
-
-                is UiEvent.ScrollPage -> TODO()
-                UiEvent.NavigateBack -> {
-                    onNavigateBack()
-                }
+            if (uiEvent is UiEvent.Navigate) {
+                onNavigate(uiEvent)
+            } else if (uiEvent == UiEvent.NavigateBack) {
+                onNavigateBack()
             }
         }
     }

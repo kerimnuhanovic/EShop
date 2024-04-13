@@ -15,16 +15,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
@@ -37,10 +42,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -57,6 +65,9 @@ import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
 import com.eshop.coreui.components.BottomBar
+import com.eshop.coreui.components.DrawerItem
+import com.eshop.coreui.components.EShopButton
+import com.eshop.coreui.components.EShopCheckbox
 import com.eshop.coreui.components.PrimarySearchBar
 import com.eshop.coreui.components.ProductCardPlaceholderFlowRow
 import com.eshop.coreui.components.ProductCardPlaceholderRow
@@ -66,6 +77,7 @@ import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.BottomBarItem
 import com.eshop.coreui.util.UiEvent
 import com.eshop.shopoverview_presentation.components.ShopCard
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
@@ -74,6 +86,12 @@ fun ShopOverviewScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
 ) {
     val state = viewModel.state.collectAsState().value
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+    val focusRequester = remember {
+        FocusRequester()
+    }
+
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
@@ -88,10 +106,30 @@ fun ShopOverviewScreen(
                 is UiEvent.ScrollPage -> {
                     // no-op
                 }
+
+                UiEvent.ChangeNavigationDrawerState -> {
+                    scope.launch {
+                        if (scaffoldState.drawerState.isOpen) {
+                            scaffoldState.drawerState.close()
+                        } else {
+                            scaffoldState.drawerState.open()
+                        }
+                    }
+                }
+
+                UiEvent.FocusInputField -> {
+                    focusRequester.requestFocus()
+                }
             }
         }
     }
-    ShopOverviewScreenContent(state = state, onEvent = viewModel::onEvent, onNavigate)
+    ShopOverviewScreenContent(
+        state = state,
+        scaffoldState = scaffoldState,
+        focusRequester = focusRequester,
+        onEvent = viewModel::onEvent,
+        onNavigate = onNavigate
+    )
 }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
@@ -99,13 +137,14 @@ fun ShopOverviewScreen(
 @Composable
 fun ShopOverviewScreenContent(
     state: ShopOverviewState,
+    scaffoldState: ScaffoldState,
+    focusRequester: FocusRequester,
     onEvent: (ShopOverviewEvent) -> Unit,
     onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val dimensions = LocalDimensions.current
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
-    val scaffoldState = rememberScaffoldState()
     val isBottomBarOverlapped = remember {
         mutableStateOf(false)
     }
@@ -150,7 +189,123 @@ fun ShopOverviewScreenContent(
                     )
                 }
             )
-        }
+        },
+        drawerContent = {
+            Divider()
+            DrawerItem(
+                isDrawerItemExpanded = state.isFilterDrawerItemExpanded,
+                containerModifier = Modifier.padding(
+                    horizontal = dimensions.spaceMedium,
+                    vertical = dimensions.spaceSmall
+                ),
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.filter),
+                        fontSize = dimensions.font_20,
+                        fontFamily = PoppinsFontFamily,
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 1,
+                        color = Color.Black
+                    )
+                },
+                iconColor = Color.Black,
+                onIconClick = {
+                    onEvent(ShopOverviewEvent.OnFilterDrawerItemClick)
+                },
+                iconModifier = Modifier.size(dimensions.size_32)
+            ) {
+                Column(modifier = Modifier.padding(top = dimensions.spaceSmall)) {
+                    state.shopCategories.map { shopCategory ->
+                        EShopCheckbox(isChecked = shopCategory.isSelected, onChange = {
+                            onEvent(ShopOverviewEvent.OnShopCategorySelect(shopCategory))
+                        }, label = {
+                            Text(
+                                text = shopCategory.category.value,
+                                fontFamily = PoppinsFontFamily,
+                                fontSize = dimensions.font_16,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black.copy(0.8f),
+                                modifier = Modifier.padding(horizontal = dimensions.spaceExtraSmall)
+                            )
+                        },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = MaterialTheme.colors.primary,
+                                checkmarkColor = Color.White
+                            )
+                        )
+                        Spacer(modifier = Modifier.height(dimensions.spaceSmall))
+                    }
+                }
+            }
+            Divider()
+
+            DrawerItem(
+                isDrawerItemExpanded = state.isSortDrawerItemExpanded,
+                containerModifier = Modifier.padding(
+                    horizontal = dimensions.spaceMedium,
+                    vertical = dimensions.spaceSmall
+                ),
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.sort_by),
+                        fontSize = dimensions.font_20,
+                        fontFamily = PoppinsFontFamily,
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 1,
+                        color = Color.Black
+                    )
+                },
+                iconColor = Color.Black,
+                onIconClick = {
+                    onEvent(ShopOverviewEvent.OnSortDrawerItemClick)
+                },
+                iconModifier = Modifier.size(dimensions.size_32)
+            ) {
+                Column(modifier = Modifier.padding(top = dimensions.spaceSmall)) {
+                    state.sortCriteria.map { criterionItem ->
+                        EShopCheckbox(isChecked = criterionItem.isSelected, onChange = {
+                            onEvent(ShopOverviewEvent.OnSortCriterionSelect(criterionItem))
+                        }, label = {
+                            Text(
+                                text = stringResource(id = criterionItem.criterion.labelId),
+                                fontFamily = PoppinsFontFamily,
+                                fontSize = dimensions.font_16,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black.copy(0.8f),
+                                modifier = Modifier.padding(horizontal = dimensions.spaceExtraSmall)
+                            )
+                        },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = MaterialTheme.colors.primary,
+                                checkmarkColor = Color.White
+                            )
+                        )
+                        Spacer(modifier = Modifier.height(dimensions.spaceSmall))
+                    }
+                }
+            }
+            Divider()
+            Spacer(modifier = Modifier.weight(1f))
+            EShopButton(
+                content = {
+                    Text(
+                        text = stringResource(id = R.string.done),
+                        fontSize = dimensions.font_16,
+                        fontFamily = PoppinsFontFamily,
+                        fontWeight = FontWeight.Medium
+                    )
+                },
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = Color.White,
+                shape = RoundedCornerShape(dimensions.spaceSmall),
+                onButtonClick = { onEvent(ShopOverviewEvent.OnFilterClick) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensions.spaceMedium)
+                    .height(dimensions.size_50)
+            )
+        },
+        drawerBackgroundColor = MaterialTheme.colors.onPrimary
     ) { values ->
         Column(
             modifier = Modifier
@@ -194,7 +349,7 @@ fun ShopOverviewScreenContent(
             Spacer(modifier = Modifier.height(dimensions.spaceMedium))
             Text(
                 text = if (state.areSearchedShopsDisplayed) "Search results for '${state.searchedQuery}'" else stringResource(
-                    id = com.eshop.shopoverview_presentation.R.string.all_shops
+                    id = if (state.shopCategories.count { it.isSelected } > 0) com.eshop.shopoverview_presentation.R.string.filtered_shops else com.eshop.shopoverview_presentation.R.string.all_shops
                 ),
                 fontFamily = PoppinsFontFamily,
                 fontWeight = FontWeight.Medium,
@@ -253,6 +408,7 @@ fun ShopOverviewScreenContent(
                 }, onTrailingIconClick = {
                     onEvent(ShopOverviewEvent.OnDeleteSearchTextClick)
                 },
+                    focusRequester = focusRequester,
                     modifier = Modifier.offset {
                         IntOffset(
                             x = 0,
@@ -270,7 +426,6 @@ fun ShopOverviewScreenContent(
                     titleId = R.string.eshop,
                     subtitleId = R.string.your_online_shop_destination,
                     onSearchIconClick = {
-                        keyboardController?.show()
                         onEvent(ShopOverviewEvent.OnSearchIconClick)
                     },
                     onFilterIconClick = { onEvent(ShopOverviewEvent.OnFilterIconClick) },
@@ -292,9 +447,10 @@ fun ShopOverviewScreenContent(
 private fun ShopOverviewScreenPreview() {
     EShopTheme {
         ShopOverviewScreenContent(
+            scaffoldState = rememberScaffoldState(),
             state = ShopOverviewState(
                 isAllShopsLoading = true,
                 isPopularShopsLoading = true
-            ), onEvent = {}, {})
+            ), onEvent = {}, onNavigate = {}, focusRequester = FocusRequester())
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
@@ -31,8 +32,12 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
@@ -44,7 +49,7 @@ import com.eshop.coreui.R
 import com.eshop.coreui.theme.EShopTheme
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PrimarySearchBar(
     inputText: String,
@@ -71,72 +76,87 @@ fun PrimarySearchBar(
             modifier = Modifier.clickable { onTrailingIconClick() }
         )
     },
+    focusRequester: FocusRequester,
     modifier: Modifier = Modifier
 ) {
     val dimensions = LocalDimensions.current
-    BasicTextField(
-        value = inputText,
-        onValueChange = onTextChange,
-        enabled = true,
-        textStyle = TextStyle(
-            fontFamily = PoppinsFontFamily,
-            fontSize = dimensions.font_14,
-            letterSpacing = dimensions.smallLetterSpacing,
-            color = MaterialTheme.colors.onBackground
-        ),
-        singleLine = isSingleLine,
-        keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
-        cursorBrush = Brush.horizontalGradient(
-            listOf(
-                MaterialTheme.colors.primary,
-                MaterialTheme.colors.primary
-            )
-        ),
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    TopAppBar(
         modifier = modifier
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colors.onPrimary)
             .height(dimensions.size_56),
-        decorationBox = { innerTextField ->
-            TextFieldDefaults.TextFieldDecorationBox(
-                value = inputText,
-                innerTextField = {
-                    Row(
-                        modifier = Modifier.fillMaxHeight(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        innerTextField()
+        backgroundColor = MaterialTheme.colors.onPrimary
+    ) {
+        BasicTextField(
+            value = inputText,
+            onValueChange = onTextChange,
+            enabled = true,
+            textStyle = TextStyle(
+                fontFamily = PoppinsFontFamily,
+                fontSize = dimensions.font_14,
+                letterSpacing = dimensions.smallLetterSpacing,
+                color = MaterialTheme.colors.onBackground
+            ),
+            singleLine = isSingleLine,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            cursorBrush = Brush.horizontalGradient(
+                listOf(
+                    MaterialTheme.colors.primary,
+                    MaterialTheme.colors.primary
+                )
+            ),
+            modifier = modifier
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colors.onPrimary)
+                .height(dimensions.size_56)
+                .focusRequester(focusRequester)
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        keyboardController?.show()
                     }
                 },
-                enabled = true,
-                singleLine = isSingleLine,
-                visualTransformation = VisualTransformation.None,
-                contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
-                    top = dimensions.default,
-                    bottom = dimensions.default,
-                    start = dimensions.spaceExtraSmall
-                ),
-                interactionSource = remember { MutableInteractionSource() },
-                placeholder = {
-                    if (inputText.isEmpty()) {
-                        Box(
+            decorationBox = { innerTextField ->
+                TextFieldDefaults.TextFieldDecorationBox(
+                    value = inputText,
+                    innerTextField = {
+                        Row(
                             modifier = Modifier.fillMaxHeight(),
-                            contentAlignment = Alignment.Center
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = stringResource(id = placeholderId),
-                                fontFamily = PoppinsFontFamily,
-                                fontSize = dimensions.font_14,
-                                letterSpacing = dimensions.smallLetterSpacing
-                            )
+                            innerTextField()
                         }
-                    }
-                },
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon
-            )
-        }
-    )
+                    },
+                    enabled = true,
+                    singleLine = isSingleLine,
+                    visualTransformation = VisualTransformation.None,
+                    contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
+                        top = dimensions.default,
+                        bottom = dimensions.default,
+                        start = dimensions.spaceExtraSmall
+                    ),
+                    interactionSource = remember { MutableInteractionSource() },
+                    placeholder = {
+                        if (inputText.isEmpty()) {
+                            Box(
+                                modifier = Modifier.fillMaxHeight(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(id = placeholderId),
+                                    fontFamily = PoppinsFontFamily,
+                                    fontSize = dimensions.font_14,
+                                    letterSpacing = dimensions.smallLetterSpacing
+                                )
+                            }
+                        }
+                    },
+                    leadingIcon = leadingIcon,
+                    trailingIcon = trailingIcon
+                )
+            }
+        )
+    }
 }
 
 @Composable
@@ -152,6 +172,7 @@ private fun PrimarySearchBarPreview() {
             placeholderId = R.string.search,
             keyboardOptions = KeyboardOptions.Default,
             keyboardActions = KeyboardActions.Default,
+            focusRequester = FocusRequester()
         )
     }
 }

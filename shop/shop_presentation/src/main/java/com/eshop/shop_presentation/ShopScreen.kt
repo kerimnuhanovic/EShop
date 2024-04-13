@@ -76,18 +76,11 @@ fun ShopScreen(
     val pagerState = rememberPagerState()
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.Navigate -> {
-                    onNavigate(event)
-                }
-
-                UiEvent.NavigateBack -> {
-                    onNavigateBack()
-                }
-
-                is UiEvent.ScrollPage -> {
-                    // no-op
-                }
+            if (event is UiEvent.Navigate) {
+                onNavigate(event)
+            }
+            if (event == UiEvent.NavigateBack) {
+                onNavigateBack()
             }
         }
     }

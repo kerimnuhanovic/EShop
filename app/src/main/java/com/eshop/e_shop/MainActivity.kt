@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             EShopTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Route.LOGIN) {
+                NavHost(navController = navController, startDestination = Route.SHOPS_OVERVIEW) {
                     composable(route = Route.LOGIN) {
                         LoginScreen(onNavigate = navController::navigate)
                     }

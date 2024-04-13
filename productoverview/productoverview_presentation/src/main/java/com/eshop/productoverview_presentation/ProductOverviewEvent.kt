@@ -1,6 +1,8 @@
 package com.eshop.productoverview_presentation
 
 import android.net.Uri
+import com.eshop.coreui.util.SelectedCategory
+import com.eshop.coreui.util.SelectedSortCriterion
 import com.eshop.coreui.util.ShopAndProductCategory
 
 sealed interface ProductOverviewEvent {
@@ -20,4 +22,9 @@ sealed interface ProductOverviewEvent {
     data class OnProductPhotoRemove(val photo: Uri) : ProductOverviewEvent
     object OnScreenEndReach : ProductOverviewEvent
     data class OnProductClick(val productId: String) : ProductOverviewEvent
+    object OnFilterDrawerItemClick : ProductOverviewEvent
+    data class OnProductCategorySelect(val selectedCategory: SelectedCategory) : ProductOverviewEvent
+    object OnSortDrawerItemClick : ProductOverviewEvent
+    data class OnSortCriterionSelect(val sortCriterion: SelectedSortCriterion) : ProductOverviewEvent
+    object OnFilterClick : ProductOverviewEvent
 }

@@ -26,5 +26,11 @@ interface ProductOverviewApi {
     suspend fun fetchPopularProduct(): List<ProductDto>
 
     @GET("product/allProducts/{offset}")
-    suspend fun fetchAllProducts(@Path("offset") offset: Int, @Query("searchQuery") searchQuery: String?): List<ProductDto>
+    suspend fun fetchAllProducts(
+        @Path("offset") offset: Int,
+        @Query("searchQuery") searchQuery: String?,
+        @Query("filters") filters: String?,
+        @Query("sortBy") sortBy: String?,
+        @Query("orderBy") orderBy: String?
+    ): List<ProductDto>
 }

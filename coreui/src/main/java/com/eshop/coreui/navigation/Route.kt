@@ -1,9 +1,8 @@
-package com.eshop.core.navigation
+package com.eshop.coreui.navigation
 
 object Route {
     const val LOGIN = "login"
     const val SIGNUP = "signup"
-    const val MAIN = "main"
     const val PRODUCTS_OVERVIEW = "products_overview"
     const val PRODUCT = "product"
     const val BASKET = "basket"

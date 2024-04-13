@@ -3,7 +3,6 @@ package com.eshop.coreui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +26,6 @@ import coil.compose.AsyncImage
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.theme.EShopTheme
-import com.eshop.coreui.util.loadingAnimation
 import java.text.NumberFormat
 import java.util.Currency
 

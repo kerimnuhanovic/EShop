@@ -3,7 +3,7 @@ package com.eshop.signup_presentation.signup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eshop.core.domain.preferences.Preferences
-import com.eshop.core.navigation.Route
+import com.eshop.coreui.navigation.Route
 import com.eshop.signup_domain.models.RegistrationData
 import com.eshop.signup_domain.usecase.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

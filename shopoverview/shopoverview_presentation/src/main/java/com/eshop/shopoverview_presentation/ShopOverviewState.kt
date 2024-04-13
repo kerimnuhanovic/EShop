@@ -1,6 +1,10 @@
 package com.eshop.shopoverview_presentation
 
 import com.eshop.core.domain.models.Shop
+import com.eshop.coreui.util.ShopAndProductCategory
+import com.eshop.coreui.util.SelectedCategory
+import com.eshop.coreui.util.SelectedSortCriterion
+import com.eshop.coreui.util.generateSortCriteriaForShops
 
 data class ShopOverviewState(
     val popularShops: List<Shop> = emptyList(),
@@ -12,5 +16,9 @@ data class ShopOverviewState(
     val isLoadingMoreShops: Boolean = false,
     val isSearchBarVisible: Boolean = false,
     val areSearchedShopsDisplayed: Boolean = false,
-    val searchedQuery: String = ""
+    val searchedQuery: String = "",
+    val isFilterDrawerItemExpanded: Boolean = false,
+    val shopCategories: List<SelectedCategory> = ShopAndProductCategory.listAllCategories().map { SelectedCategory(it, false) },
+    val isSortDrawerItemExpanded: Boolean = false,
+    val sortCriteria: List<SelectedSortCriterion> = generateSortCriteriaForShops()
 )

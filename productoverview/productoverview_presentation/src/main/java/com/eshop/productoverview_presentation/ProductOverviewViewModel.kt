@@ -1,14 +1,16 @@
 package com.eshop.productoverview_presentation
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eshop.core.domain.models.FilteredShopAndProductCategory
 import com.eshop.core.domain.usecase.ConvertListToStringUseCase
 import com.eshop.core.domain.usecase.CreateFileFromUriUseCase
-import com.eshop.core.navigation.Route
 import com.eshop.core.util.Result
-import com.eshop.coreui.util.ShopAndProductCategory
+import com.eshop.coreui.navigation.Route
+import com.eshop.coreui.util.SelectedCategory
+import com.eshop.coreui.util.SelectedSortCriterion
 import com.eshop.coreui.util.UiEvent
+import com.eshop.coreui.util.generateSortCriteriaForShops
 import com.eshop.productoverview_domain.model.ProductAdditionData
 import com.eshop.productoverview_domain.usecase.AddProductInputValidationUseCase
 import com.eshop.productoverview_domain.usecase.AddProductUseCase
@@ -48,9 +50,13 @@ class ProductOverviewViewModel @Inject constructor(
     fun onEvent(event: ProductOverviewEvent) {
         when (event) {
             ProductOverviewEvent.OnSearchIconClick -> {
-                _state.value = _state.value.copy(
-                    isSearchBarVisible = true
-                )
+                viewModelScope.launch {
+                    _state.value = _state.value.copy(
+                        isSearchBarVisible = true
+                    )
+                    delay(100L)
+                    _uiEvent.send(UiEvent.FocusInputField)
+                }
             }
 
             is ProductOverviewEvent.OnSearchQueryEnter -> {
@@ -134,17 +140,65 @@ class ProductOverviewViewModel @Inject constructor(
                     searchQuery = ""
                 )
             }
+
             ProductOverviewEvent.OnExitSearchBarClick -> {
                 _state.value = _state.value.copy(
                     searchQuery = "",
                     isSearchBarVisible = false
                 )
             }
+
             ProductOverviewEvent.OnFilterIconClick -> {
-                // TODO
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.ChangeNavigationDrawerState)
+                }
             }
+
             ProductOverviewEvent.OnSearch -> {
                 onSearch()
+            }
+
+            ProductOverviewEvent.OnFilterClick -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.ChangeNavigationDrawerState)
+                }
+                fetchFilteredProducts()
+            }
+
+            ProductOverviewEvent.OnFilterDrawerItemClick -> {
+                _state.value = state.value.copy(
+                    isFilterDrawerItemExpanded = !state.value.isFilterDrawerItemExpanded
+                )
+            }
+
+            is ProductOverviewEvent.OnProductCategorySelect -> {
+                _state.value = state.value.copy(
+                    productCategories = state.value.productCategories.map {
+                        if (it == event.selectedCategory) {
+                            SelectedCategory(it.category, !it.isSelected)
+                        } else {
+                            it
+                        }
+                    }
+                )
+            }
+
+            is ProductOverviewEvent.OnSortCriterionSelect -> {
+                _state.value = state.value.copy(
+                    sortCriteria = state.value.sortCriteria.map {
+                        if (it == event.sortCriterion) {
+                            SelectedSortCriterion(it.criterion, !it.isSelected)
+                        } else {
+                            SelectedSortCriterion(it.criterion, false)
+                        }
+                    }
+                )
+            }
+
+            ProductOverviewEvent.OnSortDrawerItemClick -> {
+                _state.value = state.value.copy(
+                    isSortDrawerItemExpanded = !state.value.isSortDrawerItemExpanded
+                )
             }
         }
     }
@@ -157,21 +211,33 @@ class ProductOverviewViewModel @Inject constructor(
                     popularProducts = result.data
                 )
             }
+
             is Result.Failure -> {
                 // TODO
             }
         }
     }
 
-    private suspend fun fetchAllProducts(offset: Int, searchQuery: String? = null) {
-        when (val result = fetchAllProductsUseCase(offset, searchQuery)) {
+    private suspend fun fetchAllProducts(
+        offset: Int, searchQuery: String? = null,
+        filteredCategories: List<SelectedCategory>? = null,
+        sortCriterion: SelectedSortCriterion = generateSortCriteriaForShops().first()
+    ) {
+        when (val result = fetchAllProductsUseCase(
+            offset, searchQuery,
+            filteredCategories?.map { FilteredShopAndProductCategory(it.category.value) },
+            sortCriterion.criterion.fieldName,
+            sortCriterion.criterion.orderBy.value
+        )) {
             is Result.Success -> {
                 _state.value = _state.value.copy(
                     isAllProductsLoading = false,
                     allProducts = state.value.allProducts + result.data,
-                    areAllProductsLoaded = result.data.isEmpty()
+                    areAllProductsLoaded = result.data.isEmpty(),
+                    areSearchedSProductsDisplayed = !searchQuery.isNullOrEmpty()
                 )
             }
+
             is Result.Failure -> {
                 // TODO
             }
@@ -181,7 +247,10 @@ class ProductOverviewViewModel @Inject constructor(
     private fun fetchInitialProducts() {
         _state.value = _state.value.copy(
             isPopularProductsLoading = true,
-            isAllProductsLoading = true
+            isAllProductsLoading = true,
+            areSearchedSProductsDisplayed = false,
+            isSearchBarVisible = false,
+            searchedQuery = ""
         )
         viewModelScope.launch(Dispatchers.IO) {
             launch {
@@ -199,7 +268,15 @@ class ProductOverviewViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 isLoadingMoreProducts = true
             )
-            fetchAllProducts(offset = state.value.allProducts.size, searchQuery = state.value.searchQuery)
+            fetchAllProducts(
+                offset = state.value.allProducts.size,
+                searchQuery = state.value.searchQuery,
+                filteredCategories = state.value.productCategories.filter { category -> category.isSelected },
+                sortCriterion = state.value.sortCriteria.find { criterion -> criterion.isSelected }
+                    .let {
+                        it ?: generateSortCriteriaForShops().first()
+                    }
+            )
             _state.value = _state.value.copy(
                 isLoadingMoreProducts = false
             )
@@ -214,14 +291,20 @@ class ProductOverviewViewModel @Inject constructor(
             searchedQuery = state.value.searchQuery
         )
         viewModelScope.launch {
-            fetchAllProducts(state.value.allProducts.size, searchQuery = state.value.searchQuery)
+            fetchAllProducts(state.value.allProducts.size,
+                searchQuery = state.value.searchQuery,
+                filteredCategories = state.value.productCategories.filter { category -> category.isSelected },
+                sortCriterion = state.value.sortCriteria.find { criterion -> criterion.isSelected }
+                    .let {
+                        it ?: generateSortCriteriaForShops().first()
+                    })
         }
     }
+
     private fun onSearch() {
         if (state.value.searchQuery.isEmpty()) {
             fetchInitialProducts()
-        }
-        else {
+        } else {
             fetchSearchedProducts()
         }
     }
@@ -269,6 +352,24 @@ class ProductOverviewViewModel @Inject constructor(
             }
             _state.value = _state.value.copy(
                 isProductAdditionInProgress = false
+            )
+        }
+    }
+
+    private fun fetchFilteredProducts() {
+        _state.value = _state.value.copy(
+            isAllProductsLoading = true,
+            allProducts = emptyList()
+        )
+        viewModelScope.launch {
+            fetchAllProducts(
+                offset = state.value.allProducts.size,
+                searchQuery = state.value.searchQuery,
+                filteredCategories = state.value.productCategories.filter { category -> category.isSelected },
+                sortCriterion = state.value.sortCriteria.find { criterion -> criterion.isSelected }
+                    .let {
+                        it ?: generateSortCriteriaForShops().first()
+                    }
             )
         }
     }

@@ -1,8 +1,11 @@
 package com.eshop.productoverview_presentation
 
 import android.net.Uri
-import com.eshop.coreui.util.ShopAndProductCategory
 import com.eshop.core.domain.models.Product
+import com.eshop.coreui.util.SelectedCategory
+import com.eshop.coreui.util.SelectedSortCriterion
+import com.eshop.coreui.util.ShopAndProductCategory
+import com.eshop.coreui.util.generateSortCriteriaForProducts
 
 data class ProductOverviewState(
     val popularProducts: List<Product> = emptyList(),
@@ -22,5 +25,10 @@ data class ProductOverviewState(
     val isLoadingMoreProducts: Boolean = false,
     val areAllProductsLoaded: Boolean = false,
     val isSearchBarVisible: Boolean = false,
-    val searchedQuery: String = ""
+    val areSearchedSProductsDisplayed: Boolean = false,
+    val searchedQuery: String = "",
+    val isFilterDrawerItemExpanded: Boolean = false,
+    val productCategories: List<SelectedCategory> = ShopAndProductCategory.listAllCategories().map { SelectedCategory(it, false) },
+    val isSortDrawerItemExpanded: Boolean = false,
+    val sortCriteria: List<SelectedSortCriterion> = generateSortCriteriaForProducts()
 )

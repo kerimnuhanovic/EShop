@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
@@ -21,13 +19,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import com.eshop.core.domain.models.Product
 import com.eshop.core.util.BASE_URL
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
-import com.eshop.coreui.theme.EShopTheme
 import java.text.NumberFormat
 import java.util.Currency
 

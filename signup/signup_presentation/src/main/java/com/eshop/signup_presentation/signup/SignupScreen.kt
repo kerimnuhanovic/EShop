@@ -93,12 +93,10 @@ fun SignupScreen(
     val pagerState = rememberPagerState()
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { uiEvent ->
-            when (uiEvent) {
-                is UiEvent.Navigate -> onNavigate(uiEvent)
-                is UiEvent.ScrollPage -> pagerState.animateScrollToPage(uiEvent.page)
-                UiEvent.NavigateBack -> {
-                    // No-op
-                }
+            if (uiEvent is UiEvent.Navigate) {
+                onNavigate(uiEvent)
+            } else if (uiEvent is UiEvent.ScrollPage) {
+                pagerState.animateScrollToPage(uiEvent.page)
             }
         }
     }

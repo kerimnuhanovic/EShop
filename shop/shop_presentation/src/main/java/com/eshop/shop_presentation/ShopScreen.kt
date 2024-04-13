@@ -1,18 +1,9 @@
 package com.eshop.shop_presentation
 
-import android.transition.Slide
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,11 +25,9 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -76,18 +65,11 @@ fun ShopScreen(
     val pagerState = rememberPagerState()
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.Navigate -> {
-                    onNavigate(event)
-                }
-
-                UiEvent.NavigateBack -> {
-                    onNavigateBack()
-                }
-
-                is UiEvent.ScrollPage -> {
-                    // no-op
-                }
+            if (event is UiEvent.Navigate) {
+                onNavigate(event)
+            }
+            if (event == UiEvent.NavigateBack) {
+                onNavigateBack()
             }
         }
     }

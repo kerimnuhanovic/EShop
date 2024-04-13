@@ -13,7 +13,6 @@ import com.eshop.shop_domain.usecase.FetchShopUseCase
 import com.eshop.shop_presentation.util.ShopLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

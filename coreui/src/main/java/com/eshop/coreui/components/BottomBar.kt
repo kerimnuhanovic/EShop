@@ -3,7 +3,6 @@ package com.eshop.coreui.components
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -17,10 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.theme.EShopTheme
-import com.eshop.coreui.util.UiEvent
 import com.eshop.coreui.util.BottomBarItem
+import com.eshop.coreui.util.UiEvent
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomBar(
     items: List<BottomBarItem>,
@@ -55,7 +53,6 @@ fun BottomBar(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 @Preview
 private fun BottomBarPreview() {

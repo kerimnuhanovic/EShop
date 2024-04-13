@@ -29,9 +29,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
+import com.eshop.coreui.R
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.theme.MediumGray
-import com.eshop.coreui.R
 import com.eshop.coreui.util.ItemData
 import com.eshop.coreui.util.ShopAndProductCategory
 

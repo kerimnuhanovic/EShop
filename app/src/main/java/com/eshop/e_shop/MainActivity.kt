@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -31,7 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             EShopTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Route.SHOPS_OVERVIEW) {
+                NavHost(navController = navController, startDestination = Route.LOGIN) {
                     composable(route = Route.LOGIN) {
                         LoginScreen(onNavigate = navController::navigate)
                     }

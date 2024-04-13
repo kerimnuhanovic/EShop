@@ -1,12 +1,11 @@
 package com.eshop.productoverview_presentation
 
 import android.net.Uri
-import com.eshop.coreui.util.ShopAndProductCategory
 import com.eshop.core.domain.models.Product
 import com.eshop.coreui.util.SelectedCategory
 import com.eshop.coreui.util.SelectedSortCriterion
+import com.eshop.coreui.util.ShopAndProductCategory
 import com.eshop.coreui.util.generateSortCriteriaForProducts
-import com.eshop.coreui.util.generateSortCriteriaForShops
 
 data class ProductOverviewState(
     val popularProducts: List<Product> = emptyList(),

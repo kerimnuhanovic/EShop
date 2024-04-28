@@ -9,9 +9,5 @@ object Route {
     const val ORDERS = "orders"
     const val SHOPS_OVERVIEW = "shops_overview"
     const val SHOP = "shop"
-    fun listLandingRoutes(): List<String> =
-        listOf(
-            LOGIN,
-            SIGNUP
-        )
+    const val CHAT = "chat"
 }

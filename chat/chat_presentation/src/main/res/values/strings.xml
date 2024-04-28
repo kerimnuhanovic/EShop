@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_your_conversations">Search your conversations</string>
+    <string name="conversations">Conversations</string>
+    <string name="no_matching_conversations">No matching conversations</string>
+</resources>

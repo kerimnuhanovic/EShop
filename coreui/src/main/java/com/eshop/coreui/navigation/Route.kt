@@ -10,4 +10,5 @@ object Route {
     const val SHOPS_OVERVIEW = "shops_overview"
     const val SHOP = "shop"
     const val CHAT = "chat"
+    const val CONVERSATIONS = "conversations"
 }

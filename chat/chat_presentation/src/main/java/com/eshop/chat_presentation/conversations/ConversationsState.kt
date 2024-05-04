@@ -1,8 +1,8 @@
-package com.eshop.chat_presentation
+package com.eshop.chat_presentation.conversations
 
 import com.eshop.chat_domain.model.Conversation
 
-data class ChatState(
+data class ConversationsState(
     val conversations: List<Conversation> = emptyList(),
     val filteredConversations: List<Conversation> = emptyList(),
     val searchQuery: String = "",

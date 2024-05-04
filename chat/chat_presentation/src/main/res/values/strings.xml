@@ -3,4 +3,5 @@
     <string name="search_your_conversations">Search your conversations</string>
     <string name="conversations">Conversations</string>
     <string name="no_matching_conversations">No matching conversations</string>
+    <string name="message">Message...</string>
 </resources>

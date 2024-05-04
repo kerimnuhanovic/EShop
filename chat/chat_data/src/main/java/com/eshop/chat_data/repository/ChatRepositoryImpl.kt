@@ -22,4 +22,14 @@ class ChatRepositoryImpl @Inject constructor(
             handleApiError(ex)
         }
     }
+
+    override suspend fun updateAndFetchUserConversation(chatPartner: String): Result<Conversation> {
+        return try {
+            val result = chatApi.fetchAndUpdateUserConversation(chatPartner)
+            val conversation = result.toConversation()
+            Result.Success(conversation)
+        } catch (ex: Exception) {
+            handleApiError(ex)
+        }
+    }
 }

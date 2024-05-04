@@ -1,24 +1,18 @@
-package com.eshop.chat_presentation
+package com.eshop.chat_presentation.conversations
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.List
-import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.runtime.Composable
@@ -26,17 +20,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eshop.chat_domain.model.Conversation
 import com.eshop.chat_domain.model.Message
-import com.eshop.chat_presentation.components.ChatScreenLoadingSkeleton
+import com.eshop.chat_presentation.components.ConversationsScreenLoadingSkeleton
 import com.eshop.chat_presentation.components.ConversationItem
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
@@ -48,11 +40,10 @@ import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.BottomBarItem
 import com.eshop.coreui.util.UiEvent
 import java.time.LocalDate
-import kotlin.math.roundToInt
 
 @Composable
-fun ChatScreen(
-    viewModel: ChatViewModel = hiltViewModel(),
+fun ConversationsScreen(
+    viewModel: ConversationsViewModel = hiltViewModel(),
     onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val state = viewModel.state.collectAsState().value
@@ -65,7 +56,7 @@ fun ChatScreen(
         }
     }
 
-    ChatScreenContent(
+    ConversationsScreenContent(
         state = state,
         onEvent = viewModel::onEvent,
         onNavigate = onNavigate
@@ -74,9 +65,9 @@ fun ChatScreen(
 }
 
 @Composable
-private fun ChatScreenContent(
-    state: ChatState,
-    onEvent: (ChatEvent) -> Unit,
+private fun ConversationsScreenContent(
+    state: ConversationsState,
+    onEvent: (ConversationsEvent) -> Unit,
     onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val dimensions = LocalDimensions.current
@@ -100,7 +91,7 @@ private fun ChatScreenContent(
                     BottomBarItem(
                         text = "Message",
                         iconId = R.drawable.message_24,
-                        route = Route.CHAT
+                        route = Route.CONVERSATIONS
                     ),
                     BottomBarItem(
                         text = "Basket",
@@ -115,11 +106,11 @@ private fun ChatScreenContent(
                 ),
                 isBottomBarOverlapped = false,
                 onNavigate = onNavigate,
-                currentDestination = Route.CHAT,
+                currentDestination = Route.CONVERSATIONS,
             )
         }) {
         if (state.isLoading) {
-            ChatScreenLoadingSkeleton()
+            ConversationsScreenLoadingSkeleton()
         } else {
             LazyColumn(
                 modifier = Modifier
@@ -144,7 +135,7 @@ private fun ChatScreenContent(
                     InputField(
                         inputText = state.searchQuery,
                         onTextChange = { query ->
-                            onEvent(ChatEvent.OnSearchQueryEnter(query))
+                            onEvent(ConversationsEvent.OnSearchQueryEnter(query))
                         },
                         placeholderId = com.eshop.chat_presentation.R.string.search_your_conversations,
                         modifier = Modifier.padding(horizontal = dimensions.spaceMedium),
@@ -154,7 +145,9 @@ private fun ChatScreenContent(
                     )
                 }
                 items(state.filteredConversations) { conversation ->
-                    ConversationItem(conversation = conversation)
+                    ConversationItem(conversation = conversation, onClick = {
+                        onEvent(ConversationsEvent.OnConversationClick(conversation.chatPartner))
+                    })
                     Divider()
                 }
                 if (state.filteredConversations.isEmpty()) {
@@ -177,9 +170,9 @@ private fun ChatScreenContent(
 
 @Composable
 @Preview
-private fun ChatScreenPreview() {
+private fun ConversationsScreenPreview() {
     EShopTheme {
-        ChatScreenContent(state = ChatState(
+        ConversationsScreenContent(state = ConversationsState(
             conversations = listOf(
                 Conversation(
                     chatPartner = "Inoma",

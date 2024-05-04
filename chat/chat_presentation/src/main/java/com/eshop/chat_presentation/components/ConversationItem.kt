@@ -1,6 +1,7 @@
 package com.eshop.chat_presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ import java.time.LocalDate
 @Composable
 fun ConversationItem(
     conversation: Conversation,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val dimensions = LocalDimensions.current
@@ -50,6 +52,7 @@ fun ConversationItem(
                 horizontal = dimensions.spaceMedium,
                 vertical = dimensions.spaceSmall
             )
+            .clickable { onClick() }
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Card(

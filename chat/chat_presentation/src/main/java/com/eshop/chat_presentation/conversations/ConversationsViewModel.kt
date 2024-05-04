@@ -1,37 +1,33 @@
-package com.eshop.chat_presentation
+package com.eshop.chat_presentation.conversations
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eshop.chat_domain.model.Conversation
-import com.eshop.chat_domain.model.Message
 import com.eshop.chat_domain.usecase.ConnectToSocketUseCase
 import com.eshop.chat_domain.usecase.FetchUserConversationsUseCase
 import com.eshop.chat_domain.usecase.ReceiveNewMessageUseCase
 import com.eshop.chat_domain.usecase.SendMessageUseCase
 import com.eshop.core.util.Result
+import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ChatViewModel @Inject constructor(
+class ConversationsViewModel @Inject constructor(
     private val connectToSocketUseCase: ConnectToSocketUseCase,
-    private val sendMessageUseCase: SendMessageUseCase,
     private val fetchUserConversationsUseCase: FetchUserConversationsUseCase,
     private val receiveNewMessageUseCase: ReceiveNewMessageUseCase
 ) : ViewModel() {
 
-    private val _state: MutableStateFlow<ChatState> = MutableStateFlow(ChatState(isLoading = true))
-    val state: StateFlow<ChatState> = _state.asStateFlow()
+    private val _state: MutableStateFlow<ConversationsState> = MutableStateFlow(ConversationsState(isLoading = true))
+    val state: StateFlow<ConversationsState> = _state.asStateFlow()
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -79,13 +75,9 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: ChatEvent) {
+    fun onEvent(event: ConversationsEvent) {
         when (event) {
-            ChatEvent.OnMessageSend -> {
-                sendMessage()
-            }
-
-            is ChatEvent.OnSearchQueryEnter -> {
+            is ConversationsEvent.OnSearchQueryEnter -> {
                 _state.value = state.value.copy(
                     searchQuery = event.query,
                     filteredConversations = state.value.conversations.filter { conversation ->
@@ -93,12 +85,12 @@ class ChatViewModel @Inject constructor(
                     }
                 )
             }
-        }
-    }
 
-    private fun sendMessage() {
-        viewModelScope.launch {
-            sendMessageUseCase.invoke("knuhanovic", "${Math.random()}")
+            is ConversationsEvent.OnConversationClick -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.Navigate("${Route.CHAT}/${event.chatPartner}"))
+                }
+            }
         }
     }
 }

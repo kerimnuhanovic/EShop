@@ -42,6 +42,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Place
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
@@ -201,10 +202,11 @@ private fun ProductOverviewScreenContent(
         bottomBar = {
             BottomBar(
                 items = listOf(
-                    BottomBarItem("Products", Icons.Rounded.Home, Route.PRODUCTS_OVERVIEW),
-                    BottomBarItem("Shops", Icons.Rounded.Place, Route.SHOPS_OVERVIEW),
-                    BottomBarItem("Basket", Icons.Rounded.ShoppingCart, Route.BASKET),
-                    BottomBarItem("Orders", Icons.Rounded.List, Route.ORDERS)
+                    BottomBarItem(text = "Products", icon = Icons.Rounded.List, route = Route.PRODUCTS_OVERVIEW),
+                    BottomBarItem(text = "Shops", iconId = R.drawable.shopping_basket_24, route = Route.SHOPS_OVERVIEW),
+                    BottomBarItem(text = "Message", iconId = R.drawable.message_24, route = Route.CONVERSATIONS),
+                    BottomBarItem(text = "Basket", icon = Icons.Rounded.ShoppingCart, route = Route.BASKET),
+                    BottomBarItem(text = "Orders", icon = Icons.Rounded.Settings, route = Route.ORDERS)
                 ),
                 isBottomBarOverlapped = isBottomBarOverlapped.value,
                 onNavigate = onNavigate,

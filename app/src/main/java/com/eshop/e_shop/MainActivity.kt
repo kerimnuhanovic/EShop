@@ -10,6 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.eshop.chat_presentation.chat.ChatScreen
+import com.eshop.chat_presentation.conversations.ConversationsScreen
 import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.e_shop.navigation.navigate
@@ -64,6 +66,14 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Route.ORDERS) {
                         Text(text = "ORDERS SCREEN")
+                    }
+                    composable(route = Route.CONVERSATIONS) {
+                        ConversationsScreen(
+                            onNavigate = navController::navigate
+                        )
+                    }
+                    composable(route = "${Route.CHAT}/{chatPartner}", arguments = listOf(navArgument("chatPartner") {type = NavType.StringType})) {
+                        ChatScreen(onNavigate = navController::navigate, onNavigateBack = navController::navigateBack)
                     }
                 }
             }

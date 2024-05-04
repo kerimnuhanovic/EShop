@@ -72,6 +72,10 @@ dependencies {
     kapt(DaggerHilt.hiltCompiler)
     implementation(Coil.coil)
     implementation(Lottie.lottie)
+    implementation(Socket.socket) {
+        exclude(group = "org.json", module = "json")
+    }
+    //implementation(Socket.socketEngine)
 
     implementation(project(Modules.core))
     implementation(project(Modules.coreui))
@@ -95,6 +99,9 @@ dependencies {
     implementation(project(Modules.shopData))
     implementation(project(Modules.shopDomain))
     implementation(project(Modules.shopPresentation))
+    implementation(project(Modules.chatData))
+    implementation(project(Modules.chatDomain))
+    implementation(project(Modules.chatPresentation))
 
     testImplementation(Testing.junit)
     androidTestImplementation(Testing.junitExt)

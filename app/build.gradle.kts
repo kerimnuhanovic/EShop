@@ -102,6 +102,9 @@ dependencies {
     implementation(project(Modules.chatData))
     implementation(project(Modules.chatDomain))
     implementation(project(Modules.chatPresentation))
+    implementation(project(Modules.cartData))
+    implementation(project(Modules.cartDomain))
+    implementation(project(Modules.cartPresentation))
 
     testImplementation(Testing.junit)
     androidTestImplementation(Testing.junitExt)

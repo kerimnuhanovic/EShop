@@ -34,4 +34,8 @@ object Modules {
     const val chatData = ":chat:chat_data"
     const val chatDomain = ":chat:chat_domain"
     const val chatPresentation = ":chat:chat_presentation"
+
+    const val cartData = ":cart:cart_data"
+    const val cartDomain = ":cart:cart_domain"
+    const val cartPresentation = ":cart:cart_presentation"
 }

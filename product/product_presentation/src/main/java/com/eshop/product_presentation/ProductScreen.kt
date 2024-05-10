@@ -19,8 +19,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
@@ -54,8 +52,6 @@ import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
 import com.eshop.coreui.components.EShopButton
 import com.eshop.coreui.components.PageIndicator
-import com.eshop.coreui.theme.LightGray
-import com.eshop.coreui.theme.ShimmerLightColor
 import com.eshop.coreui.util.UiEvent
 import com.eshop.coreui.util.loadingAnimation
 import java.text.NumberFormat

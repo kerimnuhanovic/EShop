@@ -2,12 +2,19 @@ package com.eshop.cart_presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eshop.cart_domain.usecase.CreateOrderUseCase
 import com.eshop.cart_domain.usecase.FetchCartItemsUseCase
+import com.eshop.core.domain.models.OrderDetails
+import com.eshop.core.util.DELAY_2000
+import com.eshop.core.util.OrderStatus
 import com.eshop.core.util.Result
+import com.eshop.core.util.ToastMessage
+import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -16,7 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject  constructor(
-    private val fetchCartItemsUseCase: FetchCartItemsUseCase
+    private val fetchCartItemsUseCase: FetchCartItemsUseCase,
+    private val createOrderUseCase: CreateOrderUseCase
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<CartState> = MutableStateFlow(CartState())
@@ -30,7 +38,11 @@ class CartViewModel @Inject  constructor(
     }
 
     fun onEvent(event: CartEvent) {
-
+        when (event) {
+            CartEvent.OnOrderSubmit -> {
+                createOrder()
+            }
+        }
     }
 
     private fun fetchCartItems() {
@@ -53,6 +65,40 @@ class CartViewModel @Inject  constructor(
                 }
                 is Result.Failure -> {
 
+                }
+            }
+        }
+    }
+
+    private fun createOrder() {
+        _state.value = state.value.copy(
+            isOrderSubmitting = true
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            val orderDetailsMap = state.value.products.groupBy {
+                it.shop
+            }
+            val orderDetails = orderDetailsMap.map {
+                OrderDetails(
+                    shop = it.key,
+                    items = it.value.map { product ->
+                        product.id
+                    }
+                )
+            }
+            println(orderDetails)
+            when (createOrderUseCase(orderDetails)) {
+                is Result.Success -> {
+                    println("uspio sam")
+                    _state.value = state.value.copy(
+                        isOrderSubmitting = false
+                    )
+                    _uiEvent.send(UiEvent.DisplayToast(ToastMessage.OrderSubmitted.message))
+                    delay(DELAY_2000)
+                    _uiEvent.send(UiEvent.Navigate(Route.PRODUCTS_OVERVIEW))
+                }
+                is Result.Failure -> {
+                    println("pao sam")
                 }
             }
         }

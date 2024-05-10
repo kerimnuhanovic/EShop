@@ -7,5 +7,6 @@ data class CartState(
     val products: List<Product> = emptyList(),
     val subTotal: Double = 0.0,
     val deliveryCharge: Double = 10.00,
-    val total: Double = 0.0
+    val total: Double = 0.0,
+    val isOrderSubmitting: Boolean = false
 )

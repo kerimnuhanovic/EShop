@@ -121,6 +121,10 @@ fun ShopOverviewScreen(
                 UiEvent.FocusInputField -> {
                     focusRequester.requestFocus()
                 }
+
+                is UiEvent.DisplayToast -> {
+                    // no-op
+                }
             }
         }
     }

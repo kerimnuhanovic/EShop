@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.eshop.cart_presentation.CartScreen
 import com.eshop.chat_presentation.chat.ChatScreen
 import com.eshop.chat_presentation.conversations.ConversationsScreen
 import com.eshop.coreui.navigation.Route
@@ -62,7 +63,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable(route = Route.BASKET) {
-                        Text(text = "BASKET SCREEN")
+                        CartScreen(onNavigate = navController::navigate)
                     }
                     composable(route = Route.ORDERS) {
                         Text(text = "ORDERS SCREEN")

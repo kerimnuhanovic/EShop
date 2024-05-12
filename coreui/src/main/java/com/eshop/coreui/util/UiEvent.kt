@@ -6,4 +6,5 @@ sealed interface UiEvent {
     object NavigateBack: UiEvent
     object ChangeNavigationDrawerState : UiEvent
     object FocusInputField : UiEvent
+    data class DisplayToast(val message: String) : UiEvent
 }

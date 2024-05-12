@@ -3,8 +3,6 @@ package com.eshop.shop_data.remote
 import com.eshop.core.data.remote.dto.ProductDto
 import com.eshop.core.data.remote.dto.ShopDto
 import com.eshop.shop_data.remote.dto.AllReviewsDto
-import com.eshop.shop_data.remote.request.ReviewRequest
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Path
 

@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.Text
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,7 +35,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             EShopTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Route.LOGIN) {
+                val mainViewModel: MainViewModel = hiltViewModel()
+                val appState = mainViewModel.state.collectAsState().value
+                NavHost(navController = navController, startDestination = appState.startDestination) {
                     composable(route = Route.LOGIN) {
                         LoginScreen(onNavigate = navController::navigate)
                     }

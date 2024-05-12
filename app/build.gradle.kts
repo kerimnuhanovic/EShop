@@ -75,7 +75,6 @@ dependencies {
     implementation(Socket.socket) {
         exclude(group = "org.json", module = "json")
     }
-    //implementation(Socket.socketEngine)
 
     implementation(project(Modules.core))
     implementation(project(Modules.coreui))

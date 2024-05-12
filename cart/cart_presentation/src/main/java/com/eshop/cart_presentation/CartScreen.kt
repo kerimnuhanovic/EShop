@@ -149,6 +149,14 @@ private fun CartScreenContent(
                     CartItem(product = product)
                     Spacer(modifier = Modifier.height(dimensions.spaceSmall))
                 }
+                if (state.products.isEmpty()) {
+                    Text(
+                        text = stringResource(id = com.eshop.cart_presentation.R.string.your_cart_is_empty),
+                        fontFamily = PoppinsFontFamily,
+                        fontSize = dimensions.font_16,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -256,7 +264,8 @@ private fun CartScreenContent(
                     contentColor = MaterialTheme.colors.onPrimary,
                     shape = RoundedCornerShape(dimensions.spaceSmall),
                     onButtonClick = { onEvent(CartEvent.OnOrderSubmit) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !state.isOrderSubmitting && state.products.isNotEmpty()
                 )
                 Spacer(modifier = Modifier.height(dimensions.spaceMedium))
             }

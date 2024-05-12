@@ -5,8 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.eshop.cart_domain.usecase.CreateOrderUseCase
 import com.eshop.cart_domain.usecase.FetchCartItemsUseCase
 import com.eshop.core.domain.models.OrderDetails
-import com.eshop.core.util.DELAY_2000
-import com.eshop.core.util.OrderStatus
+import com.eshop.core.util.DELAY_1000
 import com.eshop.core.util.Result
 import com.eshop.core.util.ToastMessage
 import com.eshop.coreui.navigation.Route
@@ -60,7 +59,8 @@ class CartViewModel @Inject  constructor(
                         },
                         total = result.data.sumOf { product ->
                             product.price
-                        } + state.value.deliveryCharge
+                        } + if (result.data.isEmpty()) 0.0 else state.value.deliveryCharge,
+                        deliveryCharge = if (result.data.isEmpty()) 0.0 else state.value.deliveryCharge
                     )
                 }
                 is Result.Failure -> {
@@ -89,16 +89,15 @@ class CartViewModel @Inject  constructor(
             println(orderDetails)
             when (createOrderUseCase(orderDetails)) {
                 is Result.Success -> {
-                    println("uspio sam")
                     _state.value = state.value.copy(
                         isOrderSubmitting = false
                     )
                     _uiEvent.send(UiEvent.DisplayToast(ToastMessage.OrderSubmitted.message))
-                    delay(DELAY_2000)
+                    delay(DELAY_1000)
                     _uiEvent.send(UiEvent.Navigate(Route.PRODUCTS_OVERVIEW))
                 }
                 is Result.Failure -> {
-                    println("pao sam")
+
                 }
             }
         }

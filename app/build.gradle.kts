@@ -75,6 +75,7 @@ dependencies {
     implementation(Socket.socket) {
         exclude(group = "org.json", module = "json")
     }
+    implementation(Splash.splash)
 
     implementation(project(Modules.core))
     implementation(project(Modules.coreui))

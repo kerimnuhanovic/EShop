@@ -145,8 +145,10 @@ private fun CartScreenContent(
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(dimensions.spaceMedium))
-                state.products.forEach { product ->
-                    CartItem(product = product)
+                state.products.forEachIndexed { index, product ->
+                    CartItem(product = product, onDeleteClick = {
+                        onEvent(CartEvent.OnDeleteCartItem(itemIndex = index, productId = product.id))
+                    })
                     Spacer(modifier = Modifier.height(dimensions.spaceSmall))
                 }
                 if (state.products.isEmpty()) {
@@ -213,7 +215,7 @@ private fun CartScreenContent(
                         color = MediumGrayVariant
                     )
                     Text(
-                        text = state.subTotal.toString(),
+                        text = currencyFormat.format(state.subTotal),
                         fontFamily = PoppinsFontFamily,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = dimensions.font_16,

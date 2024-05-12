@@ -3,6 +3,7 @@ package com.eshop.cart_presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eshop.cart_domain.usecase.CreateOrderUseCase
+import com.eshop.cart_domain.usecase.DeleteCartItemUseCase
 import com.eshop.cart_domain.usecase.FetchCartItemsUseCase
 import com.eshop.core.domain.models.OrderDetails
 import com.eshop.core.util.DELAY_1000
@@ -23,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject  constructor(
     private val fetchCartItemsUseCase: FetchCartItemsUseCase,
-    private val createOrderUseCase: CreateOrderUseCase
+    private val createOrderUseCase: CreateOrderUseCase,
+    private val deleteCartItemUseCase: DeleteCartItemUseCase
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<CartState> = MutableStateFlow(CartState())
@@ -40,6 +42,10 @@ class CartViewModel @Inject  constructor(
         when (event) {
             CartEvent.OnOrderSubmit -> {
                 createOrder()
+            }
+
+            is CartEvent.OnDeleteCartItem -> {
+                deleteCartItem(event.itemIndex, event.productId)
             }
         }
     }
@@ -98,6 +104,30 @@ class CartViewModel @Inject  constructor(
                 }
                 is Result.Failure -> {
 
+                }
+            }
+        }
+    }
+
+    private fun deleteCartItem(itemIndex: Int, productId: String) {
+        val itemForDelete = state.value.products.find { product ->
+            product.id == productId
+        }
+        _state.value = state.value.copy(
+            products = state.value.products.minus(itemForDelete!!)
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            when (deleteCartItemUseCase(productId)) {
+                is Result.Success -> {
+                    _uiEvent.send(UiEvent.DisplayToast(ToastMessage.ItemDeleted.message))
+                }
+                is Result.Failure -> {
+                    val items = state.value.products.toMutableList()
+                    items.add(itemIndex, itemForDelete)
+                    _uiEvent.send(UiEvent.DisplayToast(ToastMessage.ItemDeletionFailed.message))
+                    _state.value = state.value.copy(
+                        products = items
+                    )
                 }
             }
         }

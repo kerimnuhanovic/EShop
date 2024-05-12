@@ -8,4 +8,5 @@ import com.eshop.core.util.Result
 interface CartRepository {
     suspend fun fetchCartItems(): Result<List<Product>>
     suspend fun createOrder(orderDetails: List<OrderDetails>): Result<Order>
+    suspend fun deleteCartItem(productId: String): Result<Unit>
 }

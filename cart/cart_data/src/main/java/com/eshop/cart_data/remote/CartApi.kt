@@ -5,8 +5,10 @@ import com.eshop.core.data.remote.dto.OrderDto
 import com.eshop.core.data.remote.dto.ProductDto
 import com.eshop.core.domain.models.OrderDetails
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface CartApi {
     @GET("cart/list")
@@ -14,4 +16,7 @@ interface CartApi {
 
     @POST("order/add")
     suspend fun createOrder(@Body orderDetails: OrderDetailsRequest): OrderDto
+
+    @DELETE("cart/{productId}")
+    suspend fun deleteCartItem(@Path("productId") productId: String)
 }

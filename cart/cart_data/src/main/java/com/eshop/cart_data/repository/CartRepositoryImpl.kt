@@ -36,4 +36,13 @@ class CartRepositoryImpl @Inject constructor(
             handleApiError(ex)
         }
     }
+
+    override suspend fun deleteCartItem(productId: String): Result<Unit> {
+        return try {
+            cartApi.deleteCartItem(productId)
+            Result.Success(Unit)
+        } catch (ex: Exception) {
+            handleApiError(ex)
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package com.eshop.cart_presentation.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +15,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -40,6 +38,7 @@ import java.util.Currency
 @Composable
 fun CartItem(
     product: Product,
+    onDeleteClick: () -> Unit,
     currency: Currency = Currency.getInstance("EUR")
 ) {
     val dimensions = LocalDimensions.current
@@ -83,7 +82,7 @@ fun CartItem(
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { onDeleteClick() }) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
                     contentDescription = null,
@@ -108,7 +107,8 @@ private fun CartItemPreview() {
                 images = listOf("imageurl"),
                 price = 200.00,
                 shop = "Shop"
-            )
+            ),
+            onDeleteClick = {}
         )
     }
 }

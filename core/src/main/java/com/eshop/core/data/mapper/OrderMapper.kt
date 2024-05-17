@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter
 
 fun OrderDetailsDto.toOrderDetails(): OrderDetails {
     return OrderDetails(
+        id = this.id,
         shop = this.shop,
         items = this.items,
         status = OrderStatus.toOrderStatus(this.status)
@@ -18,6 +19,7 @@ fun OrderDetailsDto.toOrderDetails(): OrderDetails {
 
 fun OrderDetails.toOrderDetailsDto(): OrderDetailsDto {
     return OrderDetailsDto(
+        id = this.id,
         shop = this.shop,
         items = this.items,
         status = this.status.name

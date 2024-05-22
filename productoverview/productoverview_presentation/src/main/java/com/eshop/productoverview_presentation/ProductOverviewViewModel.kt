@@ -44,6 +44,7 @@ class ProductOverviewViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        removeSplashScreen()
         fetchInitialProducts()
     }
 
@@ -374,4 +375,9 @@ class ProductOverviewViewModel @Inject constructor(
         }
     }
 
+    private fun removeSplashScreen() {
+        viewModelScope.launch {
+            _uiEvent.send(UiEvent.DataLoaded)
+        }
+    }
 }

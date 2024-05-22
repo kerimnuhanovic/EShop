@@ -46,13 +46,18 @@ import com.eshop.coreui.components.InputField
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    onNavigate: (UiEvent.Navigate) -> Unit
+    onNavigate: (UiEvent.Navigate) -> Unit,
+    onDataLoaded: () -> Unit
 ) {
     val state = viewModel.loginState.collectAsState().value
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { uiEvent ->
             if (uiEvent is UiEvent.Navigate) {
                 onNavigate(uiEvent)
+            }
+
+            if (uiEvent is UiEvent.DataLoaded) {
+                onDataLoaded()
             }
         }
     }

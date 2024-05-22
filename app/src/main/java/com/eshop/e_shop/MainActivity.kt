@@ -30,10 +30,13 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    var keepSplashScreenOpened = true
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
+        installSplashScreen().setKeepOnScreenCondition {
+            keepSplashScreenOpened
+        }
         setContent {
             EShopTheme {
                 val navController = rememberNavController()
@@ -41,7 +44,9 @@ class MainActivity : ComponentActivity() {
                 val appState = mainViewModel.state.collectAsState().value
                 NavHost(navController = navController, startDestination = appState.startDestination) {
                     composable(route = Route.LOGIN) {
-                        LoginScreen(onNavigate = navController::navigate)
+                        LoginScreen(onNavigate = navController::navigate, onDataLoaded = {
+                            keepSplashScreenOpened = false
+                        })
                     }
                     composable(route = Route.SIGNUP) {
                         SignupScreen(onNavigate = navController::navigate)
@@ -49,6 +54,9 @@ class MainActivity : ComponentActivity() {
                     composable(route = Route.PRODUCTS_OVERVIEW) {
                         ProductOverviewScreen(
                             onNavigate = navController::navigate,
+                            onDataLoaded = {
+                                keepSplashScreenOpened = false
+                            }
                         )
                     }
                     composable(route = "${Route.PRODUCT}/{productId}", arguments =

@@ -103,7 +103,8 @@ import kotlin.math.roundToInt
 @Composable
 fun ProductOverviewScreen(
     viewModel: ProductOverviewViewModel = hiltViewModel(),
-    onNavigate: (UiEvent.Navigate) -> Unit
+    onNavigate: (UiEvent.Navigate) -> Unit,
+    onDataLoaded: () -> Unit
 ) {
     val state = viewModel.state.collectAsState().value
     val scaffoldState = rememberScaffoldState()
@@ -126,6 +127,8 @@ fun ProductOverviewScreen(
                         scaffoldState.drawerState.open()
                     }
                 }
+            } else if (uiEvent is UiEvent.DataLoaded) {
+                onDataLoaded()
             }
 
         }

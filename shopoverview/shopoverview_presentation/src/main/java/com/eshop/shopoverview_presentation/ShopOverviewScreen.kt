@@ -125,6 +125,10 @@ fun ShopOverviewScreen(
                 is UiEvent.DisplayToast -> {
                     // no-op
                 }
+
+                UiEvent.DataLoaded -> {
+                    // no-op
+                }
             }
         }
     }

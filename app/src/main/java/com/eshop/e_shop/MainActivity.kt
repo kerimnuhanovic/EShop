@@ -5,6 +5,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.Text
+import androidx.compose.runtime.collectAsState
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,15 +30,23 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    var keepSplashScreenOpened = true
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen().setKeepOnScreenCondition {
+            keepSplashScreenOpened
+        }
         setContent {
             EShopTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Route.LOGIN) {
+                val mainViewModel: MainViewModel = hiltViewModel()
+                val appState = mainViewModel.state.collectAsState().value
+                NavHost(navController = navController, startDestination = appState.startDestination) {
                     composable(route = Route.LOGIN) {
-                        LoginScreen(onNavigate = navController::navigate)
+                        LoginScreen(onNavigate = navController::navigate, onDataLoaded = {
+                            keepSplashScreenOpened = false
+                        })
                     }
                     composable(route = Route.SIGNUP) {
                         SignupScreen(onNavigate = navController::navigate)
@@ -43,6 +54,9 @@ class MainActivity : ComponentActivity() {
                     composable(route = Route.PRODUCTS_OVERVIEW) {
                         ProductOverviewScreen(
                             onNavigate = navController::navigate,
+                            onDataLoaded = {
+                                keepSplashScreenOpened = false
+                            }
                         )
                     }
                     composable(route = "${Route.PRODUCT}/{productId}", arguments =

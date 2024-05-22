@@ -43,6 +43,12 @@ class LoginViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), LoginState())
 
+    init {
+        viewModelScope.launch {
+            _uiEvent.send(UiEvent.DataLoaded)
+        }
+    }
+
     fun onEvent(event: LoginEvent) {
         when (event) {
             is LoginEvent.OnIdentifierEnter -> {

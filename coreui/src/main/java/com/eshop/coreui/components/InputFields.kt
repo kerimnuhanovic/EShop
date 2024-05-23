@@ -1,6 +1,7 @@
 package com.eshop.coreui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -152,6 +153,85 @@ fun MessageInputField(
                         Box(
                             modifier = Modifier.fillMaxHeight(),
                             contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(id = placeholderId),
+                                fontFamily = PoppinsFontFamily,
+                                fontSize = dimensions.font_14,
+                                letterSpacing = dimensions.smallLetterSpacing
+                            )
+                        }
+                    }
+                }
+            )
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun TextArea(
+    inputText: String,
+    onTextChange: (String) -> Unit,
+    placeholderId: Int,
+    isSingleLine: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    modifier: Modifier = Modifier
+) {
+    val dimensions = LocalDimensions.current
+
+    BasicTextField(
+        value = inputText,
+        onValueChange = onTextChange,
+        enabled = true,
+        textStyle = TextStyle(
+            fontFamily = PoppinsFontFamily,
+            fontSize = dimensions.font_14,
+            letterSpacing = dimensions.smallLetterSpacing,
+            color = MaterialTheme.colors.onBackground
+        ),
+        singleLine = isSingleLine,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        cursorBrush = Brush.horizontalGradient(
+            listOf(
+                MaterialTheme.colors.primary,
+                MaterialTheme.colors.primary
+            )
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(color = MaterialTheme.colors.onPrimary)
+            .height(dimensions.size_200)
+            .border(
+                width = dimensions.size_1,
+                color = MaterialTheme.colors.onBackground,
+                shape = RoundedCornerShape(dimensions.spaceSmall)
+            ),
+        decorationBox = { innerTextField ->
+            TextFieldDefaults.TextFieldDecorationBox(
+                value = inputText,
+                innerTextField = {
+                    Row(
+                        modifier = Modifier.fillMaxHeight().padding(dimensions.spaceSmall)
+                    ) {
+                        innerTextField()
+                    }
+                },
+                enabled = true,
+                singleLine = isSingleLine,
+                visualTransformation = VisualTransformation.None,
+                contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
+                    top = dimensions.default,
+                    bottom = dimensions.default,
+                    start = dimensions.spaceExtraSmall
+                ),
+                interactionSource = remember { MutableInteractionSource() },
+                placeholder = {
+                    if (inputText.isEmpty()) {
+                        Box(
+                            modifier = Modifier.fillMaxHeight().padding(dimensions.spaceSmall)
                         ) {
                             Text(
                                 text = stringResource(id = placeholderId),

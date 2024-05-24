@@ -12,5 +12,8 @@ data class ShopState(
     val selectedLayout: ShopLayout = ShopLayout.Products,
     val products: List<Product> = emptyList(),
     val reviews: List<Review> = emptyList(),
-    val rating: Double = 0.0
+    val rating: Double = 0.0,
+    val review: String = "",
+    val newRating: Int? = null,
+    val isReviewSubmitting: Boolean = false
 )

@@ -8,4 +8,5 @@ sealed interface UiEvent {
     object FocusInputField : UiEvent
     data class DisplayToast(val message: String) : UiEvent
     object DataLoaded : UiEvent
+    object CloseBottomSheet : UiEvent
 }

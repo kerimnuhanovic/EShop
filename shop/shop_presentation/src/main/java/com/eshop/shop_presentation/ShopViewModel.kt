@@ -4,9 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eshop.core.domain.models.Product
+import com.eshop.core.util.DELAY_1000
+import com.eshop.core.util.REVIEW_MAX_CHARACTERS
 import com.eshop.core.util.Result
+import com.eshop.core.util.ToastMessage
 import com.eshop.coreui.util.UiEvent
 import com.eshop.shop_domain.model.AllReviews
+import com.eshop.shop_domain.usecase.AddReviewUseCase
 import com.eshop.shop_domain.usecase.FetchShopProducts
 import com.eshop.shop_domain.usecase.FetchShopReviewsUseCase
 import com.eshop.shop_domain.usecase.FetchShopUseCase
@@ -14,6 +18,7 @@ import com.eshop.shop_presentation.util.ShopLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -25,7 +30,8 @@ class ShopViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val fetchShopUseCase: FetchShopUseCase,
     private val fetchShopProducts: FetchShopProducts,
-    private val fetchShopReviewsUseCase: FetchShopReviewsUseCase
+    private val fetchShopReviewsUseCase: FetchShopReviewsUseCase,
+    private val addReviewUseCase: AddReviewUseCase
 ) : ViewModel() {
     private val shopId: String = checkNotNull(savedStateHandle["shopId"])
 
@@ -59,6 +65,24 @@ class ShopViewModel @Inject constructor(
                     selectedLayout = ShopLayout.fromString(event.layout)
                 )
             }
+
+            is ShopEvent.OnReviewEnter -> {
+                if (state.value.review.length < REVIEW_MAX_CHARACTERS) {
+                    _state.value = _state.value.copy(
+                        review = event.review
+                    )
+                }
+            }
+
+            is ShopEvent.OnStarClick -> {
+                _state.value = _state.value.copy(
+                    newRating = event.rating
+                )
+            }
+
+            ShopEvent.OnReviewSubmit -> {
+                addReview()
+            }
         }
     }
 
@@ -80,7 +104,6 @@ class ShopViewModel @Inject constructor(
                     when {
                         productsResult is Result.Failure || reviewsResult is Result.Failure -> {
                             // display error layout
-                            println("Evo me u failure shop screen")
                         }
                         else -> {
                             val products = productsResult as Result.Success<List<Product>>
@@ -92,14 +115,38 @@ class ShopViewModel @Inject constructor(
                                 reviews = allReviews.data.reviews,
                                 rating = allReviews.data.rating
                             )
-                            println("EVO MEEEE")
-                            println(allReviews.data.reviews)
                         }
                     }
                 }
                 is Result.Failure -> {
-                    println("Evo me u failure shop screen")
                     // show failure message
+                }
+            }
+        }
+    }
+
+    private fun addReview() {
+        _state.value = state.value.copy(
+            isReviewSubmitting = true
+        )
+        viewModelScope.launch {
+            when (val result = addReviewUseCase(shopId = state.value.shop!!.username, comment = state.value.review, rating = state.value.newRating!!)) {
+                is Result.Success -> {
+                    val reviews = state.value.reviews.toMutableList()
+                    reviews.add(0, result.data)
+                    _state.value = state.value.copy(
+                        isReviewSubmitting = false,
+                        reviews = reviews
+                    )
+                    _uiEvent.send(UiEvent.CloseBottomSheet)
+                    delay(DELAY_1000)
+                    _uiEvent.send(UiEvent.DisplayToast(ToastMessage.ReviewSubmitted.message))
+                }
+                is Result.Failure -> {
+                    _state.value = state.value.copy(
+                        isReviewSubmitting = false
+                    )
+                    _uiEvent.send(UiEvent.DisplayToast(ToastMessage.ReviewNotSubmitted.message))
                 }
             }
         }

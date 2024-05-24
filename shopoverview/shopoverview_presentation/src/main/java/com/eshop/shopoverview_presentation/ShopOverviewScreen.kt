@@ -129,6 +129,10 @@ fun ShopOverviewScreen(
                 UiEvent.DataLoaded -> {
                     // no-op
                 }
+
+                UiEvent.CloseBottomSheet -> {
+                    // no-op
+                }
             }
         }
     }

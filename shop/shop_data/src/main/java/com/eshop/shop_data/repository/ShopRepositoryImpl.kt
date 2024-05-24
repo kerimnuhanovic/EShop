@@ -7,8 +7,11 @@ import com.eshop.core.domain.models.Shop
 import com.eshop.core.util.Result
 import com.eshop.core.util.handleApiError
 import com.eshop.shop_data.mapper.toAllReviews
+import com.eshop.shop_data.mapper.toReview
 import com.eshop.shop_data.remote.ShopApi
+import com.eshop.shop_data.remote.request.ReviewRequest
 import com.eshop.shop_domain.model.AllReviews
+import com.eshop.shop_domain.model.Review
 import com.eshop.shop_domain.repository.ShopRepository
 import java.lang.Exception
 import javax.inject.Inject
@@ -41,6 +44,15 @@ class ShopRepositoryImpl @Inject constructor(
         return try {
             val result = shopApi.fetchShopReviews(shopId)
             Result.Success(result.toAllReviews())
+        } catch (ex: Exception) {
+            handleApiError(ex)
+        }
+    }
+
+    override suspend fun addReview(shopId: String, comment: String, rating: Int): Result<Review> {
+        return try {
+            val result = shopApi.addReview(shopId = shopId, reviewRequest = ReviewRequest(comment, rating))
+            Result.Success(result.toReview())
         } catch (ex: Exception) {
             handleApiError(ex)
         }

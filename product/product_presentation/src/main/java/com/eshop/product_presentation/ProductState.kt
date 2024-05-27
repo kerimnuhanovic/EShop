@@ -7,5 +7,6 @@ data class ProductState(
     val product: Product? = null,
     val isLoading: Boolean = false,
     val productOwner: Shop? = null,
-    val isAddingProductInProgress: Boolean = false
+    val isAddingProductInProgress: Boolean = false,
+    val isProductFavourite: Boolean = false
 )

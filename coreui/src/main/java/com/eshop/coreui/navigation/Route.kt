@@ -11,4 +11,7 @@ object Route {
     const val SHOP = "shop"
     const val CHAT = "chat"
     const val CONVERSATIONS = "conversations"
+    const val FAVOURITE_PRODUCTS = "favourite_products"
+    const val FAVOURITE_SHOPS = "favourite_shops"
+    const val DASHBOARD = "dashboard"
 }

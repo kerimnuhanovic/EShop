@@ -99,9 +99,9 @@ private fun ConversationsScreenContent(
                         route = Route.BASKET
                     ),
                     BottomBarItem(
-                        text = "Orders",
+                        text = "Dashboard",
                         icon = Icons.Rounded.Settings,
-                        route = Route.ORDERS
+                        route = Route.DASHBOARD
                     )
                 ),
                 isBottomBarOverlapped = false,

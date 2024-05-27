@@ -105,6 +105,9 @@ dependencies {
     implementation(project(Modules.cartData))
     implementation(project(Modules.cartDomain))
     implementation(project(Modules.cartPresentation))
+    implementation(project(Modules.userDashboardData))
+    implementation(project(Modules.userDashboardDomain))
+    implementation(project(Modules.userDashboardPresentation))
 
     testImplementation(Testing.junit)
     androidTestImplementation(Testing.junitExt)

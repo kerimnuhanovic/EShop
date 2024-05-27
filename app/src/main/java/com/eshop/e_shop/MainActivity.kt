@@ -26,6 +26,7 @@ import com.eshop.productoverview_presentation.ProductOverviewScreen
 import com.eshop.shop_presentation.ShopScreen
 import com.eshop.shopoverview_presentation.ShopOverviewScreen
 import com.eshop.signup_presentation.signup.SignupScreen
+import com.eshop.userdashboard_presentation.UserDashboardScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -89,6 +90,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = "${Route.CHAT}/{chatPartner}", arguments = listOf(navArgument("chatPartner") {type = NavType.StringType})) {
                         ChatScreen(onNavigate = navController::navigate, onNavigateBack = navController::navigateBack)
+                    }
+                    composable(route = Route.DASHBOARD) {
+                        UserDashboardScreen(onNavigate = navController::navigate)
                     }
                 }
             }

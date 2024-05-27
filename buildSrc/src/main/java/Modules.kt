@@ -38,4 +38,8 @@ object Modules {
     const val cartData = ":cart:cart_data"
     const val cartDomain = ":cart:cart_domain"
     const val cartPresentation = ":cart:cart_presentation"
+
+    const val userDashboardData = ":userdashboard:userdashboard_data"
+    const val userDashboardDomain = ":userdashboard:userdashboard_domain"
+    const val userDashboardPresentation = ":userdashboard:userdashboard_presentation"
 }

@@ -191,7 +191,7 @@ fun ShopOverviewScreenContent(
                     BottomBarItem(text = "Shops", iconId = R.drawable.shopping_basket_24, route = Route.SHOPS_OVERVIEW),
                     BottomBarItem(text = "Message", iconId = R.drawable.message_24, route = Route.CONVERSATIONS),
                     BottomBarItem(text = "Basket", icon = Icons.Rounded.ShoppingCart, route = Route.BASKET),
-                    BottomBarItem(text = "Orders", icon = Icons.Rounded.Settings, route = Route.ORDERS)
+                    BottomBarItem(text = "Dashboard", icon = Icons.Rounded.Settings, route = Route.DASHBOARD)
                 ),
                 isBottomBarOverlapped = isBottomBarOverlapped.value,
                 onNavigate = onNavigate,

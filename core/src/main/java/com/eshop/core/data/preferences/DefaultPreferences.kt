@@ -2,6 +2,7 @@ package com.eshop.core.data.preferences
 
 import android.content.SharedPreferences
 import com.eshop.core.domain.preferences.Preferences
+import com.eshop.core.util.UserType
 import javax.inject.Inject
 
 class DefaultPreferences @Inject constructor(
@@ -13,5 +14,16 @@ class DefaultPreferences @Inject constructor(
 
     override fun readToken(): String? {
         return sharedPreferences.getString(Preferences.KEY_TOKEN, null)
+    }
+
+    override fun saveUserType(userType: UserType) {
+        sharedPreferences.edit().putString(Preferences.USER_TYPE, userType.type).apply()
+    }
+
+    override fun readUserType(): UserType? {
+        val type = sharedPreferences.getString(Preferences.USER_TYPE, null)
+        return if (type != null) {
+            UserType.fromString(type)
+        } else null
     }
 }

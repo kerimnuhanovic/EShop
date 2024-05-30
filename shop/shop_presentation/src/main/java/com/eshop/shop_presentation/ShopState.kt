@@ -15,5 +15,6 @@ data class ShopState(
     val rating: Double = 0.0,
     val review: String = "",
     val newRating: Int? = null,
-    val isReviewSubmitting: Boolean = false
+    val isReviewSubmitting: Boolean = false,
+    val isShopFavourite: Boolean = false
 )

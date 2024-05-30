@@ -15,6 +15,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,6 +35,8 @@ fun ImageCatalog(
     pagerState: PagerState,
     images: List<String>,
     onBackClick: () -> Unit,
+    isFavourite: Boolean,
+    onFavouriteClick: () -> Unit,
     showPageIndicator: Boolean = true
 ) {
     val dimensions = LocalDimensions.current
@@ -95,9 +98,12 @@ fun ImageCatalog(
                 tint = Color.White
             )
             Icon(
-                imageVector = Icons.Filled.FavoriteBorder,
+                imageVector = if (isFavourite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                 contentDescription = null,
-                tint = Color.White
+                tint = Color.White,
+                modifier = Modifier.clickable {
+                    onFavouriteClick()
+                }
             )
 
         }

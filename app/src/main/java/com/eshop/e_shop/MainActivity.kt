@@ -20,12 +20,15 @@ import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.e_shop.navigation.navigate
 import com.eshop.e_shop.navigation.navigateBack
+import com.eshop.favouriteproducts_presentation.FavouriteProductsScreen
+import com.eshop.favouriteshops_presentation.FavouriteShopsScreen
 import com.eshop.login_presentation.login.LoginScreen
 import com.eshop.product_presentation.ProductScreen
 import com.eshop.productoverview_presentation.ProductOverviewScreen
 import com.eshop.shop_presentation.ShopScreen
 import com.eshop.shopoverview_presentation.ShopOverviewScreen
 import com.eshop.signup_presentation.signup.SignupScreen
+import com.eshop.userdashboard_presentation.UserDashboardScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -89,6 +92,15 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = "${Route.CHAT}/{chatPartner}", arguments = listOf(navArgument("chatPartner") {type = NavType.StringType})) {
                         ChatScreen(onNavigate = navController::navigate, onNavigateBack = navController::navigateBack)
+                    }
+                    composable(route = Route.DASHBOARD) {
+                        UserDashboardScreen(onNavigate = navController::navigate)
+                    }
+                    composable(route = Route.FAVOURITE_PRODUCTS) {
+                        FavouriteProductsScreen(onNavigate = navController::navigate, onNavigateBack = navController::navigateBack)
+                    }
+                    composable(route = Route.FAVOURITE_SHOPS) {
+                        FavouriteShopsScreen(onNavigate = navController::navigate, onNavigateBack = navController::navigateBack)
                     }
                 }
             }

@@ -171,6 +171,7 @@ class SignupViewModel @Inject constructor(
             when (result) {
                 is Result.Success -> {
                     preferences.saveToken(result.data.token)
+                    preferences.saveUserType(result.data.userType)
                     _uiEvent.send(UiEvent.Navigate(Route.PRODUCTS_OVERVIEW))
                 }
                 is Result.Failure -> {

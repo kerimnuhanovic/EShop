@@ -7,4 +7,5 @@ sealed interface ShopEvent {
     data class OnReviewEnter(val review: String) : ShopEvent
     data class OnStarClick(val rating: Int) : ShopEvent
     object OnReviewSubmit : ShopEvent
+    object OnFavouriteClick : ShopEvent
 }

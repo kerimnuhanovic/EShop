@@ -266,7 +266,11 @@ private fun ShopScreenContent(
                         onBackClick = {
                             onEvent(ShopEvent.OnBackClick)
                         },
-                        showPageIndicator = false
+                        showPageIndicator = false,
+                        isFavourite = state.isShopFavourite,
+                        onFavouriteClick = {
+                            onEvent(ShopEvent.OnFavouriteClick)
+                        }
                     )
                     Spacer(modifier = Modifier.height(dimensions.spaceMedium))
                     Text(

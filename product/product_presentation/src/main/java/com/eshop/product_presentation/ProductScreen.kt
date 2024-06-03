@@ -1,5 +1,6 @@
 package com.eshop.product_presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +28,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.Composable
@@ -40,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -47,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.eshop.core.util.BASE_URL
+import com.eshop.core.util.ToastMessage
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
@@ -66,12 +70,15 @@ fun ProductScreen(
 ) {
     val state = viewModel.state.collectAsState().value
     val pagerState = rememberPagerState()
+    val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { uiEvent ->
             if (uiEvent is UiEvent.Navigate) {
                 onNavigate(uiEvent)
             } else if (uiEvent == UiEvent.NavigateBack) {
                 onNavigateBack()
+            } else if (uiEvent is UiEvent.DisplayToast) {
+                Toast.makeText(context, uiEvent.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -167,9 +174,12 @@ private fun ProductScreenContent(
                 )
                 if (state.product != null) {
                     Icon(
-                        imageVector = Icons.Filled.FavoriteBorder,
+                        imageVector = if (state.isProductFavourite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                         contentDescription = null,
-                        tint = Color.White
+                        tint = Color.White,
+                        modifier = Modifier.clickable {
+                            onEvent(ProductEvent.OnFavouriteClick)
+                        }
                     )
                 }
             }

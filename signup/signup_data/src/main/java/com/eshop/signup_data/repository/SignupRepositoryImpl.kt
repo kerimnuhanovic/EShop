@@ -1,23 +1,17 @@
 package com.eshop.signup_data.repository
 
-import androidx.core.net.toFile
 import com.eshop.core.data.mapper.toAccessToken
-import com.eshop.core.data.remote.dto.AccessTokenDto
 import com.eshop.core.domain.models.AccessToken
+import com.eshop.core.util.Result
+import com.eshop.core.util.handleSignupApiFailure
 import com.eshop.signup_data.remote.SignupApi
 import com.eshop.signup_domain.models.RegistrationData
 import com.eshop.signup_domain.repository.SignupRepository
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
-import javax.inject.Inject
-import com.eshop.core.util.Result
-import com.eshop.core.util.handleLoginApiFailure
-import com.eshop.core.util.handleSignupApiFailure
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import javax.inject.Inject
 
 
 class SignupRepositoryImpl @Inject constructor(

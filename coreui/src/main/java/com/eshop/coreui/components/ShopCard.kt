@@ -1,4 +1,4 @@
-package com.eshop.shopoverview_presentation.components
+package com.eshop.coreui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -114,7 +114,7 @@ fun ShopCard(
 
 @Composable
 @Preview
-private fun ProductCardPreview() {
+private fun ShopCardPreview() {
     val dimensions = LocalDimensions.current
     EShopTheme {
         Column(

@@ -42,4 +42,12 @@ object Modules {
     const val userDashboardData = ":userdashboard:userdashboard_data"
     const val userDashboardDomain = ":userdashboard:userdashboard_domain"
     const val userDashboardPresentation = ":userdashboard:userdashboard_presentation"
+
+    const val favouriteProductsData = ":favouriteproducts:favouriteproducts_data"
+    const val favouriteProductsDomain = ":favouriteproducts:favouriteproducts_domain"
+    const val favouriteProductsPresentation = ":favouriteproducts:favouriteproducts_presentation"
+
+    const val favouriteShopsData = ":favouriteshops:favouriteshops_data"
+    const val favouriteShopsDomain = ":favouriteshops:favouriteshops_domain"
+    const val favouriteShopsPresentation = ":favouriteshops:favouriteshops_presentation"
 }

@@ -1,8 +1,10 @@
 package com.eshop.userdashboard_presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.eshop.core.domain.preferences.Preferences
 import com.eshop.core.util.UserType
+import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.util.UiEvent
 import com.eshop.userdashboard_presentation.util.DashboardItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,6 +12,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,7 +33,9 @@ class UserDashboardViewModel @Inject constructor(
     fun onEvent(event: UserDashboardEvent) {
         when (event) {
             is UserDashboardEvent.OnItemClick -> {
-
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.Navigate(event.route))
+                }
             }
         }
     }

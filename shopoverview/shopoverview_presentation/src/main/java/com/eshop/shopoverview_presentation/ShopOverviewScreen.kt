@@ -32,9 +32,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.List
-import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material.rememberScaffoldState
@@ -77,7 +75,7 @@ import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.BottomBarItem
 import com.eshop.coreui.util.UiEvent
-import com.eshop.shopoverview_presentation.components.ShopCard
+import com.eshop.coreui.components.ShopCard
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 

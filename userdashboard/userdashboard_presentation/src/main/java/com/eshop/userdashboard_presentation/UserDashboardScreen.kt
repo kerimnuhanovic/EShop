@@ -1,6 +1,7 @@
 package com.eshop.userdashboard_presentation
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -69,11 +70,31 @@ private fun UserDashboardScreenContent(
         bottomBar = {
             BottomBar(
                 items = listOf(
-                    BottomBarItem(text = "Products", icon = Icons.Rounded.List, route = Route.PRODUCTS_OVERVIEW),
-                    BottomBarItem(text = "Shops", iconId = R.drawable.shopping_basket_24, route = Route.SHOPS_OVERVIEW),
-                    BottomBarItem(text = "Message", iconId = R.drawable.message_24, route = Route.CONVERSATIONS),
-                    BottomBarItem(text = "Basket", icon = Icons.Rounded.ShoppingCart, route = Route.BASKET),
-                    BottomBarItem(text = "Board", icon = Icons.Rounded.Settings, route = Route.DASHBOARD)
+                    BottomBarItem(
+                        text = "Products",
+                        icon = Icons.Rounded.List,
+                        route = Route.PRODUCTS_OVERVIEW
+                    ),
+                    BottomBarItem(
+                        text = "Shops",
+                        iconId = R.drawable.shopping_basket_24,
+                        route = Route.SHOPS_OVERVIEW
+                    ),
+                    BottomBarItem(
+                        text = "Message",
+                        iconId = R.drawable.message_24,
+                        route = Route.CONVERSATIONS
+                    ),
+                    BottomBarItem(
+                        text = "Basket",
+                        icon = Icons.Rounded.ShoppingCart,
+                        route = Route.BASKET
+                    ),
+                    BottomBarItem(
+                        text = "Board",
+                        icon = Icons.Rounded.Settings,
+                        route = Route.DASHBOARD
+                    )
                 ),
                 isBottomBarOverlapped = false,
                 onNavigate = onNavigate,
@@ -81,12 +102,18 @@ private fun UserDashboardScreenContent(
             )
         }
     ) {
-        Column(modifier = Modifier.fillMaxSize().padding(it)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(it)) {
             state.items.forEach { item ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(dimensions.spaceMedium), verticalAlignment = Alignment.CenterVertically
+                        .padding(dimensions.spaceMedium)
+                        .clickable {
+                            onEvent(UserDashboardEvent.OnItemClick(item.route))
+                        },
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (item.iconId != null) {
                         Icon(

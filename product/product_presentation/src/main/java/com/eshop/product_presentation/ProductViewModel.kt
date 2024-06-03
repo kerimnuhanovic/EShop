@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eshop.core.domain.usecase.AddFavouriteProductUseCase
 import com.eshop.core.domain.usecase.CheckIsProductFavouriteUseCase
+import com.eshop.core.domain.usecase.DeleteFavouriteProductUseCase
 import com.eshop.core.util.Result
 import com.eshop.core.util.ToastMessage
 import com.eshop.coreui.util.UiEvent
@@ -31,7 +32,7 @@ class ProductViewModel @Inject constructor(
     private val addProductToCartUseCase: AddProductToCartUseCase,
     private val checkIsProductFavouriteUseCase: CheckIsProductFavouriteUseCase,
     private val addFavouriteProductUseCase: AddFavouriteProductUseCase,
-    private val deleteFavouriteProductUseCase: AddFavouriteProductUseCase
+    private val deleteFavouriteProductUseCase: DeleteFavouriteProductUseCase
 ) : ViewModel() {
     private val productId: String = checkNotNull(savedStateHandle["productId"])
 

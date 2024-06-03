@@ -108,6 +108,12 @@ dependencies {
     implementation(project(Modules.userDashboardData))
     implementation(project(Modules.userDashboardDomain))
     implementation(project(Modules.userDashboardPresentation))
+    implementation(project(Modules.favouriteProductsData))
+    implementation(project(Modules.favouriteProductsDomain))
+    implementation(project(Modules.favouriteProductsPresentation))
+    implementation(project(Modules.favouriteShopsData))
+    implementation(project(Modules.favouriteShopsDomain))
+    implementation(project(Modules.favouriteShopsPresentation))
 
     testImplementation(Testing.junit)
     androidTestImplementation(Testing.junitExt)

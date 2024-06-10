@@ -1,6 +1,7 @@
 package com.eshop.shopoverview_presentation
 
 import com.eshop.core.domain.models.Shop
+import com.eshop.coreui.util.BottomBarItem
 import com.eshop.coreui.util.ShopAndProductCategory
 import com.eshop.coreui.util.SelectedCategory
 import com.eshop.coreui.util.SelectedSortCriterion
@@ -20,5 +21,6 @@ data class ShopOverviewState(
     val isFilterDrawerItemExpanded: Boolean = false,
     val shopCategories: List<SelectedCategory> = ShopAndProductCategory.listAllCategories().map { SelectedCategory(it, false) },
     val isSortDrawerItemExpanded: Boolean = false,
-    val sortCriteria: List<SelectedSortCriterion> = generateSortCriteriaForShops()
+    val sortCriteria: List<SelectedSortCriterion> = generateSortCriteriaForShops(),
+    val bottomBarItems: List<BottomBarItem> = emptyList()
 )

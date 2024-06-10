@@ -41,5 +41,8 @@ sealed class ToastMessage(val message: String) {
     object FavouriteShopDelete : ToastMessage("Shop has been successfully removed from favourites.")
     object FavouriteShopAddFailed : ToastMessage("Something went wrong and we were not able to add shop to favourites.")
     object FavouriteShopDeleteFailed : ToastMessage("Something went wrong and we were not able to delete shop from favourites.")
+    object OrderApproved : ToastMessage("Order has been successfully approved.")
+    object OrderDeclined : ToastMessage("Order has been successfully declined.")
+    object ChangeOrderStatusFailed : ToastMessage("Something went wrong and we were not able to update order status.")
 
 }

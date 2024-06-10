@@ -6,11 +6,13 @@ import com.eshop.cart_domain.usecase.CreateOrderUseCase
 import com.eshop.cart_domain.usecase.DeleteCartItemUseCase
 import com.eshop.cart_domain.usecase.FetchCartItemsUseCase
 import com.eshop.core.domain.models.OrderDetails
+import com.eshop.core.domain.preferences.Preferences
 import com.eshop.core.util.DELAY_1000
 import com.eshop.core.util.Result
 import com.eshop.core.util.ToastMessage
 import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.util.UiEvent
+import com.eshop.coreui.util.generateBottomBarItems
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -25,7 +27,8 @@ import javax.inject.Inject
 class CartViewModel @Inject  constructor(
     private val fetchCartItemsUseCase: FetchCartItemsUseCase,
     private val createOrderUseCase: CreateOrderUseCase,
-    private val deleteCartItemUseCase: DeleteCartItemUseCase
+    private val deleteCartItemUseCase: DeleteCartItemUseCase,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<CartState> = MutableStateFlow(CartState())
@@ -35,6 +38,7 @@ class CartViewModel @Inject  constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        generateBarItems()
         fetchCartItems()
     }
 
@@ -130,6 +134,14 @@ class CartViewModel @Inject  constructor(
                     )
                 }
             }
+        }
+    }
+
+    private fun generateBarItems() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                bottomBarItems = generateBottomBarItems(preferences.readUserType()!!.type)
+            )
         }
     }
 

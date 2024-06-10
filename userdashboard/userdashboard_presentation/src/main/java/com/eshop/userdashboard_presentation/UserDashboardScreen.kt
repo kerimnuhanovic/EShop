@@ -30,15 +30,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.eshop.core.util.UserType
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
 import com.eshop.coreui.components.BottomBar
 import com.eshop.coreui.navigation.Route
+import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.BottomBarItem
 import com.eshop.coreui.util.UiEvent
+import com.eshop.coreui.util.generateBottomBarItems
+import com.eshop.userdashboard_presentation.util.DashboardItem
 import kotlin.math.roundToInt
 
 @Composable
@@ -69,42 +74,18 @@ private fun UserDashboardScreenContent(
     Scaffold(
         bottomBar = {
             BottomBar(
-                items = listOf(
-                    BottomBarItem(
-                        text = "Products",
-                        icon = Icons.Rounded.List,
-                        route = Route.PRODUCTS_OVERVIEW
-                    ),
-                    BottomBarItem(
-                        text = "Shops",
-                        iconId = R.drawable.shopping_basket_24,
-                        route = Route.SHOPS_OVERVIEW
-                    ),
-                    BottomBarItem(
-                        text = "Message",
-                        iconId = R.drawable.message_24,
-                        route = Route.CONVERSATIONS
-                    ),
-                    BottomBarItem(
-                        text = "Basket",
-                        icon = Icons.Rounded.ShoppingCart,
-                        route = Route.BASKET
-                    ),
-                    BottomBarItem(
-                        text = "Board",
-                        icon = Icons.Rounded.Settings,
-                        route = Route.DASHBOARD
-                    )
-                ),
+                items = state.bottomBarItems,
                 isBottomBarOverlapped = false,
                 onNavigate = onNavigate,
                 currentDestination = Route.DASHBOARD
             )
         }
     ) {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(it)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
             state.items.forEach { item ->
                 Row(
                     modifier = Modifier
@@ -140,5 +121,26 @@ private fun UserDashboardScreenContent(
                 Divider()
             }
         }
+    }
+}
+
+@Composable
+@Preview
+private fun UserDashboardScreenPreview() {
+    EShopTheme {
+        UserDashboardScreenContent(
+            state = UserDashboardState(
+                items = listOf(
+                    DashboardItem.FavouriteProducts,
+                    DashboardItem.FavouriteShops,
+                    DashboardItem.MyOrders,
+                    DashboardItem.LogOut
+                ),
+                bottomBarItems = generateBottomBarItems(UserType.Customer.type)
+
+            ),
+            onEvent ={},
+            onNavigate = {}
+        )
     }
 }

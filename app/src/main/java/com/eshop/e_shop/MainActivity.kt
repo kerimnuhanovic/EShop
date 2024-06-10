@@ -23,6 +23,7 @@ import com.eshop.e_shop.navigation.navigateBack
 import com.eshop.favouriteproducts_presentation.FavouriteProductsScreen
 import com.eshop.favouriteshops_presentation.FavouriteShopsScreen
 import com.eshop.login_presentation.login.LoginScreen
+import com.eshop.orders_presentation.OrdersScreen
 import com.eshop.product_presentation.ProductScreen
 import com.eshop.productoverview_presentation.ProductOverviewScreen
 import com.eshop.shop_presentation.ShopScreen
@@ -83,7 +84,7 @@ class MainActivity : ComponentActivity() {
                         CartScreen(onNavigate = navController::navigate)
                     }
                     composable(route = Route.ORDERS) {
-                        Text(text = "ORDERS SCREEN")
+                        OrdersScreen(onNavigate = navController::navigate, onNavigateBack = navController::navigateBack)
                     }
                     composable(route = Route.CONVERSATIONS) {
                         ConversationsScreen(

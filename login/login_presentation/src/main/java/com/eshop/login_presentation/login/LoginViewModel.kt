@@ -80,6 +80,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = loginUseCase(Credentials(identifier.value, password.value))) {
                 is Result.Success -> {
+                    println(result.data.token)
                     preferences.saveToken(result.data.token)
                     preferences.saveUserType(result.data.userType)
                     _uiEvent.send(UiEvent.Navigate(Route.PRODUCTS_OVERVIEW))

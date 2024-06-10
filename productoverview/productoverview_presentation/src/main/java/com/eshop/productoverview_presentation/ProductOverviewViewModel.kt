@@ -3,6 +3,7 @@ package com.eshop.productoverview_presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eshop.core.domain.models.FilteredShopAndProductCategory
+import com.eshop.core.domain.preferences.Preferences
 import com.eshop.core.domain.usecase.ConvertListToStringUseCase
 import com.eshop.core.domain.usecase.CreateFileFromUriUseCase
 import com.eshop.core.util.Result
@@ -10,6 +11,7 @@ import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.util.SelectedCategory
 import com.eshop.coreui.util.SelectedSortCriterion
 import com.eshop.coreui.util.UiEvent
+import com.eshop.coreui.util.generateBottomBarItems
 import com.eshop.coreui.util.generateSortCriteriaForShops
 import com.eshop.productoverview_domain.model.ProductAdditionData
 import com.eshop.productoverview_domain.usecase.AddProductInputValidationUseCase
@@ -34,6 +36,7 @@ class ProductOverviewViewModel @Inject constructor(
     private val addProductInputValidationUseCase: AddProductInputValidationUseCase,
     private val fetchPopularProductsUseCase: FetchPopularProductsUseCase,
     private val fetchAllProductsUseCase: FetchAllProductsUseCase,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<ProductOverviewState> =
@@ -45,6 +48,7 @@ class ProductOverviewViewModel @Inject constructor(
 
     init {
         removeSplashScreen()
+        generateBarItems()
         fetchInitialProducts()
     }
 
@@ -378,6 +382,14 @@ class ProductOverviewViewModel @Inject constructor(
     private fun removeSplashScreen() {
         viewModelScope.launch {
             _uiEvent.send(UiEvent.DataLoaded)
+        }
+    }
+
+    private fun generateBarItems() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                bottomBarItems = generateBottomBarItems(preferences.readUserType()!!.type)
+            )
         }
     }
 }

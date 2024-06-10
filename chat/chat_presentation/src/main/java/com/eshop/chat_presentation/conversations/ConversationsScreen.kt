@@ -30,6 +30,7 @@ import com.eshop.chat_domain.model.Conversation
 import com.eshop.chat_domain.model.Message
 import com.eshop.chat_presentation.components.ConversationsScreenLoadingSkeleton
 import com.eshop.chat_presentation.components.ConversationItem
+import com.eshop.core.util.UserType
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
@@ -39,6 +40,7 @@ import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.util.BottomBarItem
 import com.eshop.coreui.util.UiEvent
+import com.eshop.coreui.util.generateBottomBarItems
 import java.time.LocalDate
 
 @Composable
@@ -77,33 +79,7 @@ private fun ConversationsScreenContent(
             .fillMaxSize(),
         bottomBar = {
             BottomBar(
-                items = listOf(
-                    BottomBarItem(
-                        text = "Products",
-                        icon = Icons.Rounded.List,
-                        route = Route.PRODUCTS_OVERVIEW
-                    ),
-                    BottomBarItem(
-                        text = "Shops",
-                        iconId = R.drawable.shopping_basket_24,
-                        route = Route.SHOPS_OVERVIEW
-                    ),
-                    BottomBarItem(
-                        text = "Message",
-                        iconId = R.drawable.message_24,
-                        route = Route.CONVERSATIONS
-                    ),
-                    BottomBarItem(
-                        text = "Basket",
-                        icon = Icons.Rounded.ShoppingCart,
-                        route = Route.BASKET
-                    ),
-                    BottomBarItem(
-                        text = "Dashboard",
-                        icon = Icons.Rounded.Settings,
-                        route = Route.DASHBOARD
-                    )
-                ),
+                items = state.bottomBarItems,
                 isBottomBarOverlapped = false,
                 onNavigate = onNavigate,
                 currentDestination = Route.CONVERSATIONS,
@@ -188,7 +164,8 @@ private fun ConversationsScreenPreview() {
                         )
                     )
                 )
-            )
+            ),
+            bottomBarItems = generateBottomBarItems(UserType.Shop.type)
         ), onEvent = {}, onNavigate = {})
     }
 }

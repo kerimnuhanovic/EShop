@@ -38,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.eshop.cart_presentation.components.CartItem
 import com.eshop.cart_presentation.components.CartScreenLoadingSkeleton
 import com.eshop.core.domain.models.Product
+import com.eshop.core.util.UserType
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
@@ -48,6 +49,7 @@ import com.eshop.coreui.theme.EShopTheme
 import com.eshop.coreui.theme.MediumGrayVariant
 import com.eshop.coreui.util.BottomBarItem
 import com.eshop.coreui.util.UiEvent
+import com.eshop.coreui.util.generateBottomBarItems
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.util.Currency
@@ -89,33 +91,7 @@ private fun CartScreenContent(
             .fillMaxSize(),
         bottomBar = {
             BottomBar(
-                items = listOf(
-                    BottomBarItem(
-                        text = "Products",
-                        icon = Icons.Rounded.List,
-                        route = Route.PRODUCTS_OVERVIEW
-                    ),
-                    BottomBarItem(
-                        text = "Shops",
-                        iconId = R.drawable.shopping_basket_24,
-                        route = Route.SHOPS_OVERVIEW
-                    ),
-                    BottomBarItem(
-                        text = "Message",
-                        iconId = R.drawable.message_24,
-                        route = Route.CONVERSATIONS
-                    ),
-                    BottomBarItem(
-                        text = "Basket",
-                        icon = Icons.Rounded.ShoppingCart,
-                        route = Route.BASKET
-                    ),
-                    BottomBarItem(
-                        text = "Dashboard",
-                        icon = Icons.Rounded.Settings,
-                        route = Route.DASHBOARD
-                    )
-                ),
+                items = state.bottomBarItems,
                 isBottomBarOverlapped = false,
                 onNavigate = onNavigate,
                 currentDestination = Route.BASKET,
@@ -291,7 +267,8 @@ private fun CartScreenPreview() {
                     price = 200.00,
                     shop = "Shop"
                 )
-            )
+            ),
+            bottomBarItems = generateBottomBarItems(UserType.Customer.type)
         ), onEvent = {}, onNavigate = {})
     }
 }

@@ -2,6 +2,7 @@ package com.eshop.productoverview_presentation
 
 import android.net.Uri
 import com.eshop.core.domain.models.Product
+import com.eshop.coreui.util.BottomBarItem
 import com.eshop.coreui.util.SelectedCategory
 import com.eshop.coreui.util.SelectedSortCriterion
 import com.eshop.coreui.util.ShopAndProductCategory
@@ -30,5 +31,6 @@ data class ProductOverviewState(
     val isFilterDrawerItemExpanded: Boolean = false,
     val productCategories: List<SelectedCategory> = ShopAndProductCategory.listAllCategories().map { SelectedCategory(it, false) },
     val isSortDrawerItemExpanded: Boolean = false,
-    val sortCriteria: List<SelectedSortCriterion> = generateSortCriteriaForProducts()
+    val sortCriteria: List<SelectedSortCriterion> = generateSortCriteriaForProducts(),
+    val bottomBarItems: List<BottomBarItem> = emptyList()
 )

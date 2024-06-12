@@ -184,13 +184,7 @@ fun ShopOverviewScreenContent(
         scaffoldState = scaffoldState,
         bottomBar = {
             BottomBar(
-                items = listOf(
-                    BottomBarItem(text = "Products", icon = Icons.Rounded.List, route = Route.PRODUCTS_OVERVIEW),
-                    BottomBarItem(text = "Shops", iconId = R.drawable.shopping_basket_24, route = Route.SHOPS_OVERVIEW),
-                    BottomBarItem(text = "Message", iconId = R.drawable.message_24, route = Route.CONVERSATIONS),
-                    BottomBarItem(text = "Basket", icon = Icons.Rounded.ShoppingCart, route = Route.BASKET),
-                    BottomBarItem(text = "Dashboard", icon = Icons.Rounded.Settings, route = Route.DASHBOARD)
-                ),
+                items = state.bottomBarItems,
                 isBottomBarOverlapped = isBottomBarOverlapped.value,
                 onNavigate = onNavigate,
                 currentDestination = Route.SHOPS_OVERVIEW,

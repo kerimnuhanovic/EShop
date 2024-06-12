@@ -6,6 +6,7 @@ import com.eshop.core.domain.preferences.Preferences
 import com.eshop.core.util.UserType
 import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.util.UiEvent
+import com.eshop.coreui.util.generateBottomBarItems
 import com.eshop.userdashboard_presentation.util.DashboardItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -27,14 +28,20 @@ class UserDashboardViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        generateBarItems()
         generateDashboardItems()
     }
 
     fun onEvent(event: UserDashboardEvent) {
         when (event) {
             is UserDashboardEvent.OnItemClick -> {
-                viewModelScope.launch {
-                    _uiEvent.send(UiEvent.Navigate(event.route))
+                if (event.route != Route.LOGIN) {
+                    viewModelScope.launch {
+                        _uiEvent.send(UiEvent.Navigate(event.route))
+                    }
+                }
+                else {
+                    logoutUser(event.route)
                 }
             }
         }
@@ -58,4 +65,18 @@ class UserDashboardViewModel @Inject constructor(
         }
     }
 
+    private fun logoutUser(route: String) {
+        viewModelScope.launch {
+            preferences.deleteToken()
+            _uiEvent.send(UiEvent.Navigate(route))
+        }
+    }
+
+    private fun generateBarItems() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                bottomBarItems = generateBottomBarItems(preferences.readUserType()!!.type)
+            )
+        }
+    }
 }

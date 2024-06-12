@@ -114,6 +114,9 @@ dependencies {
     implementation(project(Modules.favouriteShopsData))
     implementation(project(Modules.favouriteShopsDomain))
     implementation(project(Modules.favouriteShopsPresentation))
+    implementation(project(Modules.ordersData))
+    implementation(project(Modules.ordersDomain))
+    implementation(project(Modules.ordersPresentation))
 
     testImplementation(Testing.junit)
     androidTestImplementation(Testing.junitExt)

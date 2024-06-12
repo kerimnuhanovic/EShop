@@ -7,9 +7,11 @@ import com.eshop.chat_domain.usecase.ConnectToSocketUseCase
 import com.eshop.chat_domain.usecase.FetchUserConversationsUseCase
 import com.eshop.chat_domain.usecase.ReceiveNewMessageUseCase
 import com.eshop.chat_domain.usecase.SendMessageUseCase
+import com.eshop.core.domain.preferences.Preferences
 import com.eshop.core.util.Result
 import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.util.UiEvent
+import com.eshop.coreui.util.generateBottomBarItems
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +25,8 @@ import javax.inject.Inject
 class ConversationsViewModel @Inject constructor(
     private val connectToSocketUseCase: ConnectToSocketUseCase,
     private val fetchUserConversationsUseCase: FetchUserConversationsUseCase,
-    private val receiveNewMessageUseCase: ReceiveNewMessageUseCase
+    private val receiveNewMessageUseCase: ReceiveNewMessageUseCase,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<ConversationsState> = MutableStateFlow(ConversationsState(isLoading = true))
@@ -33,6 +36,30 @@ class ConversationsViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        generateBarItems()
+        fetchUserConversations()
+    }
+
+    fun onEvent(event: ConversationsEvent) {
+        when (event) {
+            is ConversationsEvent.OnSearchQueryEnter -> {
+                _state.value = state.value.copy(
+                    searchQuery = event.query,
+                    filteredConversations = state.value.conversations.filter { conversation ->
+                        conversation.chatPartner.lowercase().contains(event.query.lowercase())
+                    }
+                )
+            }
+
+            is ConversationsEvent.OnConversationClick -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.Navigate("${Route.CHAT}/${event.chatPartner}"))
+                }
+            }
+        }
+    }
+
+    private fun fetchUserConversations() {
         viewModelScope.launch {
             _state.value = state.value.copy(
                 isLoading = true
@@ -75,22 +102,11 @@ class ConversationsViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: ConversationsEvent) {
-        when (event) {
-            is ConversationsEvent.OnSearchQueryEnter -> {
-                _state.value = state.value.copy(
-                    searchQuery = event.query,
-                    filteredConversations = state.value.conversations.filter { conversation ->
-                        conversation.chatPartner.lowercase().contains(event.query.lowercase())
-                    }
-                )
-            }
-
-            is ConversationsEvent.OnConversationClick -> {
-                viewModelScope.launch {
-                    _uiEvent.send(UiEvent.Navigate("${Route.CHAT}/${event.chatPartner}"))
-                }
-            }
+    private fun generateBarItems() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                bottomBarItems = generateBottomBarItems(preferences.readUserType()!!.type)
+            )
         }
     }
 }

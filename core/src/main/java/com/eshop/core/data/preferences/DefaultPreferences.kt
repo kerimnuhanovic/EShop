@@ -16,6 +16,10 @@ class DefaultPreferences @Inject constructor(
         return sharedPreferences.getString(Preferences.KEY_TOKEN, null)
     }
 
+    override fun deleteToken() {
+        sharedPreferences.edit().putString(Preferences.KEY_TOKEN, null).apply()
+    }
+
     override fun saveUserType(userType: UserType) {
         sharedPreferences.edit().putString(Preferences.USER_TYPE, userType.type).apply()
     }

@@ -3,6 +3,7 @@ package com.eshop.shopoverview_presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eshop.core.domain.models.FilteredShopAndProductCategory
+import com.eshop.core.domain.preferences.Preferences
 import com.eshop.coreui.navigation.Route
 import com.eshop.core.util.Result
 import com.eshop.coreui.util.UiEvent
@@ -10,6 +11,7 @@ import com.eshop.shopoverview_domain.usecase.FetchAllShopsUseCase
 import com.eshop.shopoverview_domain.usecase.FetchPopularShopsUseCase
 import com.eshop.coreui.util.SelectedCategory
 import com.eshop.coreui.util.SelectedSortCriterion
+import com.eshop.coreui.util.generateBottomBarItems
 import com.eshop.coreui.util.generateSortCriteriaForShops
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ShopOverviewViewModel @Inject constructor(
     private val fetchAllShopsUseCase: FetchAllShopsUseCase,
-    private val fetchPopularShopsUseCase: FetchPopularShopsUseCase
+    private val fetchPopularShopsUseCase: FetchPopularShopsUseCase,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<ShopOverviewState> = MutableStateFlow(ShopOverviewState())
@@ -34,6 +37,7 @@ class ShopOverviewViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        generateBarItems()
         fetchInitialShops()
     }
 
@@ -256,6 +260,14 @@ class ShopOverviewViewModel @Inject constructor(
                 sortCriterion = state.value.sortCriteria.find { criterion -> criterion.isSelected }.let {
                     it ?: generateSortCriteriaForShops().first()
                 }
+            )
+        }
+    }
+
+    private fun generateBarItems() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                bottomBarItems = generateBottomBarItems(preferences.readUserType()!!.type)
             )
         }
     }

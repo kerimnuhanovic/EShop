@@ -50,4 +50,8 @@ object Modules {
     const val favouriteShopsData = ":favouriteshops:favouriteshops_data"
     const val favouriteShopsDomain = ":favouriteshops:favouriteshops_domain"
     const val favouriteShopsPresentation = ":favouriteshops:favouriteshops_presentation"
+
+    const val ordersData = ":orders:orders_data"
+    const val ordersDomain = ":orders:orders_domain"
+    const val ordersPresentation = ":orders:orders_presentation"
 }

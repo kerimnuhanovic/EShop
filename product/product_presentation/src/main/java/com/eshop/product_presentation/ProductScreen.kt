@@ -51,6 +51,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.eshop.core.util.BASE_URL
 import com.eshop.core.util.ToastMessage
+import com.eshop.core.util.UserType
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.R
@@ -299,7 +300,7 @@ private fun ProductScreenContent(
                 )
             }
         }
-        if (!state.isLoading) {
+        if (!state.isLoading && state.userType == UserType.Customer) {
             EShopButton(
                 content = {
                     if (!state.isAddingProductInProgress) {

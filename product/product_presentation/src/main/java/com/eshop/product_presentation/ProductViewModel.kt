@@ -3,6 +3,7 @@ package com.eshop.product_presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eshop.core.domain.preferences.Preferences
 import com.eshop.core.domain.usecase.AddFavouriteProductUseCase
 import com.eshop.core.domain.usecase.CheckIsProductFavouriteUseCase
 import com.eshop.core.domain.usecase.DeleteFavouriteProductUseCase
@@ -32,11 +33,14 @@ class ProductViewModel @Inject constructor(
     private val addProductToCartUseCase: AddProductToCartUseCase,
     private val checkIsProductFavouriteUseCase: CheckIsProductFavouriteUseCase,
     private val addFavouriteProductUseCase: AddFavouriteProductUseCase,
-    private val deleteFavouriteProductUseCase: DeleteFavouriteProductUseCase
+    private val deleteFavouriteProductUseCase: DeleteFavouriteProductUseCase,
+    private val preferences: Preferences
 ) : ViewModel() {
     private val productId: String = checkNotNull(savedStateHandle["productId"])
 
-    private val _state: MutableStateFlow<ProductState> = MutableStateFlow(ProductState())
+    private val _state: MutableStateFlow<ProductState> = MutableStateFlow(ProductState(
+        userType = preferences.readUserType()!!
+    ))
     val state = _state.asStateFlow()
 
     private val _uiEvent = Channel<UiEvent>()

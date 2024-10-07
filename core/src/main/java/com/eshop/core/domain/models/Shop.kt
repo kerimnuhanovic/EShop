@@ -11,5 +11,6 @@ data class Shop(
     val profileImage: String,
     val userType: UserType,
     val shopCategories: List<String>,
-    val shopLocations: List<String>
+    val shopLocations: List<String>,
+    val rating: Double = 0.0
 )

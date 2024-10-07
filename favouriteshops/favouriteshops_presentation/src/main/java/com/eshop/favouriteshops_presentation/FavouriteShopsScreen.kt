@@ -88,7 +88,7 @@ private fun FavouriteShopsScreenContent(
                     ShopCard(image = "$BASE_URL/${shop.profileImage}",
                         shopName = shop.username,
                         location = shop.shopLocations.first(),
-                        review = 4.4,
+                        review = shop.rating,
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .height(dimensions.uploadImageSurfaceSize)

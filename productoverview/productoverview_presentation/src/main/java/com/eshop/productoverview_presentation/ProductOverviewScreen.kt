@@ -72,6 +72,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eshop.core.util.BASE_URL
+import com.eshop.core.util.UserType
 import com.eshop.core.util.formatDate
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
@@ -212,10 +213,12 @@ private fun ProductOverviewScreenContent(
             )
         },
         floatingActionButton = {
-            FloatingButton(
-                modalBottomSheetState = bottomSheetState,
-                isBottomBarOverlapped = isBottomBarOverlapped
-            )
+            if (state.userType == UserType.Shop) {
+                FloatingButton(
+                    modalBottomSheetState = bottomSheetState,
+                    isBottomBarOverlapped = isBottomBarOverlapped
+                )
+            }
         },
         drawerContent = {
             Divider()
@@ -340,7 +343,7 @@ private fun ProductOverviewScreenContent(
                 Column(
                     modifier = Modifier
                         .padding(dimensions.spaceMedium)
-                        .fillMaxHeight(0.9f)
+                        .fillMaxHeight(0.95f)
                         .verticalScroll(rememberScrollState())
                 ) {
                     Spacer(modifier = Modifier.height(dimensions.spaceMedium))
@@ -654,7 +657,7 @@ private fun ProductOverviewScreenContent(
 private fun ProductOverviewScreenPreview() {
     EShopTheme {
         ProductOverviewScreenContent(
-            state = ProductOverviewState(isPopularProductsLoading = true, isAllProductsLoading = true),
+            state = ProductOverviewState(isPopularProductsLoading = true, isAllProductsLoading = true, userType = UserType.Shop),
             onEvent = {},
             onNavigate = {},
             focusRequester = FocusRequester(),

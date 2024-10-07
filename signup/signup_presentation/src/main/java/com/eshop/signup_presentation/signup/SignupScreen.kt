@@ -396,6 +396,15 @@ private fun UploadImageScreen(
             }
 
         }
+        Text(
+            text = stringResource(id = R.string.upload_your_profile_image),
+            fontFamily = PoppinsFontFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = dimensions.font_20,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.onBackground,
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.weight(1f))
         PageIndicator(SECOND_PAGE)
     }

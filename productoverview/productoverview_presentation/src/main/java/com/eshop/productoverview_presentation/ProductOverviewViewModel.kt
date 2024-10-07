@@ -40,7 +40,9 @@ class ProductOverviewViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<ProductOverviewState> =
-        MutableStateFlow(ProductOverviewState())
+        MutableStateFlow(ProductOverviewState(
+            userType = preferences.readUserType()!!
+        ))
     val state = _state.asStateFlow()
 
     private val _uiEvent = Channel<UiEvent>()

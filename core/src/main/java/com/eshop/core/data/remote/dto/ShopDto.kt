@@ -9,5 +9,6 @@ data class ShopDto(
     val profileImage: String,
     val userType: String,
     val shopCategories: List<String>,
-    val shopLocations: List<String>
+    val shopLocations: List<String>,
+    val rating: Double
 )

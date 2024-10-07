@@ -159,7 +159,7 @@ class ShopViewModel @Inject constructor(
                                     isShopLoading = false,
                                     products = products.data,
                                     reviews = allReviews.data.reviews,
-                                    rating = allReviews.data.rating
+                                    rating = String.format("%.2f", allReviews.data.rating).toDouble()
                                 )
                             }
                         }

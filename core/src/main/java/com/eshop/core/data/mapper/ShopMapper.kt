@@ -13,5 +13,6 @@ fun ShopDto.toShop() = Shop(
     this.profileImage,
     UserType.fromString(this.userType),
     this.shopCategories,
-    this.shopLocations
+    this.shopLocations,
+    this.rating
 )

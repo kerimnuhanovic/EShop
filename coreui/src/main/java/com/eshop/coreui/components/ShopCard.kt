@@ -87,25 +87,27 @@ fun ShopCard(
                     modifier = Modifier.padding(end = dimensions.spaceExtraSmall)
                 )
             }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = dimensions.spaceExtraSmall)
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Star,
-                    contentDescription = null,
-                    tint = StarGreenVariant,
-                    modifier = Modifier
-                        .padding(horizontal = dimensions.spaceExtraSmall)
-                )
-                Text(
-                    text = review.toString(),
-                    fontSize = dimensions.font_12,
-                    fontFamily = PoppinsFontFamily,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.DarkGray,
-                    modifier = Modifier.padding(end = dimensions.spaceExtraSmall)
-                )
+            if (review != 0.0) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = dimensions.spaceExtraSmall)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Star,
+                        contentDescription = null,
+                        tint = StarGreenVariant,
+                        modifier = Modifier
+                            .padding(horizontal = dimensions.spaceExtraSmall)
+                    )
+                    Text(
+                        text = review.toString(),
+                        fontSize = dimensions.font_12,
+                        fontFamily = PoppinsFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.DarkGray,
+                        modifier = Modifier.padding(end = dimensions.spaceExtraSmall)
+                    )
+                }
             }
             Spacer(modifier = Modifier.weight(1f))
         }

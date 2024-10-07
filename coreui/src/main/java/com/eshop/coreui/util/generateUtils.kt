@@ -15,7 +15,7 @@ fun generateBottomBarItems(userType: String): List<BottomBarItem> {
                 BottomBarItem(text = "Shops", iconId = R.drawable.shopping_basket_24, route = Route.SHOPS_OVERVIEW),
                 BottomBarItem(text = "Message", iconId = R.drawable.message_24, route = Route.CONVERSATIONS),
                 BottomBarItem(text = "Basket", icon = Icons.Rounded.ShoppingCart, route = Route.BASKET),
-                BottomBarItem(text = "Dashboard", icon = Icons.Rounded.Settings, route = Route.DASHBOARD)
+                BottomBarItem(text = "Board", icon = Icons.Rounded.Settings, route = Route.DASHBOARD)
             )
         }
         "Shop" -> {
@@ -24,7 +24,7 @@ fun generateBottomBarItems(userType: String): List<BottomBarItem> {
                 BottomBarItem(text = "Shops", iconId = R.drawable.shopping_basket_24, route = Route.SHOPS_OVERVIEW),
                 BottomBarItem(text = "Message", iconId = R.drawable.message_24, route = Route.CONVERSATIONS),
                 BottomBarItem(text = "Orders", iconId =R.drawable.list_alt_24, route = Route.ORDERS),
-                BottomBarItem(text = "Dashboard", icon = Icons.Rounded.Settings, route = Route.DASHBOARD)
+                BottomBarItem(text = "Board", icon = Icons.Rounded.Settings, route = Route.DASHBOARD)
             )
         }
         else -> {

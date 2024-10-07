@@ -26,5 +26,5 @@
     <string name="sort_by_product_price_asc">Price: Low to High</string>
     <string name="sort_by_product_date_desc">Date: Newest First</string>
     <string name="sort_by_product_date_asc">Price: Oldest First</string>
-
+    <string name="upload_your_profile_image">Upload your profile image</string>
 </resources>

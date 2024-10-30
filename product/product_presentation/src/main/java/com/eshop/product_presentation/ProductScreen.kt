@@ -263,9 +263,8 @@ private fun ProductScreenContent(
         }
         Box(
             modifier = Modifier
-                .padding(horizontal = dimensions.spaceMedium, vertical = dimensions.spaceLarge)
+                .padding(start = dimensions.spaceMedium, end = dimensions.spaceMedium, top = dimensions.spaceMedium)
                 .fillMaxWidth()
-                .defaultMinSize(minHeight = dimensions.size_200)
                 .loadingAnimation(
                     isLoading = state.isLoading,
                     shimmerColor = MaterialTheme.colors.onSecondary
@@ -282,7 +281,7 @@ private fun ProductScreenContent(
         }
         Box(
             modifier = Modifier
-                .padding(horizontal = dimensions.spaceMedium)
+                .padding(horizontal = dimensions.spaceMedium, vertical = dimensions.spaceMedium)
                 .defaultMinSize(minHeight = dimensions.size_20, minWidth = dimensions.size_200)
                 .loadingAnimation(
                     isLoading = state.isLoading,
@@ -325,8 +324,7 @@ private fun ProductScreenContent(
                     .padding(
                         start = dimensions.spaceMedium,
                         end = dimensions.spaceMedium,
-                        bottom = dimensions.spaceMedium,
-                        top = dimensions.spaceLarge
+                        bottom = dimensions.spaceMedium
                     ),
                 shape = RectangleShape
             )

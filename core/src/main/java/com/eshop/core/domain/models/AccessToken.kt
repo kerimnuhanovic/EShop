@@ -4,6 +4,8 @@ import com.eshop.core.util.UserType
 
 data class AccessToken(
     val token: String,
-    val userType: UserType
+    val userType: UserType,
+    val username: String,
+    val profileImage: String
 )
 

@@ -5,5 +5,7 @@ import com.squareup.moshi.Json
 data class AccessTokenDto(
     @field:Json(name="accessToken")
     val token: String,
-    val userType: String
+    val userType: String,
+    val username: String,
+    val profileImage: String
 )

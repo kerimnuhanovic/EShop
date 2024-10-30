@@ -1,6 +1,7 @@
 package com.eshop.core.data.preferences
 
 import android.content.SharedPreferences
+import com.eshop.core.domain.models.AccessToken
 import com.eshop.core.domain.preferences.Preferences
 import com.eshop.core.util.UserType
 import javax.inject.Inject
@@ -29,5 +30,20 @@ class DefaultPreferences @Inject constructor(
         return if (type != null) {
             UserType.fromString(type)
         } else null
+    }
+
+    override fun saveUserInfo(accessToken: AccessToken) {
+        sharedPreferences.edit().putString(Preferences.KEY_TOKEN, "Bearer ${accessToken.token}").apply()
+        sharedPreferences.edit().putString(Preferences.USER_TYPE, accessToken.userType.type).apply()
+        sharedPreferences.edit().putString(Preferences.USERNAME, accessToken.username).apply()
+        sharedPreferences.edit().putString(Preferences.PROFILE_IMAGE, accessToken.profileImage).apply()
+    }
+
+    override fun readUsername(): String? {
+        return sharedPreferences.getString(Preferences.USERNAME, null)
+    }
+
+    override fun readProfileImageUrl(): String? {
+        return sharedPreferences.getString(Preferences.PROFILE_IMAGE, null)
     }
 }

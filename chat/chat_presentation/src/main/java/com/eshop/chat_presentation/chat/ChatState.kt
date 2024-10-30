@@ -5,5 +5,7 @@ import com.eshop.chat_domain.model.Conversation
 data class ChatState(
     val conversation: Conversation? = null,
     val isLoading: Boolean = false,
-    val message: String = ""
+    val message: String = "",
+    val currentUserProfileImage: String = "",
+    val currentUser: String = ""
 )

@@ -420,7 +420,7 @@ private fun ProductOverviewScreenContent(
                     )
                     Spacer(modifier = Modifier.height(dimensions.spaceMedium))
                     Text(
-                        text = stringResource(id = com.eshop.productoverview_presentation.R.string.select_your_product_category),
+                        text = stringResource(id = com.eshop.productoverview_presentation.R.string.product_category),
                         fontFamily = PoppinsFontFamily,
                         fontWeight = FontWeight.Medium,
                         fontSize = dimensions.font_16,

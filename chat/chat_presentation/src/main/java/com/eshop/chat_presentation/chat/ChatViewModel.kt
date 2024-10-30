@@ -7,6 +7,7 @@ import com.eshop.chat_domain.model.Conversation
 import com.eshop.chat_domain.usecase.ReceiveNewMessageUseCase
 import com.eshop.chat_domain.usecase.SendMessageUseCase
 import com.eshop.chat_domain.usecase.UpdateAndFetchUserConversationUseCase
+import com.eshop.core.domain.preferences.Preferences
 import com.eshop.core.util.Result
 import com.eshop.coreui.navigation.Route
 import com.eshop.coreui.util.UiEvent
@@ -24,12 +25,16 @@ class ChatViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val updateAndFetchUserConversationUseCase: UpdateAndFetchUserConversationUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
-    private val receiveNewMessageUseCase: ReceiveNewMessageUseCase
+    private val receiveNewMessageUseCase: ReceiveNewMessageUseCase,
+    private val preferences: Preferences
 ): ViewModel() {
 
     private val chatPartner: String = checkNotNull(savedStateHandle["chatPartner"])
 
-    private val _state: MutableStateFlow<ChatState> = MutableStateFlow(ChatState())
+    private val _state: MutableStateFlow<ChatState> = MutableStateFlow(ChatState(
+        currentUser = preferences.readUsername()!!,
+        currentUserProfileImage = preferences.readProfileImageUrl()!!
+    ))
     val state = _state.asStateFlow()
 
     private val _uiEvent = Channel<UiEvent>()

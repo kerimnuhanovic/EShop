@@ -5,22 +5,30 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.AsyncImage
 import com.eshop.chat_domain.model.Message
+import com.eshop.core.util.BASE_URL
 import com.eshop.coreui.LocalDimensions
 import com.eshop.coreui.PoppinsFontFamily
 import com.eshop.coreui.theme.EShopTheme
 import java.time.LocalDate
 
 @Composable
-fun MessageItem(message: Message, modifier: Modifier = Modifier) {
+fun MessageItem(message: Message, userProfileImage: String, modifier: Modifier = Modifier) {
     val dimensions = LocalDimensions.current
     val backgroundColor =
         if (message.isCurrentUserReceiver!!) MaterialTheme.colors.primary else MaterialTheme.colors.primaryVariant
@@ -38,10 +46,15 @@ fun MessageItem(message: Message, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth(),
-        horizontalArrangement = if (message.isCurrentUserReceiver!!) Arrangement.Start else Arrangement.End
+        horizontalArrangement = if (message.isCurrentUserReceiver!!) Arrangement.Start else Arrangement.End,
+        verticalAlignment = Alignment.Top
     ) {
+        if (message.isCurrentUserReceiver!!) {
+            ProfileImage(imageUrl = userProfileImage, modifier = Modifier.padding(end = dimensions.spaceExtraSmall))
+        }
         Row(
             modifier = Modifier
+                .fillMaxWidth(0.8f)
                 .background(
                     color = backgroundColor,
                     shape = shape
@@ -54,6 +67,9 @@ fun MessageItem(message: Message, modifier: Modifier = Modifier) {
                 fontSize = dimensions.font_12,
                 color = MaterialTheme.colors.onSecondary
             )
+        }
+        if (!message.isCurrentUserReceiver!!) {
+            ProfileImage(imageUrl = userProfileImage, modifier = Modifier.padding(start = dimensions.spaceExtraSmall))
         }
     }
 }
@@ -72,7 +88,8 @@ private fun MessageItemPreview() {
                 isSeen = false,
                 isCurrentUserReceiver = false
             ),
-            modifier = Modifier.padding(dimensions.spaceSmall)
+            modifier = Modifier.padding(dimensions.spaceSmall),
+            userProfileImage = "1704471244427-714891812-profile_image.jpg"
         )
     }
 }

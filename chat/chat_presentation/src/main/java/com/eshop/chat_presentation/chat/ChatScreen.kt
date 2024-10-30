@@ -101,7 +101,8 @@ fun ChatScreenContent(
                         Spacer(modifier = Modifier.height(dimensions.spaceSmall))
                     }
                     items(state.conversation.messages.reversed()) { message ->
-                        MessageItem(message = message)
+                        val userProfileImage = if (message.sentBy == state.currentUser) state.currentUserProfileImage else state.conversation.chatPartnerProfileImage
+                        MessageItem(message = message, userProfileImage = userProfileImage)
                     }
                     item {
                         Spacer(modifier = Modifier.height(dimensions.spaceSmall))
